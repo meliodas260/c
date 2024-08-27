@@ -1,0 +1,189 @@
+/* Custom Styles */
+
+h2{
+    color: #eb0808;
+    text-align: center;
+}
+.card {
+    margin-top: 20px;
+}
+.relative{
+    position: relative;
+}
+.centerer{
+    text-align: center;
+}
+.resizable-input {
+    resize: both; /* Enables both horizontal and vertical resizing */
+    overflow: auto; /* Shows scrollbars if content overflows the input */
+    min-width: 100px; /* Minimum width of the input */
+    min-height: 30px; /* Minimum height of the input */
+    max-width: 300px; /* Maximum width of the input */
+    max-height: 100px; /* Maximum height of the input */
+    padding: 5px; /* Optional padding for better visual appearance */
+  }
+.search{
+       width: 100%;
+       text-align: center;
+       position: relative;
+       background-color: #ff0000;
+      color: #eb0808;
+}
+#myDiv {
+    display: none; /* Initially hide the div */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 999; /* Set z-index to a high value to ensure it appears above other content */
+            text-align: center; 
+}
+.prediction-container {
+    position: absolute;
+    background-color: rgb(155, 227, 229);
+    border: 1px solid #6692f3;
+    border-radius: 2px;
+    max-height: 150px;
+    width: auto;
+    overflow-y: auto;
+    display: none;
+    padding: 9px;
+    z-index: 2;
+}
+#contentDiv {
+    background-color: lightgray;
+    padding: 30%;
+    height: 100px;
+    display: inline-block; /* Display as inline-block */
+}
+.mdi--search {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5l-1.5 1.5l-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14S14 12 14 9.5S12 5 9.5 5'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+form {
+    background: rgba(red, green, blue, 0.06);
+    padding: 3em;
+    border-radius: 20px;
+    border-left: 1px solid rgba(red, green, blue, 0.3);
+    border-top: 1px solid rgba(red, green, blue, 0.3);
+    box-shadow: 20px 20px 10px -6px rgba(0, 0, 0, 0.116);
+    text-align: center;
+    position:sticky;
+    transition: all 0.2s ease-in-out;
+    max-width: 1100px; /* Set maximum width */
+    width: 90%; /* Set width to a percentage */
+    margin: 0 auto; /* Center the form horizontally */
+    z-index: 1; /* Lowest layer */
+
+}
+.SpecDiv{
+    background: rgba(red, green, blue, 0.06);
+    padding: 3em;
+    border-radius: 20px;
+    border-left: 1px solid rgba(red, green, blue, 0.3);
+    border-top: 1px solid rgba(red, green, blue, 0.3);
+    box-shadow: 20px 20px 10px -6px rgba(0, 0, 0, 0.116);
+    text-align: center;
+    position:sticky;
+    transition: all 0.2s ease-in-out;
+    max-width: 1100px; /* Set maximum width */
+    width: 90%; /* Set width to a percentage */
+    margin: 0 auto; /* Center the form horizontally */
+    z-index: 2; /* Lowest layer */
+}
+.norDiv{
+    background: rgba(red, green, blue, 0.06);
+    padding: 3em;
+    border-radius: 20px;
+    text-align: center;
+    position:sticky;
+    transition: all 0.2s ease-in-out;
+    max-width: 1100px; /* Set maximum width */
+    width: 90%; /* Set width to a percentage */
+    margin: 0 auto; /* Center the form horizontally */
+    margin-top: 1%;
+    z-index: 2; /* Lowest layer */
+}
+input{
+    padding: auto;
+}
+.longinput{
+    padding: auto;
+    width: 90%;
+}
+.contentor{
+    padding: 0 15% 0 15% ;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 600px) {
+    form {
+        padding: 2em; /* Decrease padding for smaller screens */
+    }
+    .contentor{
+        padding: 0 1% 0 1% !important;
+    }
+}
+
+
+.lagayan{
+    position: absolute;
+    top: 50%;
+    left:50%;
+    -webkit-transform : translate(-50%, -50%);
+    transform : translate(-50%, -50%);
+
+}
+.buttonclean{
+    margin-top: 10px;
+    padding: 9px 50px;
+}
+
+.input-group {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space elements evenly */
+}
+
+.input-group input {
+    border: 1px solid #0D6EFD;
+    flex: 1; /* Allow input fields to grow and shrink */
+    margin-right: 10px; /* Add spacing between input fields */
+    margin-bottom: 10px;
+}   
+.input-group input::placeholder{
+    color: #797979;
+    text-align: center;
+}
+.input-group label {
+    font-size: 14px;
+    margin-bottom: 5px; 
+}
+
+.borderer{
+    border: 1px solid rgb(188, 219, 236);
+
+}
+.carbon--search-advanced {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M30 6h-4V2h-2v4h-4v2h4v4h2V8h4zm-6 22.586l-5.975-5.975a9.023 9.023 0 1 0-1.414 1.414L22.586 30zM4 17a7 7 0 1 1 7 7a7.008 7.008 0 0 1-7-7'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }

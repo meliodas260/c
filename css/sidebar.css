@@ -1,0 +1,43 @@
+/* Basic reset */
+body, ul {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    
+    width: 19%; /* Adjust width as needed */
+    height: 100%;
+    background-color: #ffffff;
+    color: #000000;
+    position:absolute;
+    top: 9% 1rem;
+    left: 0;
+    padding-top: 5%;
+    border-right: #244153 solid 1px;
+    border-bottom: #244153 solid 1px;
+    z-index: 0;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 20px;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar ul li a {
+    color: #000000;
+    text-decoration: none;
+  }
+  
+  /* Content styles */
+  .content {
+    margin-left: 20%; /* Adjust based on sidebar width */
+    padding: 20px;
+    z-index: 2;
+  }
+  
