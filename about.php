@@ -13,7 +13,7 @@
 
 <body>
     
-about samin
+about sa school namin
 
    
 </body>
