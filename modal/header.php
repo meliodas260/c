@@ -185,26 +185,27 @@ nav ul li a {
     <h3>NEUST Repository</h3>
     <nav>
         <ul>
-            <li><a href="homepage.php">Home</a></li>
-            <li><a href="./about.php">About</a></li>
-            <li><a href="./TeacherS.php">Teachers</a></li>
-            <li><a href="./TeacherS.php"><span class="line-md--download-outline"></span></a></li>
-            <li><a href="./logout.php"><span class="material-symbols--logout-sharp"></span></a></li>
+            <li><a href="homepage">Home</a></li>
+            <li><a href="./about">About</a></li>
+            <li><a href="./TeacherS">Teachers</a></li>
+            <li><a href="./TeacherS"><span class="line-md--download-outline"></span></a></li>
+            <li><a href="./logout"><span class="material-symbols--logout-sharp"></span></a></li>
         </ul>
     </nav>
    
     <div class="burger-menu" onclick="toggleMenu()"><span class="game-icons--hamburger-menu"></span></div>
     
-    <?php $cookie_value = $_COOKIE["RepSesID"];
-        $lastChar = substr($cookie_value, -1);
+    <?php 
+    // $cookie_value = $_COOKIE["RepSesID"];
+    //     $lastChar = substr($cookie_value, -1);
 
-        if ($lastChar === '1') {
-            echo "<a href='./Accounts.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
-        } else if ($lastChar === '9') {
-            echo "<a href='./CapTSection.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
-        }else if ($lastChar === '8') {
-            echo "<a href='./UploadResearchInfo.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
-        }
+    //     if ($lastChar === '1') {
+    //         echo "<a href='./Accounts' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
+    //     } else if ($lastChar === '9') {
+    //         echo "<a href='./CapTSection' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
+    //     }else if ($lastChar === '8') {
+    //         echo "<a href='./UploadResearchInfo' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
+    //     }
  ?>
     
 </header>

@@ -157,6 +157,19 @@
                 width: 100%;
                 max-width: 500px;
             }
+            .norDiv{
+                background: rgba(red, green, blue, 0.06);
+                padding: 3em;
+                border-radius: 20px;
+                text-align: center;
+                position:sticky;
+                transition: all 0.2s ease-in-out;
+                max-width: 1100px; /* Set maximum width */
+                width: 90%; /* Set width to a percentage */
+                margin: 0 auto; /* Center the form horizontally */
+                margin-top: 1%;
+                z-index: 2; /* Lowest layer */
+}
         }
 </style>
 <?php
@@ -168,8 +181,8 @@ include 'modal/header.php';
 <div class="contentor">
     
     <div class="input-group mb-3" style="padding:1rem 15% 0 15%; @media screen and (max-width: 600px) {padding:1rem 5% 0 5%;} ">
-        <input type="text" class="form-control" placeholder="Search" aria-label="Search" name="normalSearch">
-        <button class="btn btn-outline-secondary" type="button"  ><span class="mdi--search"></span></button>
+        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-secondary" type="button"><span class="mdi--search"></span></button>
         <button class="btn btn-outline-secondary" type="button" id="openModalBtn"><span class="carbon--search-advanced"></span></button>        
     </div>
        
@@ -233,16 +246,6 @@ include 'modal/header.php';
         // Example usage of the function
         addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'https://via.placeholder.com/300x200');
     </script>
-    <div class="norDiv1">
-    <h2> What We Offer</h2>
-    <ul>
-       <li> Centralized Repository: Our system provides a secure and organized space where you can upload and access research papers, theses, dissertations, and other scholarly materials. With robust search and retrieval functionalities, finding relevant research has never been easier.
-        </li>
-       <li> Enhanced Collaboration: Collaborate with peers and colleagues by sharing your research and accessing others’ work. Our platform supports collaborative projects, allowing you to engage with a network of researchers and contribute to the academic community.
-        </li>
-    </ul>
-    
-    </div>
     <script src="modal/modal.js"></script>
 </body>
 </html>

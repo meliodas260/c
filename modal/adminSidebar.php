@@ -12,7 +12,6 @@
   <ul>
     <li><a href="Accounts.php">Accounts</a></li>
     <li><a href="setSection.php">Sections</a></li>
-    <li><a href="#">Download Request</a></li>
     <li><a href="#">Tags & Programs</a></li>
     <li><a href="#">Reports</a></li>
   </ul>
