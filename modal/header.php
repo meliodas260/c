@@ -186,7 +186,7 @@ nav ul li a {
     <nav>
         <ul>
             <li><a href="homepage.php">Home</a></li>
-            <li><a href="about.php">About</a></li>
+            <li><a href="./about.php">About</a></li>
             <li><a href="TeacherS.php">Teachers</a></li>
             <li><a href="TeacherS.php"><span class="line-md--download-outline"></span></a></li>
             <li><a href="logout.php"><span class="material-symbols--logout-sharp"></span></a></li>
@@ -199,11 +199,11 @@ nav ul li a {
         $lastChar = substr($cookie_value, -1);
 
         if ($lastChar === '1') {
-            echo "<a href='Accounts.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
+            echo "<a href='./Accounts.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
         } else if ($lastChar === '9') {
-            echo "<a href='CapTSection.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
+            echo "<a href='./CapTSection.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
         }else if ($lastChar === '8') {
-            echo "<a href='UploadResearchInfo.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
+            echo "<a href='./UploadResearchInfo.php' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
         }
  ?>
     
