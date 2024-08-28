@@ -30,6 +30,7 @@ header {
 nav ul {
     list-style-type: none;
     margin: 0;
+    position: ri;
     padding: 0;
     display: flex;
 }
@@ -99,7 +100,19 @@ nav ul li a {
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
   }
-
+  .iconamoon--profile-thin {
+        display: inline-block;
+        width: 1.7em;
+        height: 1.7em;
+        --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000'%3E%3Cpath stroke-linejoin='round' d='M4 18a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z'/%3E%3Ccircle cx='12' cy='7' r='3'/%3E%3C/g%3E%3C/svg%3E");
+        background-color: currentColor;
+        -webkit-mask-image: var(--svg);
+        mask-image: var(--svg);
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        }
 
 /* Media query for small screens (mobile devices) */
 @media screen and (max-width: 600px) {
@@ -171,6 +184,19 @@ nav ul li a {
     nav ul.show li {
         margin: 10px 0; /* Add spacing between menu items */
     }
+    .iconamoon--profile-thin {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000'%3E%3Cpath stroke-linejoin='round' d='M4 18a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z'/%3E%3Ccircle cx='12' cy='7' r='3'/%3E%3C/g%3E%3C/svg%3E");
+        background-color: currentColor;
+        -webkit-mask-image: var(--svg);
+        mask-image: var(--svg);
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        }
 }
 
 
@@ -189,7 +215,7 @@ nav ul li a {
             <li><a href="./about">About</a></li>
             <li><a href="./TeacherS">Teachers</a></li>
             <li><a href="./TeacherS"><span class="line-md--download-outline"></span></a></li>
-            <li><a href="./logout"><span class="material-symbols--logout-sharp"></span></a></li>
+            <li><a href="./logout"><span class="iconamoon--profile-thin"></span></a></li>
         </ul>
     </nav>
    

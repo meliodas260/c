@@ -1,10 +1,10 @@
 <?php
-require_once 'verifier.php';
+// require_once 'verifier.php';
 
-    if(!VerifyResearcher()){
-        header("Location: homepage.php");
-        exit;
-}
+//     if(!VerifyResearcher()){
+//         header("Location: homepage.php");
+//         exit;
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,19 +40,19 @@ require_once 'verifier.php';
  
 <?php   include 'modal/header.php'; 
         include 'modal/ResearcherSidebar.php';
-        $ResearchID = $_COOKIE["ResearchNya"];
+        // $ResearchID = $_COOKIE["ResearchNya"];
         
-        $conn = new mysqli("localhost", "mine", "pass", "repository");
-        if ($conn->connect_error) {
-            echo "error";
-        }
-        // SQL query to fetch data
-        $sql = "SELECT * FROM `ResearchTBL` WHERE `ResearchID` = '$ResearchID';";
-        $result = $conn->query($sql);
+        // $conn = new mysqli("localhost", "mine", "pass", "repository");
+        // if ($conn->connect_error) {
+        //     echo "error";
+        // }
+        // // SQL query to fetch data
+        // $sql = "SELECT * FROM `ResearchTBL` WHERE `ResearchID` = '$ResearchID';";
+        // $result = $conn->query($sql);
        
-         if ($result) {
-            $ResearchInfo = $result->fetch_assoc();
-            echo $ResearchInfo['CourseID'];
+        //  if ($result) {
+        //     $ResearchInfo = $result->fetch_assoc();
+        //     echo $ResearchInfo['CourseID'];
         
         
 
@@ -75,7 +75,9 @@ require_once 'verifier.php';
 
     <form  action="researchinfoapi.php" method="POST">
         <div class="relative"> 
-        <?php echo $ResearchID; ?>
+        <?php 
+            echo $ResearchID; 
+        ?>
             <h2>Research info</h2>
             <h5><b>RESEARCH TITLE </b></h5>
             <div class="input-group centerer" style="padding-left:15%; padding-right:15%; ">
@@ -136,7 +138,7 @@ require_once 'verifier.php';
                 </div>
         </div>
         <button type="submit" class="btn btn-primary buttonclean">Submit</button>
-        <?php }?>
+        <?php //}?>
     </form>
       </div>
       
