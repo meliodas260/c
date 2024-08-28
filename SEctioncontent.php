@@ -18,8 +18,8 @@ require_once 'verifier.php';
     <title>Accounts</title>
 </head>
 <body>
-<?php include 'header.php'; ?>
-<?php include 'adminSidebar.php'; ?>
+<?php include 'modal/header.php'; ?>
+<?php include 'modal/adminSidebar.php'; ?>
 <div class="content">
     <div class="norDiv">
     <?php

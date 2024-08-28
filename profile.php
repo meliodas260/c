@@ -9,7 +9,7 @@
     <title>profile</title>
 </head>
 
-<?php include 'header.php'; ?>
+<?php include 'modal/header.php'; ?>
 
    profile
 </body>

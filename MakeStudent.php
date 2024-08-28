@@ -23,8 +23,8 @@
 <div class="relative">
 
 
-<?php include 'header.php'; ?>  
-<?php include 'adminSidebar.php'; ?>
+<?php include 'modal/header.php'; ?>  
+<?php include 'modal/adminSidebar.php'; ?>
 
 <div class="content">
     <form  action="backend/adminaccessApi.php" method="post">   

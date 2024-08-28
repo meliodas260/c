@@ -187,9 +187,9 @@ nav ul li a {
         <ul>
             <li><a href="homepage.php">Home</a></li>
             <li><a href="./about.php">About</a></li>
-            <li><a href="TeacherS.php">Teachers</a></li>
-            <li><a href="TeacherS.php"><span class="line-md--download-outline"></span></a></li>
-            <li><a href="logout.php"><span class="material-symbols--logout-sharp"></span></a></li>
+            <li><a href="./TeacherS.php">Teachers</a></li>
+            <li><a href="./TeacherS.php"><span class="line-md--download-outline"></span></a></li>
+            <li><a href="./logout.php"><span class="material-symbols--logout-sharp"></span></a></li>
         </ul>
     </nav>
    

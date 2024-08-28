@@ -16,8 +16,8 @@ require_once 'verifier.php';
 </head>
 <body>
 
-<?php   include 'header.php'; 
-        include 'ResearcherSidebar.php';
+<?php   include 'modal/header.php'; 
+        include 'modal/ResearcherSidebar.php';
         
  
                 ?>

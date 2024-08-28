@@ -16,8 +16,8 @@ require_once 'verifier.php';
     <link href="css/sidebar.css" rel="stylesheet">
     <title>Accounts</title>
 </head>
-<?php include 'header.php'; 
-    include 'CapTSidebar.php'; 
+<?php include 'modal/header.php'; 
+    include 'modal/CapTSidebar.php'; 
     $secID = $_GET['SecID'];
     $secname = $_GET['Secname'];
     $course = $_GET['course'];

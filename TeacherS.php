@@ -8,7 +8,7 @@
     <title>Admin page</title>
 </head>
 
-<?php include 'header.php'; ?>
+<?php include 'modal/header.php'; ?>
 
 
 <body>

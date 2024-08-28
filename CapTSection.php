@@ -17,8 +17,8 @@ require_once 'verifier.php';
     <title>Accounts</title>
 </head>
 
-<?php include 'header.php'; ?>
-<?php include 'CapTSidebar.php'; ?>
+<?php include 'modal/header.php'; ?>
+<?php include 'modal/CapTSidebar.php'; ?>
 <body>
 <div class="content">
 <h2>Programs & Sections</h2>

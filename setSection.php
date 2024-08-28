@@ -18,8 +18,8 @@ require_once 'verifier.php';
     <title>Accounts</title>
 </head>
 <body>
-<?php include 'header.php'; 
-    include 'adminSidebar.php'; 
+<?php include 'modal/header.php'; 
+    include 'modal/adminSidebar.php'; 
     // Database connection
                     $host = 'localhost';
                     $username = 'mine';

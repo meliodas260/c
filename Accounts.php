@@ -17,8 +17,8 @@
     <title>Accounts</title>
 </head>
 
-<?php include 'header.php'; ?>
-<?php include 'adminSidebar.php'; ?>
+<?php include 'modal/header.php'; ?>
+<?php include 'modal/adminSidebar.php'; ?>
 
 <div class="content">
 <h2>Programs & Sections</h2>

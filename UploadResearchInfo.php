@@ -38,8 +38,8 @@ require_once 'verifier.php';
 <body>
     
  
-<?php   include 'header.php'; 
-        include 'ResearcherSidebar.php';
+<?php   include 'modal/header.php'; 
+        include 'modal/ResearcherSidebar.php';
         $ResearchID = $_COOKIE["ResearchNya"];
         
         $conn = new mysqli("localhost", "mine", "pass", "repository");
