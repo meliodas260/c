@@ -5,9 +5,9 @@ body, ul {
   }
   
   /* Sidebar styles */
-  .sidebar {
+  .sidebarold {
     
-    width: 19%; /* Adjust width as needed */
+    width: auto;
     height: 100%;
     background-color: #ffffff;
     color: #000000;
@@ -34,10 +34,4 @@ body, ul {
     text-decoration: none;
   }
   
-  /* Content styles */
-  .content {
-    margin-left: 20%; /* Adjust based on sidebar width */
-    padding: 20px;
-    z-index: 2;
-  }
   

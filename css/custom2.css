@@ -138,9 +138,35 @@ input{
 .contentor{
     padding: 0 15% 0 15% ;
 }
+.content {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.sidebar {
+    flex: 0 0 20%;
+    background-color: #8d2424; /* Optional: Add background color to distinguish */
+}
+
+.main-content {
+    flex: 0 0 70%;
+    background-color: #ffffff; /* Optional: Add background color to distinguish */
+}
+
 
 /* Media query for smaller screens */
 @media screen and (max-width: 600px) {
+    .content {
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .main-content {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
     form {
         padding: 2em; /* Decrease padding for smaller screens */
     }

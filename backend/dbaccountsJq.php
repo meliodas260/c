@@ -10,7 +10,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Select data from the database
-    $stmt = $pdo->query("SELECT `Fname`, `Mname`, `Lname`, `Usertype`, `UserID` FROM AccountTBL ORDER BY `Fname` ASC LIMIT 15");
+    $stmt = $pdo->query("SELECT `Fname`, `Mname`, `Lname`, `Usertype`, `UserID` FROM Accounttbl ORDER BY `Fname` ASC LIMIT 15");
     
     // Prepare data for DataTables
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

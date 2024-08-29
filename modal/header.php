@@ -52,9 +52,9 @@ header {
     justify-content: space-between;
     align-items: center;
     height: 7%;
-    margin-bottom:10px;
-    padding-bottom: 5px;
-    border-bottom: 4px solid  rgb(24, 228, 255);
+    margin-bottom:-1px;
+    padding-bottom: 0px;
+    border-bottom: 1px solid  rgb(24, 228, 255);
     z-index: 3;
 }
 nav {
