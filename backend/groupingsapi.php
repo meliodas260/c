@@ -3,7 +3,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
-    $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
   
     if ($conn->connect_error) {  // Check connection
         die("Connection failed: " . $conn->connect_error);

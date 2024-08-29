@@ -1,7 +1,7 @@
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_GET['password'])) {
-    $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
 
     // Check connection
     if ($conn->connect_error) {
@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
 
 
 function updateSessionCookies($sesid, $UID,$dateExpire,$date) {
-    $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
     session_start(); 
     // Set the cookie
     $cookie_name = "RepSesID";

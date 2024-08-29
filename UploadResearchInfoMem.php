@@ -34,7 +34,7 @@
         include 'modal/ResearcherSidebar.php';
         $ResearchID = $_COOKIE["ResearchNya"];
         
-        $conn = new mysqli("localhost", "mine", "pass", "repository");
+        $conn = new mysqli("localhost", "mine", "pass", "repo");
         if ($conn->connect_error) {
             echo "error";
         }

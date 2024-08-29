@@ -144,10 +144,35 @@
         .read-more:hover {
             background-color: #1060c9;
             color:white;
+        }  
+        .flexer {
+            padding-top:2rem;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .half {
+            flex: 1; /* Each child will take up equal space */
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in the width */
+        }
+
+        .left {
+            background-color: lightblue;
+        }
+
+        .right {
+            background-color: lightcoral;
         }
 
         /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media screen and (max-width: 600px) {
+            
+            .half {
+            
+                flex: 1 1 100%;
+            
+            }
             #research-container {
                 flex-direction: column;
                 align-items: center;
@@ -158,6 +183,7 @@
                 max-width: 500px;
             }
         }
+
 </style>
 <?php
 include 'modal/header.php';
@@ -233,16 +259,24 @@ include 'modal/header.php';
         // Example usage of the function
         addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'https://via.placeholder.com/300x200');
     </script>
-    <div class="norDiv1">
-    <h2> What We Offer</h2>
-    <ul>
-       <li> Centralized Repository: Our system provides a secure and organized space where you can upload and access research papers, theses, dissertations, and other scholarly materials. With robust search and retrieval functionalities, finding relevant research has never been easier.
-        </li>
-       <li> Enhanced Collaboration: Collaborate with peers and colleagues by sharing your research and accessing others’ work. Our platform supports collaborative projects, allowing you to engage with a network of researchers and contribute to the academic community.
-        </li>
-    </ul>
-    
+    <div class="flexer">
+        <div class="half left"> 
+
+        </div>
+
+        <div class="half right">   
+            <h2> What We Offer</h2>
+            <ul>
+            <li> Centralized repo: Our system provides a secure and organized space where you can upload and access research papers, theses, dissertations, and other scholarly materials. With robust search and retrieval functionalities, finding relevant research has never been easier.
+                </li>
+            <li> Enhanced Collaboration: Collaborate with peers and colleagues by sharing your research and accessing others’ work. Our platform supports collaborative projects, allowing you to engage with a network of researchers and contribute to the academic community.
+                </li>
+            </ul>
+        </div>
     </div>
+    
+
+
     <script src="modal/modal.js"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@
      
 
                     <form action="try.php" method="GET">
-                       <h3>Online Repository System</h3>    
+                       <h3>Online repo System</h3>    
                        <br>
                        <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" name="username" placeholder="name@example.com" required>

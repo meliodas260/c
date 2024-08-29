@@ -41,20 +41,22 @@ $hashed_password = password_hash($password_with_salt, PASSWORD_DEFAULT);
 // Verify the password
 if (password_verify($password_with_salt, $hashed_password)) {
 
-    // $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
   
-    // if ($conn->connect_error) {  // Check connection
-    //     die("Connection failed: " . $conn->connect_error);
-    // }
-    // Prepare SQL statement to insert data into a table
-    // $sql = "INSERT INTO AccountTBL (UserID, Email, Usertype, Fname, Mname, Lname, Suffix, Gender,Password,asin,DateCreated) 
+    if ($conn->connect_error) {  // Check connection
+        die("Connection failed: " . $conn->connect_error);
+    }
+    //Prepare SQL statement to insert data into a table
+    $sql = "INSERT INTO `accounttbl` (`UserID`, `Email`, `SchoolId`, `Fname`, `Lname`, `Mname`, `Suffix`, `IsMale`, `imageName`, `Password`, `DateCreated`, `Usertype`) 
+    VALUES (NULL, '$email', '$UID', '$fname', '$lname', '$mname', '$suffix', '$gender', NULL, '$hashed_password', DEFAULT, '$status')";
+    // $sql = "INSERT INTO accounttbl (UserID, Email, Usertype, Fname, Mname, Lname, Suffix, Gender,Password,asin,DateCreated) 
     //         VALUES ('$UID','$email', '$status', '$fname', '$mname', '$lname', '$suffix', '$gender' , '$hashed_password', '$salt', DEFAULT)";
     
-        // try{  $conn->query($sql) === TRUE;
+        try{  $conn->query($sql) === TRUE;
             echo "New record created successfully.";
             $to_email = $email; // Email address to which you want to send the email
             $subject = "Password giver"; // Subject of the email
-            $message = " your password to repository system is $password"; // Body of the email
+            $message = " your password to repo system is $password"; // Body of the email
 
             // Gmail SMTP configuration
             $smtp_username = "lestersayson206@gmail.com"; // Your Gmail email address
@@ -80,24 +82,24 @@ if (password_verify($password_with_salt, $hashed_password)) {
 
         // Send email
         if ($mail->send()) {
-        header("Location: MakeStudent.php?tama=true");
-        exit;
-    
+        // header("Location: ./MakeStudent?tama=true");
+        // exit;
+            echo "dinasend";
 
-        // } else {
-    //       echo $password;
-    //     }
-    // } catch(Exception $e) {
-    //     echo "SQL Error: " . $e->getMessage();
-    //     header("Location: MakeStudent.php?error=true");
-    //             exit;
-    // }
+        } else {
+          echo $password;
+        }
+    } catch(Exception $e) {
+        echo "SQL Error: " . $e->getMessage();
+        // header("Location: ./MakeStudent?error=true");
+        //         exit;
+    }
     
-    // $conn->close();
+    $conn->close();
 
 
 } else {
-    header("Location: MakeStudent.php?error=true");
+    header("Location: ./MakeStudent?error=true");
     exit;  
 }
 
@@ -151,5 +153,5 @@ if (password_verify($password_with_salt, $hashed_password)) {
 //     } else {
 //         echo "Error uploading file.";
 //     }
- }
+ 
 ?>

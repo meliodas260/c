@@ -2,7 +2,7 @@
 $host = 'localhost';
 $username = 'mine';
 $password = 'pass';
-$database = 'repository';
+$database = 'repo';
 $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 
 try {

@@ -13,6 +13,37 @@
 /* Additional styles specific to the header can also be included here */
 /* For example, styles for the header background color, text color, etc. */
 /* For simplicity, I'll add some basic styles here */
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            min-width: 160px;
+            top: 100%;
+            transform: translateX(-70%);
+        }
+
+        .dropdown-menu a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-container:hover .dropdown-menu {
+            display: block;
+        }
 header {
     background-color: #1e3698;
     color: #fff;
@@ -26,13 +57,17 @@ header {
     border-bottom: 4px solid  rgb(24, 228, 255);
     z-index: 3;
 }
-
+nav {
+    flex: 1; /* Allow nav to take up remaining space */
+}
 nav ul {
     list-style-type: none;
     margin: 0;
-    position: ri;
     padding: 0;
+    text-align:right;
+    float:right;
     display: flex;
+    justify-content: flex-end;
 }
 
 nav ul li {
@@ -208,14 +243,23 @@ nav ul li a {
 
 <header><a href="homepage.php" class="image">
     <img src="img/neust_logo.png"  alt="Neust Logo"></a>
-    <h3>NEUST Repository</h3>
+    <h3>RESEARCH REPOSYTORY</h3>
     <nav>
         <ul>
             <li><a href="homepage">Home</a></li>
             <li><a href="./about">About</a></li>
             <li><a href="./TeacherS">Teachers</a></li>
             <li><a href="./TeacherS"><span class="line-md--download-outline"></span></a></li>
-            <li><a href="./logout"><span class="iconamoon--profile-thin"></span></a></li>
+            <li><div class="dropdown-container">
+                    <a href="./profile" class="btn btn-primary"><span class="iconamoon--profile-thin"></span></a>
+                    <div class="dropdown-menu">
+                        <a href="#">Action 1</a>
+                        <a href="#">Action 2</a>
+                        <a href="#">Action 3</a>
+                    </div>
+                </div>
+            
+            </li>
         </ul>
     </nav>
    
@@ -242,6 +286,7 @@ nav ul li a {
         document.querySelector('nav ul').classList.toggle('show');
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
 
      $UID = $_POST['UID'];
      $secID = $_POST['secID'];

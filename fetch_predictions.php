@@ -2,7 +2,7 @@
 
 
     // Database connection
-    $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
 predictTeacher(){
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);

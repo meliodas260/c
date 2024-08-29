@@ -34,7 +34,7 @@
             $servername = "localhost";
             $username = "mine";
             $password = "pass";
-            $dbname = "repository";
+            $dbname = "repo";
             
         $conn = mysqli_connect($servername, $username, $password, $dbname);
         $ResearchID = $_COOKIE["ResearchNya"];

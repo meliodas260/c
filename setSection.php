@@ -24,7 +24,7 @@ require_once 'verifier.php';
                     $host = 'localhost';
                     $username = 'mine';
                     $password = 'pass';
-                    $database = 'repository';
+                    $database = 'repo';
                     $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 
                     try {
@@ -107,7 +107,7 @@ $sqlsection = $pdo->query("SELECT `CourseID` FROM `CourseTBL` ORDER BY `CourseTB
         <label for="Course"  class="mx-3"  > <b>Course</b> </label> <!--Course -->
         <select id="Course" name="Course" class="form-select w-25 mx-3  mb-3 ">
             <?php
-                $conn = new mysqli("localhost", "mine", "pass", "repository");
+                $conn = new mysqli("localhost", "mine", "pass", "repo");
             
                 // Check connection
                 if ($conn->connect_error) {

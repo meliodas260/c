@@ -2,7 +2,7 @@
     <?php
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli("localhost", "mine", "pass", "repository");
+    $conn = new mysqli("localhost", "mine", "pass", "repo");
 
 
 echo "<script>swal('Success!', 'Form submitted successfully!', 'success');</script>";

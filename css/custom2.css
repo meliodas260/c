@@ -116,7 +116,7 @@ form {
     z-index: 2; /* Lowest layer */
 }
 .norDiv1{
-    background: rgba(rgb(162, 94, 94), rgb(101, 150, 101), rgb(107, 107, 152), 0.06);
+    background:rgba(red, green, blue, 0.06);
     padding: 3em;
     border-radius: 20px;
     text-align: center;
