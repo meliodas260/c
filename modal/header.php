@@ -51,14 +51,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 10%;
+    height: 7%;
     margin-bottom:10px;
     padding-bottom: 5px;
     border-bottom: 4px solid  rgb(24, 228, 255);
     z-index: 3;
 }
 nav {
-    flex: 1; /* Allow nav to take up remaining space */
+    flex: 1;
 }
 nav ul {
     list-style-type: none;
@@ -71,26 +71,32 @@ nav ul {
 }
 
 nav ul li {
-    margin-top:-10px;
+    
+    margin-top: 10px;
     margin-left: 20px;
 }
 
 nav ul li:first-child {
     margin-left: 0;
 }
-img{
-    width: 100% ;
-}
+.image {
+            margin-left: 1rem;
+            width: auto;
+            height: 50px;
+        }
+
+        img {
+            height: 100%;
+            width: auto;
+        }
+
 nav ul li a {
+   
     color: #fff;
     text-decoration: none;
     font-weight: bold;
     font-size: 18px;
 }
-.image{
-    margin-left: 1rem;
-    width: 5% ;
-    }
 .iconamoon--profile-circle-fill {
   display: inline-block;
   width: 3em;
@@ -148,9 +154,144 @@ nav ul li a {
         -webkit-mask-size: 100% 100%;
         mask-size: 100% 100%;
         }
+    .headH4{
+        margin-left:1em;
+    }
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        z-index: 10;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    /* Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Form Styling */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"], select, input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .modalbutton {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .modalbutton[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    #research-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+            }
+
+            .research-card {
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                width: 300px;
+                transition: transform 0.2s;
+                text-align: center;
+            }
+
+            .research-card:hover {
+                transform: scale(1.05);
+            }
+
+            .research-image {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+
+            .research-title {
+                font-size: 18px;
+                margin: 0;
+                color: #333;
+            }
+
+        .research-author, .research-year {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .research-description {
+            font-size: 14px;
+            color: #666;
+            margin: 10px 0;
+        }
+        .center-div {
+            display: flex;
+            justify-content: center; /* Horizontal centering */
+            align-items: center;
+            padding:auto;
+            margin:auto;
+}
 
 /* Media query for small screens (mobile devices) */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
+    .image{
+        text-align:center;
+        justify-self: center;
+    }
+    .endder{
+        margin: 0;
+    padding: 0;
+    text-align:right;
+    float:right;
+    display: flex;
+    justify-content: flex-end;
+    }
     .iconamoon--profile-circle-fill {
     display: inline-block;
     width: 2em;
@@ -166,22 +307,15 @@ nav ul li a {
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     }
-    img{
-    width: 100% ;
-    }
-    .image{
-        margin-left: 1rem;
-    width: 9% ;
-    }
     nav ul {
         display: none; /* Hide the navigation links by default on small screens */
     }
     /* Style the burger menu icon to make it look like a button */
     .burger-menu {
-        display: block; /* Display the burger menu icon */
-        cursor: pointer; /* Change cursor to pointer to indicate clickability */
-        font-size: 30px; /* Increase font size for better visibility */
-        padding: 5px; /* Add padding for better touch interaction */
+        display: block;
+        cursor: pointer;
+        font-size: 30px;
+        padding: 5px;
     }
     .game-icons--hamburger-menu {
     margin-top:-10px;
@@ -232,18 +366,64 @@ nav ul li a {
         -webkit-mask-size: 100% 100%;
         mask-size: 100% 100%;
         }
+    
+
+
+
+
+.removeSearch{
+        display: none;
+    }
 }
-
-
-
-
     </style>
 </head>
 <body>
 
-<header><a href="homepage.php" class="image">
+<header><div class="burger-menu" onclick="toggleMenu()"><span class="game-icons--hamburger-menu"></span></div>
+<div class="center-div">
+    <a href="homepage.php" class="image">
     <img src="img/neust_logo.png"  alt="Neust Logo"></a>
-    <h3>RESEARCH REPOSYTORY</h3>
+    <div class="headH4">
+        <h4>RESEARCH REPOSYTORY</h4>
+    </div>
+</div>
+    <div class="input-group mb-3 endder" style="margin:1rem 15% 0 15%; @media screen and (max-width: 600px) {padding:1rem 5% 0 5%;} ">
+        <input type="text" class="form-control removeSearch" placeholder="Search" aria-label="Search" name="normalSearch">
+        <button class="btn btn-outline-secondary removeSearch rounded" type="button"  ><span class="mdi--search"></span></button>
+        <button class="btn btn-outline-secondary rounded" type="button" id="openModalBtn"><span class="carbon--search-advanced"></span></button>        
+    </div>
+       
+   <!-- modal -->
+    <div id="advancedSearchModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Advanced Search</h2>
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label for="keyword">Keyword:</label>
+                        <input type="text" id="keyword" name="keyword">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category" name="category">
+                            <option value="">Select Category</option>
+                            <option value="books">Books</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateRange">Date Range:</label>
+                        <input type="date" id="startDate" name="startDate">
+                        to
+                        <input type="date" id="endDate" name="endDate">
+                    </div>
+                    <button type="submit" class="modalbutton">Search</button>
+                    <button type="button" id="clearBtn" class="modalbutton">Clear</button>
+                </form>
+            </div>
+    </div>
     <nav>
         <ul>
             <li><a href="homepage">Home</a></li>
@@ -263,7 +443,7 @@ nav ul li a {
         </ul>
     </nav>
    
-    <div class="burger-menu" onclick="toggleMenu()"><span class="game-icons--hamburger-menu"></span></div>
+    
     
     <?php 
     // $cookie_value = $_COOKIE["RepSesID"];
@@ -287,6 +467,7 @@ nav ul li a {
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="modal/modal.js"></script>
 
 </body>
 </html>
