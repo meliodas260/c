@@ -1,25 +1,42 @@
 <?php
-require_once 'verifier.php';
+// require_once 'verifier.php';
 
-    if(!Verifyadmin()){
-        header("Location: homepage.php");
-        exit;
-}
+//     if(!Verifyadmin()){
+//         header("Location: homepage.php");
+//         exit;
+// }
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>
+        .content {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.sidebar {
+    flex: 0 0 20%;
+    background-color: #8d2424; /* Optional: Add background color to distinguish */
+}
+
+.main-content {
+    flex: 0 0 70%;
+    background-color: #ffffff; /* Optional: Add background color to distinguish */
+}
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
-    <title>Accounts</title>
+    <title>Make Section</title>
 </head>
 <body>
 <?php include 'modal/header.php'; 
-    include 'modal/adminSidebar.php'; 
+   
     // Database connection
                     $host = 'localhost';
                     $username = 'mine';
@@ -37,134 +54,156 @@ require_once 'verifier.php';
     ?>
 
 <div class="content">
-<h2>Programs & Sections</h2>
-<?php 
-$sqlsection = $pdo->query("SELECT `CourseID` FROM `CourseTBL` ORDER BY `CourseTBL`.`CourseID` DESC;");
+    <div class="sidebar">
+<?php  include 'modal/adminSidebar.php';  ?>
+    </div>
+    <div class="main-content">
+    <div class="SpecDiv">
+            <h3>BSIT</h3>
+            <table id="BSITTBL" class="table display">
+                <thead>
+                    <tr>
+                        <th scope="col">Section</th>
+                        <th scope="col">School YR</th>
+                        <th scope="col">CapstoneTeacher</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here by DataTables -->
+                </tbody>
+            </table>
+        </div>
+        <h2>Programs & Sections</h2>
+        <?php 
+        $sqlsection = $pdo->query("SELECT `CourseID`,`CourseName` FROM `CourseTBL` ORDER BY `CourseTBL`.`CourseID` DESC;");
 
-                        // Loop through the result set and display data in table rows
-                        while ($higherRow = $sqlsection->fetch(PDO::FETCH_ASSOC)) {
-                            
-                            $courseID = $higherRow['CourseID'];
+                                // Loop through the result set and display data in table rows
+                                while ($higherRow = $sqlsection->fetch(PDO::FETCH_ASSOC)) {
+                                    
+                                    $courseID = $higherRow['CourseName'];
 
 
 
-                            echo  '<div class="SpecDiv">
-                                <h3> '.$courseID.'</h3>
-                                <table class="table">
-                                            <thead>
-                                                <tr>
-                                                <th scope="col">Section</th>
-                                                <th scope="col">School Yr</th>
-                                                <th scope="col">CapstoneTeacher</th>
-                                                
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-                                
-                                                    
-
-                                                        // Select data from the database
-                                                        $stmt = $pdo->query("SELECT A.`SectionID`, A.`SectionName`, A.`CourseID` , A.`SchoolYR` , B.Fname, B.Mname , B.Lname , B.suffix FROM `Sectionn&CapTeacherTBL` as A 
-                                                        INNER JOIN AccountTBL as B ON A.`UID_Teacher` = B.UserID WHERE `CourseID` ='$courseID' ORDER BY A.`SectionID` DESC;");
-
-                                                        // Loop through the result set and display data in table rows
-                                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                                            echo "<tr>";
-                                                            echo "<th scope='row'>" . $row['SectionName'] . "</td>";
-                                                            echo "<td>" . $row['SchoolYR'] . "</td>";
-                                                            echo "<td colspan='2'>" . $row['Fname'] . " " . $row['Mname'] . " " . $row['Lname'] . " " . $row['suffix'] ."</td>";
+                                    echo  '<div class="SpecDiv">
+                                        <h3> '.$courseID.'</h3>
+                                        <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                        <th scope="col">Section</th>
+                                                        <th scope="col">School Yr</th>
+                                                        <th scope="col">CapstoneTeacher</th>
                                                         
-                                                            $section = $row['SectionID'];
-                                                            echo "<td> <a href='" . "SEctioncontent.php?section=" . urlencode($section) . "'> More</a></td>";
-                                                            echo "</tr>";
-
-
-
-
-                                                        }
-                                                    
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>';
                                         
-                                        echo    '</tbody>
-                                        </table>
-                                </div>';
-   }} 
-   catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+                                                            
+
+                                                                // Select data from the database
+                                                                $stmt = $pdo->query("SELECT A.`SectionID`, A.`SectionName`, A.`CourseID`,A.`CourseName` , A.`SchoolYR` , B.Fname, B.Mname , B.Lname , B.suffix FROM `Sectionn&CapTeacherTBL` as A 
+                                                                INNER JOIN AccountTBL as B ON A.`UID_Teacher` = B.UserID WHERE `CourseID` ='$courseID' ORDER BY A.`SectionID` DESC;");
+
+                                                                // Loop through the result set and display data in table rows
+                                                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                                    echo "<tr>";
+                                                                    echo "<th scope='row'>" . $row['SectionName'] . "</td>";
+                                                                    echo "<td>" . $row['SchoolYR'] . "</td>";
+                                                                    echo "<td colspan='2'>" . $row['Fname'] . " " . $row['Mname'] . " " . $row['Lname'] . " " . $row['suffix'] ."</td>";
+                                                                
+                                                                    $section = $row['SectionID'];
+                                                                    echo "<td> <a href='" . "SEctioncontent.php?section=" . urlencode($section) . "'> More</a></td>";
+                                                                    echo "</tr>";
+
+
+
+
+                                                                }
+                                                            
+                                                
+                                                echo    '</tbody>
+                                                </table>
+                                        </div>';
+        }} 
+        catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+                                    }
+        ?>
+
+
+
+
+        <form  action="backend/setsectionapi.php" method="post">   
+        <div class="relative">
+                <h2>Create Section</h2>
+                <div class="input-group">
+                <div class="form-floating mb-3 w-50">
+                                <input type="Text" class="border border-primary form-control " id="SectionName" name="SectionName" placeholder="name@example.com" required>
+                                <label for="SectionName">SectionName</label><!--SectionName -->
+                </div>
+                <label for="Course"  class="mx-3"  > <b>Course</b> </label> <!--Course -->
+                <select id="Course" name="Course" class="form-select w-25 mx-3  mb-3 ">
+                    <?php
+                        $conn = new mysqli("localhost", "mine", "pass", "repo");
+                    
+                        // Check connection
+                        if ($conn->connect_error) {
+                            echo "error";
+                        }
+                        // SQL query to fetch data
+                        $sql = "SELECT `CourseID`,`CourseName` FROM `Coursetbl`;";
+                        $result = $conn->query($sql);
+                        if ($result) {
+                            // Fetch rows as associative array
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                // Access the ProgramOption column value from the current row 
+                                $progID = $row[`CourseID`];
+                                $ProgramOption = $row['CourseName'];
+                               
+                                
+                                // Output the <option> element
+                                echo "<option value=' $progID '>$ProgramOption</option>";
                             }
-?>
-
-
-
-
-<form  action="setsectionapi.php" method="post">   
-<div class="relative">
-        <h2>Create Section</h2>
-        <div class="input-group">
-        <div class="form-floating mb-3 w-50">
-                        <input type="Text" class="border border-primary form-control " id="SectionName" name="SectionName" placeholder="name@example.com" required>
-                        <label for="SectionName">SectionName</label><!--SectionName -->
-        </div>
-        <label for="Course"  class="mx-3"  > <b>Course</b> </label> <!--Course -->
-        <select id="Course" name="Course" class="form-select w-25 mx-3  mb-3 ">
-            <?php
-                $conn = new mysqli("localhost", "mine", "pass", "repo");
-            
-                // Check connection
-                if ($conn->connect_error) {
-                    echo "error";
-                }
-                // SQL query to fetch data
-                $sql = "SELECT CourseID FROM `CourseTBL`;";
-                $result = $conn->query($sql);
-                if ($result) {
-                    // Fetch rows as associative array
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        // Access the ProgramOption column value from the current row
-                        $ProgramOption = $row['CourseID'];
-                        
-                        // Output the <option> element
-                        echo "<option value=\"$ProgramOption\">$ProgramOption</option>";
                     }
-            }
-            ?>
-</select>
-        </div>
-        <br>
-        <div class="input-group">
-        <div class="form-floating mb-3 w-50">
-            <input class="border border-primary form-control "type="text" id="ResearchT" autocomplete="off" name="ResearchT" placeholder="juan" required> 
-            <label for="ResearchT">Research Teacher ID #</label>
-            <div id="prediction-container"></div><!--ResearchT -->
-        </div>
-        <div class="form-floating mb-3  w-25">
-            <input class="border border-primary form-control"type="text"  id="SY" name="SY" placeholder="Mercado" > 
-            <label for="SY">School Year</label><!--SY -->
-        </div>  
-        
-        </div>
-        <br><br>
-        <div class="mx-10">
-        <div id="input-container">
-                <h3> Students</h3>
-            
-            <div class="input-group ">
-                <h6></h6>
-                <div class="form-floating mb-3 w-75">
-                            <input type="text" class="border border-primary form-control " id="StudentID" name="StudentIDField[]" placeholder="name@example.com" required>
-                            <label for="StudentID">Student #</label><!--StudentID -->
+                    ?>
+        </select>
+                </div>
+                <br>
+                <div class="input-group">
+                <div class="form-floating mb-3 w-50">
+                    <input class="border border-primary form-control "type="text" id="ResearchT" autocomplete="off" name="ResearchT" placeholder="juan" required> 
+                    <label for="ResearchT">Research Teacher ID #</label>
+                    <div id="prediction-container"></div><!--ResearchT -->
+                </div>
+                <div class="form-floating mb-3  w-25">
+                    <input class="border border-primary form-control"type="text"  id="SY" name="SY" placeholder="Mercado" > 
+                    <label for="SY">School Year</label><!--SY -->
                 </div>  
-                <button type="button" class="add-input btn btn-primary btn-lg mb-3 ">+</button>
+                
+                </div>
+                <br><br>
+                <div class="mx-10">
+                <div id="input-container">
+                        <h3> Students</h3>
+                    
+                    <div class="input-group ">
+                        <h6></h6>
+                        <div class="form-floating mb-3 w-75">
+                                    <input type="text" class="border border-primary form-control " id="StudentID" name="StudentIDField[]" placeholder="name@example.com" required>
+                                    <label for="StudentID">Student #</label><!--StudentID -->
+                        </div>  
+                        <button type="button" class="add-input btn btn-primary btn-lg mb-3 ">+</button>
 
-            </div>
-        </div>
+                    </div>
+                </div>
 
-        </div>
-        <button type="submit" class="btn btn-primary buttonclean">Submit</button>
-    </form>
+                </div>
+                <button type="submit" class="btn btn-primary buttonclean">Submit</button>
+            </form>
 
-    
+        
 
-
+    </div>                    
 </div>
 
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -240,6 +279,28 @@ $sqlsection = $pdo->query("SELECT `CourseID` FROM `CourseTBL` ORDER BY `CourseTB
             });
         });
     </script>
+    <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<!-- Initialization script -->
+    <script>
+    $(document).ready(function() {
+        $('#BSITTBL').DataTable({
+            "ajax": {
+                "url": "backend/getsectionsAPI.php", // Your PHP file that returns JSON data
+                "type": "GET",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "SectionName" },
+                { "data": "SchoolYR"},
+                { "data": "UID_Teacher" },
+                { "data": null, "defaultContent": "<a href='SEctioncontent.php'>More</a>" }
+            ]
+        });
+    });
+</script>
         <h3>Upload Section in Excel</h3>
         <br>
         <form action="adminaccessApi.php" method="post" enctype="multipart/form-data">

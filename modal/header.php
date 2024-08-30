@@ -384,7 +384,7 @@ nav ul li a {
     <a href="homepage.php" class="image">
     <img src="img/neust_logo.png"  alt="Neust Logo"></a>
     <div class="headH4">
-        <h4>RESEARCH REPOSYTORY</h4>
+        <h4>RESEARCH REPOSITORY</h4>
     </div>
 </div>
     <div class="input-group mb-3 endder" style="margin:1rem 15% 0 15%; @media screen and (max-width: 600px) {padding:1rem 5% 0 5%;} ">

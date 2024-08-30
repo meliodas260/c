@@ -1,10 +1,10 @@
 <?php
-require_once 'verifier.php';
+// require_once 'verifier.php';
 
-    if(!Verifyadmin()){
-        header("Location: homepage.php");
-        exit;
-}
+//     if(!Verifyadmin()){
+//         header("Location: homepage.php");
+//         exit;
+// }
 
 ?>
 <!DOCTYPE html>
