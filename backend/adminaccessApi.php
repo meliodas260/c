@@ -31,15 +31,11 @@ function generateRandomPassword($length = 15) {
 // Generate random password
 $password = generateRandomPassword();
 
-// Add salt to the password
-$salt = uniqid(mt_rand(), true);
-$password_with_salt = $password . $salt;
-
 // Hash the password with salt
-$hashed_password = password_hash($password_with_salt, PASSWORD_DEFAULT);
+$hashed_password = md5($password);
 
 // Verify the password
-if (password_verify($password_with_salt, $hashed_password)) {
+if ($hashed_password) {
 
     $conn = new mysqli("localhost", "mine", "pass", "repo");
   

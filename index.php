@@ -20,7 +20,7 @@
 <div class="lagayan">
      
 
-                    <form action="try.php" method="GET">
+                    <form action="backend/try.php" method="GET">
                        <h3>Online repo System</h3>    
                        <br>
                        <div class="form-floating mb-3">

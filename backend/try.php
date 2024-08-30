@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
     $password = $_GET['password'];
 
     // SQL query to fetch data
-    $sql = "SELECT Password , asin,UserID, Usertype FROM AccountTBL WHERE Email = '$username'   ";
+    $sql = "SELECT Password ,UserID, Usertype FROM accounttbl WHERE Email = '$username'   ";
     $result = $conn->query($sql);
     
     
@@ -21,18 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
         $UserInfo = $result->fetch_assoc();
         
         $hashedPasswordFromDatabase = $UserInfo['Password'];
-        $salt = $UserInfo['asin'];
         $UID = $UserInfo['UserID'];
-
-        $hashedPassword = $password . $salt;
-        // Hash the provided password
-        $passwordWithSalt = password_hash($password, PASSWORD_DEFAULT);
-        
-        // Combine hashed password with salt
-        
         
         // Verify the password
-        if (password_verify($hashedPassword, $hashedPasswordFromDatabase)) {
+        if (md5($password) === $hashedPasswordFromDatabase) {
 
             $currentDateTime = new DateTime(); // Creates a new DateTime object representing the current date and time
             $sesid = $currentDateTime->format("YmdHis"); // Retrieves current date and time in YYYY-MM-DD HH:MM:SS format
@@ -46,14 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
             $dateExpire = $currentDateTime->format('Y-m-d H:i:s');
 
             $status = $UserInfo['Usertype'];
-            $sqlRepSesIDs = "SELECT * FROM `usertypeTBL` WHERE `Status` = '$status'";
+            $sqlRepSesIDs = "SELECT * FROM `usertypetbl` WHERE `UserStatus` = '$status'";
             $RepSesIDs = $conn->query($sqlRepSesIDs);
             $UserType = $RepSesIDs->fetch_assoc();
             if ($UserType['usertype'] == 1) {
                 $SESID = $sesid . "1";
                 //admin sya
                 updateSessionCookies($SESID, $UID,$dateExpire,$date);
-                header("Location: Accounts.php");
+                header("Location: ../Accounts.php");
                 exit;
             } elseif ($UserType['usertype'] == 2) {
                 //check if researcher or capstone teacher
@@ -65,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                         $SESID = $sesid . "9";
                         //edi teacher sya
                         updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                        header("Location: CapTSection.php");
+                        header("Location: ../CapTSection.php");
                         exit;
                     }else{
 
@@ -80,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                                 $expiration_time = time() + (86400 * 7);
                                 setcookie("ResearchNya", $Research, $expiration_time, "/", "", false, true);
                                 updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                                header("Location: UploadResearchInfo.php");
+                                header("Location: ../UploadResearchInfo.php");
                             }elseif($anolamans['Role'] == "Member"){//members
 
                                 $SESID = $sesid . "7"; 
@@ -89,12 +81,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                                 $expiration_time = time() + (86400 * 7);
                                 setcookie("ResearchNya", $Research, $expiration_time, "/", "", false, true);
                                 updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                                header("Location: UploadResearchInfo.php");
+                                header("Location: ../UploadResearchInfo.php");
                             }else{
                                 $SESID = $sesid . "0";
                                 //edi USER sya
                                 updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                                header("Location: homepage.php");
+                                header("Location: ../homepage.php");
                             }
 //1 admin, 9 Capstone Teacher, 8 Lead Researcher, 7 Member Researcher
                         
@@ -102,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 }
                 
                 updateSessionCookies("User",$username);
-                header("Location: homepage.php");
+                header("Location: ../homepage.php");
                 exit;
             
 
@@ -110,14 +102,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 $role = "Ekis";
             }
         } else {
-            header("Location: index.php?error=true");
+            header("Location: ../index.php?error=true");
             exit;
         }
     
 
     } 
     else {
-        header("Location: index.php?error=true");
+        header("Location: ../index.php?error=true");
         exit;
     }
 
