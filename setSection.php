@@ -152,10 +152,10 @@
                         }
                         // SQL query to fetch data
                         $sql = "SELECT `CourseID`,`CourseName` FROM `Coursetbl`;";
-                        $result = $conn->query($sql);
+                        $result = $pdo->query($sql);
                         if ($result) {
-                            // Fetch rows as associative array
-                            while ($row = mysqli_fetch_assoc($result)) {
+                            // Fetch rows as associative arra ywhile ($row = $ResearchSql->fetch(PDO::FETCH_ASSOC)) { 
+                            while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
                                 // Access the ProgramOption column value from the current row 
                                 $progID = $row[`CourseID`];
                                 $ProgramOption = $row['CourseName'];

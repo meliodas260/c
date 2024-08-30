@@ -14,6 +14,7 @@
 /* For example, styles for the header background color, text color, etc. */
 /* For simplicity, I'll add some basic styles here */
         .dropdown-container {
+            padding-right:2em;
             position: relative;
             display: inline-block;
         }
@@ -102,7 +103,7 @@ nav ul li a {
   width: 3em;
   height: 3em;
   color :white;
-  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 4a8 8 0 0 0-6.96 11.947A4.99 4.99 0 0 1 9 14h6a4.99 4.99 0 0 1 3.96 1.947A8 8 0 0 0 12 4m7.943 14.076A9.959 9.959 0 0 0 22 12c0-5.523-4.477-10-10-10S2 6.477 2 12a9.958 9.958 0 0 0 2.057 6.076l-.005.018l.355.413A9.98 9.98 0 0 0 12 22a9.947 9.947 0 0 0 5.675-1.765a10.055 10.055 0 0 0 1.918-1.728l.355-.413zM12 6a3 3 0 1 0 0 6a3 3 0 0 0 0-6' clip-rule='evenodd'/%3E%3C/svg%3E");
+  --svg: url("img/avatar-default-icon-1024x1024-dvpl2mz1.png");
   background-color: currentColor;
   -webkit-mask-image: var(--svg);
   mask-image: var(--svg);
@@ -114,19 +115,6 @@ nav ul li a {
 .profile{
     margin-right: 1rem;
 }
-.line-md--download-outline {
-  display: inline-block;
-  width: 1.8rem;
-  height: 1.8rem;
-  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath stroke-dasharray='14' stroke-dashoffset='14' d='M6 19h12'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' begin='0.5s' dur='0.4s' values='14;0'/%3E%3C/path%3E%3Cpath stroke-dasharray='18' stroke-dashoffset='18' d='M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='0.4s' values='18;0'/%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
-  background-color: currentColor;
-  -webkit-mask-image: var(--svg);
-  mask-image: var(--svg);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}  
 .material-symbols--logout-sharp {
     display: inline-block;
     width: 1.7em;
@@ -145,7 +133,7 @@ nav ul li a {
         display: inline-block;
         width: 1.7em;
         height: 1.7em;
-        --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000'%3E%3Cpath stroke-linejoin='round' d='M4 18a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z'/%3E%3Ccircle cx='12' cy='7' r='3'/%3E%3C/g%3E%3C/svg%3E");
+        --svg: url("img/avatar-default-icon-1024x1024-dvpl2mz1.png");
         background-color: currentColor;
         -webkit-mask-image: var(--svg);
         mask-image: var(--svg);
@@ -276,6 +264,10 @@ nav ul li a {
             align-items: center;
             padding:auto;
             margin:auto;
+}
+.rounder{
+    
+    border-radius:20px;
 }
 
 /* Media query for small screens (mobile devices) */
@@ -429,9 +421,9 @@ nav ul li a {
             <li><a href="homepage">Home</a></li>
             <li><a href="./about">About</a></li>
             <li><a href="./TeacherS">Teachers</a></li>
-            <li><a href="./TeacherS"><span class="line-md--download-outline"></span></a></li>
+            <li><a href="./TeacherS"><span class="f7--square-favorites-alt-fill"></span></a></li>
             <li><div class="dropdown-container">
-                    <a href="./profile" class="btn btn-primary"><span class="iconamoon--profile-thin"></span></a>
+                    <a href="./profile" class="rounder"><span class="iconamoon--profile-thin"></span></a>
                     <div class="dropdown-menu">
                         <a href="#">Action 1</a>
                         <a href="#">Action 2</a>
