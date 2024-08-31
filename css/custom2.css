@@ -146,7 +146,6 @@ input{
 
 .sidebar {
     flex: 0 0 20%;
-    background-color: #8d2424; /* Optional: Add background color to distinguish */
 }
 
 .main-content {

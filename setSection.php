@@ -74,57 +74,9 @@
                 </tbody>
             </table>
         </div>
-        <h2>Programs & Sections</h2>
+       
         <?php 
-        $sqlsection = $pdo->query("SELECT `CourseID`,`CourseName` FROM `CourseTBL` ORDER BY `CourseTBL`.`CourseID` DESC;");
-
-                                // Loop through the result set and display data in table rows
-                                while ($higherRow = $sqlsection->fetch(PDO::FETCH_ASSOC)) {
-                                    
-                                    $courseID = $higherRow['CourseName'];
-
-
-
-                                    echo  '<div class="SpecDiv">
-                                        <h3> '.$courseID.'</h3>
-                                        <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                        <th scope="col">Section</th>
-                                                        <th scope="col">School Yr</th>
-                                                        <th scope="col">CapstoneTeacher</th>
-                                                        
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>';
-                                        
-                                                            
-
-                                                                // Select data from the database
-                                                                $stmt = $pdo->query("SELECT A.`SectionID`, A.`SectionName`, A.`CourseID`,A.`CourseName` , A.`SchoolYR` , B.Fname, B.Mname , B.Lname , B.suffix FROM `Sectionn&CapTeacherTBL` as A 
-                                                                INNER JOIN AccountTBL as B ON A.`UID_Teacher` = B.UserID WHERE `CourseID` ='$courseID' ORDER BY A.`SectionID` DESC;");
-
-                                                                // Loop through the result set and display data in table rows
-                                                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                                                    echo "<tr>";
-                                                                    echo "<th scope='row'>" . $row['SectionName'] . "</td>";
-                                                                    echo "<td>" . $row['SchoolYR'] . "</td>";
-                                                                    echo "<td colspan='2'>" . $row['Fname'] . " " . $row['Mname'] . " " . $row['Lname'] . " " . $row['suffix'] ."</td>";
-                                                                
-                                                                    $section = $row['SectionID'];
-                                                                    echo "<td> <a href='" . "SEctioncontent.php?section=" . urlencode($section) . "'> More</a></td>";
-                                                                    echo "</tr>";
-
-
-
-
-                                                                }
-                                                            
-                                                
-                                                echo    '</tbody>
-                                                </table>
-                                        </div>';
-        }} 
+                    } 
         catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
                                     }
