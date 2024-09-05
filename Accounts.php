@@ -22,6 +22,7 @@
 }
 
 .main-content {
+    margin-top: 3%;
     flex: 0 0 70%;
     background-color: #ffffff; /* Optional: Add background color to distinguish */
 }

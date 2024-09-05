@@ -435,20 +435,8 @@ nav ul li a {
         </ul>
     </nav>
    
-    
-    
-    <?php 
-    // $cookie_value = $_COOKIE["RepSesID"];
-    //     $lastChar = substr($cookie_value, -1);
 
-    //     if ($lastChar === '1') {
-    //         echo "<a href='./Accounts' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
-    //     } else if ($lastChar === '9') {
-    //         echo "<a href='./CapTSection' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
-    //     }else if ($lastChar === '8') {
-    //         echo "<a href='./UploadResearchInfo' class='profile'> <span class='iconamoon--profile-circle-fill'></span></a>";
-    //     }
- ?>
+
     
 </header>
 

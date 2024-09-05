@@ -109,7 +109,12 @@ include 'modal/header.php';
         }
 
         // Example usage of the function
-        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'https://via.placeholder.com/300x200');
+        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
+        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
+        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
+        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
+        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
+        
     </script>
     <div class="flexer">
         <div class="half left"> 

@@ -3,24 +3,26 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exeption;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-
-
+require 'PhpSpreadsheet-master/src/PhpSpreadsheet/Spreadsheet.php';
+require 'PhpSpreadsheet-master/src/PhpSpreadsheet/Writer/Xlsx.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
 require 'PHPMailer-master/src/Exception.php';
-    // Extract form data
-    $UID = $_POST['ID'];
-    $email = $_POST['Email'];
+ 
+    if (isset($_POST['ID']) && isset( $_POST['Email']) && isset($_POST['UserType']) && isset($_POST['Fname']) && isset($_POST['Mname']) && isset($_POST['Lname']) && isset($_POST['suffix'])  && isset($_POST['gender'])) {
+ $UID = $_POST['ID'];
+   $email = $_POST['Email'];
     $status = $_POST['UserType'];
     $fname = $_POST['Fname'];
     $mname = $_POST['Mname'];
     $lname = $_POST['Lname'];
     $suffix = $_POST['suffix'];
     $gender = $_POST['gender'];
+    // Extract form data
+
     
 // Generate a random password
 function generateRandomPassword($length = 15) {
@@ -98,56 +100,52 @@ if ($hashed_password) {
     header("Location: ./MakeStudent?error=true");
     exit;  
 }
-
-    
-     
-    // Create a database connection
     
 }
 
 
 
-// if(isset($_POST['submit'])){
-//     // Check if file is uploaded without errors
-//     if(isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == UPLOAD_ERR_OK){
-//         // Include PHPExcel library
-//         require_once 'PHPExcel/Classes/PHPExcel.php';
 
-//         // Get file details
-//         $file_name = $_FILES['excel_file']['name'];
-//         $file_tmp = $_FILES['excel_file']['tmp_name'];
+    if(isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == UPLOAD_ERR_OK){
+        // Include PHPExcel library
+        require_once 'PHPExcel/Classes/PHPExcel.php';
 
-//         // Load Excel file
-//         $objPHPExcel = PHPExcel_IOFactory::load($file_tmp);
+        // Get file details
+        $file_name = $_FILES['excel_file']['name'];
+        $file_tmp = $_FILES['excel_file']['tmp_name'];
 
-//         // Get worksheet
-//         $worksheet = $objPHPExcel->getActiveSheet();
+        // Load Excel file
+        $objPHPExcel = PHPExcel_IOFactory::load($file_tmp);
 
-//         // Loop through rows
-//         foreach($worksheet->getRowIterator() as $row){
-//             // Get cell values
-//             $cellIterator = $row->getCellIterator();
-//             $cellIterator->setIterateOnlyExistingCells(FALSE);
+        // Get worksheet
+        $worksheet = $objPHPExcel->getActiveSheet();
 
-//             $data = [];
-//             foreach ($cellIterator as $cell) {
-//                 $data[] = $cell->getValue();
-//             }
+        // Loop through rows
+        foreach($worksheet->getRowIterator() as $row){
+            // Get cell values
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(FALSE);
 
-//             // Save data to MySQL
-//             // Modify this part according to your MySQL connection and table structure
-//             $connection = mysqli_connect("localhost", "username", "password", "database_name");
-//             $data = array_map('mysqli_real_escape_string', $data); // Prevent SQL injection
-//             $query = "INSERT INTO your_table_name (column1, column2, column3) VALUES ('" . implode("','", $data) . "')";
-//             mysqli_query($connection, $query);
-//         }
+            $data = [];
+            foreach ($cellIterator as $cell) {
+                $data[] = $cell->getValue();
+            }
 
-//         // Close MySQL connection
-//         mysqli_close($connection);
+            echo implode($data);
+            // // Save data to MySQL
+            // // Modify this part according to your MySQL connection and table structure
+            // $connection = mysqli_connect("localhost", "username", "password", "database_name");
+            // $data = array_map('mysqli_real_escape_string', $data); // Prevent SQL injection
+            // $query = "INSERT INTO your_table_name (column1, column2, column3) VALUES ('" . implode("','", $data) . "')";
+            // mysqli_query($connection, $query);
+        }
 
-//         echo "Data imported successfully!";
-//     } else {
-//         echo "Error uploading file.";
-//     }
+        // Close MySQL connection
+        mysqli_close($connection);
+
+        echo "Data imported successfully!";
+    } else {
+        echo "Error uploading file.";
+            }
  
 ?>

@@ -146,9 +146,11 @@ input{
 
 .sidebar {
     flex: 0 0 20%;
+    
 }
 
 .main-content {
+    margin-top: 10px;
     flex: 0 0 70%;
     background-color: #ffffff; /* Optional: Add background color to distinguish */
 }
