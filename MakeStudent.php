@@ -30,7 +30,7 @@
         </div>
         <div class="main-content">
                 <!-- Form to Create Accounts -->
-                <form id="myForm" method="POST" onsubmit="submitForm(event)"  >   
+                <form id="CreateAccount" method="POST" onsubmit="submitForm(event)"  >   
                     <h2>Make Accounts</h2>
                     <div class="input-group">
                         <div class="form-floating mb-3 w-75">
@@ -111,7 +111,7 @@
                 <!-- Form to Upload Excel File -->
                 <h2>For Excel Upload</h2>
                 <br>
-                <form id="myForm" action="backend/adminaccessApi.php" method="POST" onsubmit="submitForm(event)" enctype="multipart/form-data">
+                <form id="" action="backend/adminaccessApi.php" method="POST" onsubmit="submitForm(event)" enctype="multipart/form-data">
                     <label for="excel_file">Upload Excel File:</label>
                     <input type="file" name="excel_file" id="excel_file" accept=".xls,.xlsx">
                     <br>
@@ -129,6 +129,6 @@
     </div>
 </div>
 
-<script src="modal/modal.js"></script>
+<script src="backend/APIcaller.js"></script>
 </body>
 </html>

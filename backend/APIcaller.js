@@ -1,7 +1,7 @@
 
 
         //makeStudent
-document.getElementById('myForm').addEventListener('submit', function(event) {
+document.getElementById('CreateAccount').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
     // Create a FormData object from the form
@@ -24,7 +24,7 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
                 confirmButtonText: 'OK'
             }).then(() => {
                 // Clear the form inputs after closing the alert
-                document.getElementById('myForm').reset();
+                document.getElementById('CreateAccount').reset();
             });
         } else {
             // Show error alert

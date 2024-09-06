@@ -29,6 +29,7 @@
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
@@ -85,7 +86,7 @@
 
 
 
-        <form  action="backend/setsectionapi.php" method="post">   
+        <form id="CreateSection" method="POST" onsubmit="submitForm(event)">   
         <div class="relative">
                 <h2>Create Section</h2>
                 <div class="input-group">
@@ -103,20 +104,19 @@
                             echo "error";
                         }
                         // SQL query to fetch data
-                        $sql = "SELECT `CourseID`,`CourseName` FROM `Coursetbl`;";
+                        $sql = "SELECT `CourseID`, `CourseName` FROM `Coursetbl`;";
                         $result = $pdo->query($sql);
+                        
                         if ($result) {
-                            // Fetch rows as associative arra ywhile ($row = $ResearchSql->fetch(PDO::FETCH_ASSOC)) { 
+                            // Fetch rows as associative array
                             while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-                                // Access the ProgramOption column value from the current row 
-                                $progID = $row[`CourseID`];
+                                $progID = $row['CourseID']; // Fixed quoting
                                 $ProgramOption = $row['CourseName'];
-                               
                                 
                                 // Output the <option> element
-                                echo "<option value=' $progID '>$ProgramOption</option>";
+                                echo "<option value='$progID'>$ProgramOption</option>";
                             }
-                    }
+                        }                        
                     ?>
         </select>
                 </div>
@@ -247,7 +247,7 @@
             "columns": [
                 { "data": "SectionName" },
                 { "data": "SchoolYR"},
-                { "data": "UID_Teacher" },
+                { "data": "SchoolID_Teacher" },
                 { "data": null, "defaultContent": "<a href='SEctioncontent.php'>More</a>" }
             ]
         });
@@ -261,5 +261,54 @@
             <br>
             <button type="submit" class="btn btn-primary buttonclean" name="submit">Upload</button>
         </form>
+    <script>
+
+//makeStudent
+document.getElementById('CreateSection').addEventListener('submit', function(event) {
+event.preventDefault(); // Prevent the default form submission
+
+// Create a FormData object from the form
+var formData = new FormData(this);
+
+// Send the form data to the PHP API using fetch
+fetch('backend/setsectionapi.php', { // The URL of the PHP file that processes the form data
+method: 'POST',
+body: formData
+})
+.then(response => response.json()) // Parse the JSON response
+.then(data => {
+// Handle the response from the PHP API
+if (data.success) {
+    // Show success alert
+    swal.fire({
+        title: 'Success!',
+        text: data.message,
+        icon: 'success',
+        confirmButtonText: 'OK'
+    }).then(() => {
+        // Clear the form inputs after closing the alert
+        document.getElementById('CreateSection').reset();
+    });
+} else {
+    // Show error alert
+    swal.fire({
+        title: 'Error!',
+        text: data.message,
+        icon: 'error',
+        confirmButtonText: 'Try Again'
+    });
+}
+})
+.catch(error => {
+// Handle any errors from the API or network
+console.error('Error:', error);
+swal.fire({
+    title: 'Error!',
+    text: error,
+    icon: 'error',
+    confirmButtonText: 'Try Again'
+});
+});
+});</script>
 </body>
 </html>

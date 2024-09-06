@@ -1,30 +1,45 @@
 <?php
 
+// Database connection
+$conn = new mysqli("localhost", "mine", "pass", "repo");
 
-    // Database connection
-    $conn = new mysqli("localhost", "mine", "pass", "repo");
-predictTeacher(){
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-        $input = $_POST['input'];
-        // $Status = $_POST['input2'];
-        // Fetch predictions from the database
-        // $sql = "SELECT `Email` FROM `AccountTBL` WHERE Email LIKE '$input%' and `Status` = '$Status';";
-        $sql = "SELECT `UserID` FROM `AccountTBL` WHERE `UserID` LIKE '$input%' and `Usertype` = 'Teacher';";
-        $result = $conn->query($sql);
+// Get input values
+$input = $_POST['input'] ?? ''; // Default to empty string if not set
+$sec = $_POST['secid'] ?? '';   // Default to empty string if not set
 
-        $predictions = [];
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $predictions[] = $row['UserID'];
-            }
-        }
+// Determine which query to run based on the presence of `secid`
+if (!empty($sec)) {
+    // Query for Student & Section
+    $stmt = $conn->prepare("SELECT `UID` FROM `Student&SectionTBL` WHERE `UID` LIKE ? AND `SectionId` = ?");
+    $inputParam = "%$input%";
+    $stmt->bind_param("si", $inputParam, $sec);
+} else {
+    // Query for AccountTBL
+    $stmt = $conn->prepare("SELECT `SchoolId` FROM `accounttbl` WHERE `SchoolId` LIKE ? AND `Usertype` = '3'");
+    $inputParam = "$input%";
+    $stmt->bind_param("s", $inputParam);
+}
 
-        // Return predictions as JSON
-        echo json_encode($predictions);
+// Execute query
+$stmt->execute();
+$result = $stmt->get_result();
 
-        $conn->close();
+$predictions = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $predictions[] = $row['UID'] ?? $row['SchoolId']; // Handle different column names
     }
+}
+
+// Return predictions as JSON
+echo json_encode($predictions);
+
+// Close statement and connection
+$stmt->close();
+$conn->close();
+
 ?>
