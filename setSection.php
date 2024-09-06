@@ -169,7 +169,7 @@
     
             // AJAX request to fetch predictions
             $.ajax({
-                url: 'fetch_predictions.php', // PHP script to fetch predictions
+                url: 'backend/fetch_predictions.php', // PHP script to fetch predictions
                 method: 'POST',
                 data: { input: inputValue },
                 dataType: 'json',

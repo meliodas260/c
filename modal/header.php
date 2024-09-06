@@ -6,13 +6,6 @@
     <title>Your Website Name</title>
 
     <style>
-        /* Additional styles specific to the header can also be included here */
-        /* For example, styles for the header background color, text color, etc. */
-        /* For simplicity, I'll add some basic styles here */
-       
-/* Additional styles specific to the header can also be included here */
-/* For example, styles for the header background color, text color, etc. */
-/* For simplicity, I'll add some basic styles here */
         .dropdown-container {
             padding-right:2em;
             position: relative;
@@ -114,6 +107,20 @@ nav ul li a {
 }
 .profile{
     margin-right: 1rem;
+}
+.material-symbols-light--logout-sharp {
+  display: inline-block;
+ 
+  width: 1.2em;
+  height: 1.2em;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M4 20V4h8.02v1H5v14h7.02v1zm12.462-4.461l-.702-.72l2.319-2.319H9.192v-1h8.887l-2.32-2.32l.702-.718L20 12z'/%3E%3C/svg%3E");
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg);
+  mask-image: var(--svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 .material-symbols--logout-sharp {
     display: inline-block;
@@ -425,9 +432,20 @@ nav ul li a {
             <li><div class="dropdown-container">
                     <a href="./profile" class="rounder"><span class="iconamoon--profile-thin"></span></a>
                     <div class="dropdown-menu">
-                        <a href="#">Action 1</a>
+                    <?php 
+    $cookie_value = $_COOKIE["RepSesID"];
+        $lastChar = substr($cookie_value, -1);
+
+        if ($lastChar === '1') {
+            echo "<a href='./Accounts'> <span> Admin</span></a>";
+        } else if ($lastChar === '9') {
+            echo "<a href='./CapTSection'> <span> Capstone</span></a>";
+        }else if ($lastChar === '8') {
+            echo "<a href='./UploadResearchInfo'> <span>Student</span></a>";
+        }
+ ?>
                         <a href="#">Action 2</a>
-                        <a href="#">Action 3</a>
+                        <a href="logout.php"><span class="material-symbols-light--logout-sharp"></span><span>Logout</span></a>
                     </div>
                 </div>
             

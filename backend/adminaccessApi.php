@@ -1,17 +1,14 @@
 <?php
+header('Content-Type: application/json'); 
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exeption;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-require 'PhpSpreadsheet-master/src/PhpSpreadsheet/Spreadsheet.php';
-require 'PhpSpreadsheet-master/src/PhpSpreadsheet/Writer/Xlsx.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
 require 'PHPMailer-master/src/Exception.php';
- 
+$notif = "sige";
     if (isset($_POST['ID']) && isset( $_POST['Email']) && isset($_POST['UserType']) && isset($_POST['Fname']) && isset($_POST['Mname']) && isset($_POST['Lname']) && isset($_POST['suffix'])  && isset($_POST['gender'])) {
  $UID = $_POST['ID'];
    $email = $_POST['Email'];
@@ -51,54 +48,63 @@ if ($hashed_password) {
     //         VALUES ('$UID','$email', '$status', '$fname', '$mname', '$lname', '$suffix', '$gender' , '$hashed_password', '$salt', DEFAULT)";
     
         try{  $conn->query($sql) === TRUE;
-            echo "New record created successfully.";
-            $to_email = $email; // Email address to which you want to send the email
-            $subject = "Password giver"; // Subject of the email
-            $message = " your password to repo system is $password"; // Body of the email
+           
+            // $to_email = $email; // Email address to which you want to send the email
+            // $subject = "Password giver"; // Subject of the email
+            // $message = " your password to repo system is $password"; // Body of the email
 
-            // Gmail SMTP configuration
-            $smtp_username = "lestersayson206@gmail.com"; // Your Gmail email address
-            $smtp_password = "mzvv vlse dpyb vtpn"; // Your Gmail app-specific password
+            // // Gmail SMTP configuration
+            // $smtp_username = "lestersayson206@gmail.com"; // Your Gmail email address
+            // $smtp_password = "mzvv vlse dpyb vtpn"; // Your Gmail app-specific password
             
-            // Create PHPMailer object
-            $mail = new PHPMailer;
+            // // Create PHPMailer object
+            // $mail = new PHPMailer;
 
-            // SMTP configuration
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = $smtp_username;
-            $mail->Password = $smtp_password;
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port = 465;
+            // // SMTP configuration
+            // $mail->isSMTP();
+            // $mail->Host = 'smtp.gmail.com';
+            // $mail->SMTPAuth = true;
+            // $mail->Username = $smtp_username;
+            // $mail->Password = $smtp_password;
+            // $mail->SMTPSecure = 'ssl';
+            // $mail->Port = 465;
 
-            // Email content
-            $mail->setFrom($smtp_username);
-            $mail->addAddress($to_email);
-            $mail->Subject = $subject;
-            $mail->Body = $message;
+            // // Email content
+            // $mail->setFrom($smtp_username);
+            // $mail->addAddress($to_email);
+            // $mail->Subject = $subject;
+            // $mail->Body = $message;
 
         // Send email
-        if ($mail->send()) {
-        // header("Location: ./MakeStudent?tama=true");
-        // exit;
-            echo "dinasend";
+        $lol = true;
+        if($lol){
+        // if ($mail->send()) {
+            if ($lol) {
+                // Return success response
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Hello, ! Your form was successfully submitted."
+                ]);
+            } else {
+                // Return error response
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Please provide a valid name."
+                ]);
 
+            }
         } else {
           echo $password;
         }
     } catch(Exception $e) {
         echo "SQL Error: " . $e->getMessage();
-        // header("Location: ./MakeStudent?error=true");
-        //         exit;
     }
     
     $conn->close();
 
 
 } else {
-    header("Location: ./MakeStudent?error=true");
-    exit;  
+    $notif = "dikoalam";
 }
     
 }
@@ -145,7 +151,7 @@ if ($hashed_password) {
 
         echo "Data imported successfully!";
     } else {
-        echo "Error uploading file.";
+        // echo "Error uploading file.";
             }
  
 ?>
