@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                     if(!($anolaman['MAX(`DateCreacted`)'] == null)){
                         $SESID = $sesid . "9";
                         //edi teacher sya
-                        updateSessionCookies($SESID,$SID,$dateExpire,$date);
+                        updateSessionCookies($SESID,$UID,$dateExpire,$date);
                         header("Location: ../CapTSection.php");
                         exit;
                     }else{
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                                 //edi Researcher sya
                                 $expiration_time = time() + (86400 * 7);
                                 setcookie("ResearchNya", $Research, $expiration_time, "/", "", false, true);
-                                updateSessionCookies($SESID,$SID,$dateExpire,$date);
+                                updateSessionCookies($SESID,$UID,$dateExpire,$date);
                                 header("Location: ../UploadResearchInfo.php");
                             }elseif($anolamans['Role'] == "Member"){//members
 

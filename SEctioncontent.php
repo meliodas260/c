@@ -32,7 +32,7 @@
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Retrieve the value of 'data' from the URL parameter
-$receivedSection = $_GET['section'];
+$receivedSection = $_GET['sectionID'];
 $section = $pdo->query("SELECT * FROM `Sectionn&CapTeacherTBL` WHERE `SectionID` = $receivedSection;");
 $secN = $section->fetch();
 echo "<h1> " . $secN['SectionName'] ."</h1>";
@@ -56,7 +56,7 @@ echo "<h1> " . $secN['SectionName'] ."</h1>";
                         
 
                         // Select data from the database
-                        $stmt = $pdo->query("SELECT B.Fname,B.Mname,B.Lname,B.suffix FROM `Student&SectionTBL` AS A INNER JOIN AccountTBL AS B ON A.`UID` = B.UserID WHERE A.SectionId = $receivedSection;");
+                        $stmt = $pdo->query("SELECT B.Fname,B.Mname,B.Lname,B.suffix FROM `Student&SectionTBL` AS A INNER JOIN AccountTBL AS B ON A.`UIDStudent` = B.UserID WHERE A.SectionId = $receivedSection;");
 $number = 1;
                         // Loop through the result set and display data in table rows
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

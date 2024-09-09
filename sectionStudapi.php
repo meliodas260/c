@@ -16,7 +16,7 @@ if (isset($_GET['secID'])) {
         $stmt = $pdo->prepare("
             SELECT b.UserID, b.Fname, b.Mname, b.Lname, b.suffix
             FROM `Student&SectionTBL` a
-            INNER JOIN `AccountTBL` b ON a.schoolIDStudent = b.SchoolId
+            INNER JOIN `AccountTBL` b ON a.UIDStudent = b.SchoolId
             WHERE `SectionId` = :secID
         ");
 

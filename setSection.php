@@ -18,6 +18,7 @@
 }
 
 .sidebar {
+    position:sticky;
     flex: 0 0 20%;
     background-color: #8d2424; /* Optional: Add background color to distinguish */
 }
@@ -37,20 +38,7 @@
 </head>
 <body>
 <?php include 'modal/header.php'; 
-   
-    // Database connection
-                    $host = 'localhost';
-                    $username = 'mine';
-                    $password = 'pass';
-                    $database = 'repo';
-                    $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 
-                    try {
-                        $pdo = new PDO($dsn, $username, $password);
-                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        
-    
     
     ?>
 
@@ -75,13 +63,6 @@
                 </tbody>
             </table>
         </div>
-       
-        <?php 
-                    } 
-        catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-                                    }
-        ?>
 
 
 
@@ -96,28 +77,31 @@
                 </div>
                 <label for="Course"  class="mx-3"  > <b>Course</b> </label> <!--Course -->
                 <select id="Course" name="Course" class="form-select w-25 mx-3  mb-3 ">
-                    <?php
-                        $conn = new mysqli("localhost", "mine", "pass", "repo");
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('backend/setsectionapi.php', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const selectElement = document.getElementById('Course');
+            if (Array.isArray(data.CourseTypes)) {
+                data.CourseTypes.forEach((CourseTypes, index) => {
+                    const option = document.createElement('option');
+                    option.value = data.CourseValues[index];
+                    option.textContent = CourseTypes;
+                    selectElement.appendChild(option);
+                });
+            } else {
+                console.error("Failed to fetch user types:", data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
                     
-                        // Check connection
-                        if ($conn->connect_error) {
-                            echo "error";
-                        }
-                        // SQL query to fetch data
-                        $sql = "SELECT `CourseID`, `CourseName` FROM `Coursetbl`;";
-                        $result = $pdo->query($sql);
-                        
-                        if ($result) {
-                            // Fetch rows as associative array
-                            while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-                                $progID = $row['CourseID']; // Fixed quoting
-                                $ProgramOption = $row['CourseName'];
-                                
-                                // Output the <option> element
-                                echo "<option value='$progID'>$ProgramOption</option>";
-                            }
-                        }                        
-                    ?>
         </select>
                 </div>
                 <br>
@@ -153,7 +137,14 @@
                 <button type="submit" class="btn btn-primary buttonclean">Submit</button>
             </form>
 
-        
+            <h3>Upload Section in Excel</h3>
+        <br>
+        <form action="adminaccessApi.php" method="post" enctype="multipart/form-data">
+            <label for="excel_file">Upload Excel File:</label>
+            <input type="file" name="excel_file" id="excel_file" accept=".xls,.xlsx">
+            <br>
+            <button type="submit" class="btn btn-primary buttonclean" name="submit">Upload</button>
+        </form>
 
     </div>                    
 </div>
@@ -237,32 +228,40 @@
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 <!-- Initialization script -->
     <script>
-    $(document).ready(function() {
-        $('#BSITTBL').DataTable({
-            "ajax": {
-                "url": "backend/getsectionsAPI.php", // Your PHP file that returns JSON data
-                "type": "GET",
-                "dataSrc": ""
-            },
-            "columns": [
-                { "data": "SectionName" },
-                { "data": "SchoolYR"},
-                { "data": "UID_Teacher" },
-                { "data": null, "defaultContent": "<a href='SEctioncontent.php'>More</a>" }
-            ]
-        });
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#BSITTBL').DataTable({
+        "ajax": {
+            "url": "backend/getsectionsAPI.php", // Your PHP file that returns JSON data
+            "type": "GET",
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "SectionName" },
+            { "data": "SchoolYR" },
+            { "data": "UID_Teacher" },
+            { 
+                "data": null, 
+                "render": function(data, type, row) {
+                    // Render the button with sectionID as a data attribute
+                    return `<button class='btn-more' data-sectionid='${row.SectionID}'>More</button>`;
+                }
+            }
+        ]
     });
-</script>
-        <h3>Upload Section in Excel</h3>
-        <br>
-        <form action="adminaccessApi.php" method="post" enctype="multipart/form-data">
-            <label for="excel_file">Upload Excel File:</label>
-            <input type="file" name="excel_file" id="excel_file" accept=".xls,.xlsx">
-            <br>
-            <button type="submit" class="btn btn-primary buttonclean" name="submit">Upload</button>
-        </form>
-    <script>
 
+    // Attach event listener to the 'More' button
+    $('#BSITTBL tbody').on('click', '.btn-more', function() {
+        var sectionID = $(this).attr('data-sectionid'); // Get the sectionID from the button's data attribute
+        
+        // Redirect to SEctioncontent.php with sectionID as query parameter
+        window.location.href = `SEctioncontent.php?sectionID=${sectionID}`;
+    });
+});
+
+</script>
+      
+    <script>
 //makeStudent
 document.getElementById('CreateSection').addEventListener('submit', function(event) {
 event.preventDefault(); // Prevent the default form submission
