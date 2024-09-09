@@ -21,7 +21,7 @@ if ($conn->connect_error) {
                             
                             $secID = $max['MAX(`SectionID`)'] + 1;}
 
-        $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `SchoolYR`, `SchoolID_Teacher`, `DateCreacted`) VALUES 
+        $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `SchoolYR`, `UID_Teacher`, `DateCreacted`) VALUES 
                     ($secID, '$SectionName', '$Course', '$SHY', '$TeacherEmail', DEFAULT);";
 
 
@@ -38,7 +38,7 @@ if ($conn->connect_error) {
             $escapedInput = $conn->real_escape_string($value);
 
             // Construct the SQL query to insert data into the database
-            $sql = "INSERT INTO `Student&SectionTBL` (`StudentNSectionID`, `SchoolIDStudent`, `SectionId`,`date`) VALUES (default, '$value', '$secID',default);";
+            $sql = "INSERT INTO `Student&SectionTBL` (`StudentNSectionID`, `UIDStudent`, `SectionId`,`date`) VALUES (default, '$value', '$secID',default);";
 
             // Execute the query
             if ($conn->query($sql) !== TRUE) {

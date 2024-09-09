@@ -22,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
         
         $hashedPasswordFromDatabase = $UserInfo['Password'];
         $UID = $UserInfo['UserID'];
+
         
         // Verify the password
         if (md5($password) === $hashedPasswordFromDatabase) {
@@ -47,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 updateSessionCookies($SESID, $UID,$dateExpire,$date);
                 header("Location: ../Accounts.php");
                 exit;
-            } elseif ($UserType['usertype'] == 2) {
+            } elseif ($UserType['usertype'] == 3) {
                 //check if researcher or capstone teacher
                 $CapT = "SELECT MAX(`DateCreacted`) FROM `Sectionn&CapTeacherTBL` WHERE `UID_Teacher`='$UID' LIMIT 1;";
                 $CheckcapT = $conn->query($CapT);
@@ -56,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                     if(!($anolaman['MAX(`DateCreacted`)'] == null)){
                         $SESID = $sesid . "9";
                         //edi teacher sya
-                        updateSessionCookies($SESID,$UID,$dateExpire,$date);
+                        updateSessionCookies($SESID,$SID,$dateExpire,$date);
                         header("Location: ../CapTSection.php");
                         exit;
                     }else{
@@ -71,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                                 //edi Researcher sya
                                 $expiration_time = time() + (86400 * 7);
                                 setcookie("ResearchNya", $Research, $expiration_time, "/", "", false, true);
-                                updateSessionCookies($SESID,$UID,$dateExpire,$date);
+                                updateSessionCookies($SESID,$SID,$dateExpire,$date);
                                 header("Location: ../UploadResearchInfo.php");
                             }elseif($anolamans['Role'] == "Member"){//members
 

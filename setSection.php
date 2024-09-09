@@ -247,7 +247,7 @@
             "columns": [
                 { "data": "SectionName" },
                 { "data": "SchoolYR"},
-                { "data": "SchoolID_Teacher" },
+                { "data": "UID_Teacher" },
                 { "data": null, "defaultContent": "<a href='SEctioncontent.php'>More</a>" }
             ]
         });

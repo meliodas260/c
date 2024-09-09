@@ -9,6 +9,7 @@
     <title>Admin page</title>
 </head>
 <div class="sidebar">
+<?php include 'adminSidebar.php'; ?>
   <ul>
   <?php 
     $cookie_value = $_COOKIE["RepSesID"];

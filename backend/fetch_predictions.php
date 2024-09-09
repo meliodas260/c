@@ -14,12 +14,12 @@ $sec = $_POST['secid'] ?? '';   // Default to empty string if not set
 // Determine which query to run based on the presence of `secid`
 if (!empty($sec)) {
     // Query for Student & Section
-    $stmt = $conn->prepare("SELECT `UID` FROM `Student&SectionTBL` WHERE `UID` LIKE ? AND `SectionId` = ?");
+    $stmt = $conn->prepare("SELECT `SchoolIDStudent` FROM `Student&SectionTBL` WHERE `UIDstudent` LIKE ? AND `SectionId` = ?");
     $inputParam = "%$input%";
     $stmt->bind_param("si", $inputParam, $sec);
 } else {
     // Query for AccountTBL
-    $stmt = $conn->prepare("SELECT `SchoolId` FROM `accounttbl` WHERE `SchoolId` LIKE ? AND `Usertype` = '3'");
+    $stmt = $conn->prepare("SELECT `UserID` FROM `accounttbl` WHERE `UserID` LIKE ? AND `Usertype` = '3'");
     $inputParam = "$input%";
     $stmt->bind_param("s", $inputParam);
 }
@@ -31,7 +31,7 @@ $result = $stmt->get_result();
 $predictions = [];
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $predictions[] = $row['UID'] ?? $row['SchoolId']; // Handle different column names
+        $predictions[] = $row['SchoolIDStudent'] ?? $row['UserID']; // Handle different column names
     }
 }
 
