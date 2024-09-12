@@ -12,6 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
     <title>Accounts</title>
@@ -176,7 +177,7 @@ $(document).ready(function() {
 
         
 
-        <form  action="backend/groupingsapi.php" method="post">
+        <form id="Createrole" method="POST" onsubmit="submitForm(event)">
         <input type="hidden" id="SecNumber" name="SecNumber" value="<?php echo $secID; ?>">
         <input type="hidden" id="course"  name="course" value="<?php echo $course; ?>">
         <h2>Research roles</h2>
@@ -340,6 +341,52 @@ $sqlsection = $pdo->query("SELECT * FROM `ResearchTBL` WHERE `SectionID` = '$sec
                                 </div>';
    }
 ?>
+<script>
+    document.getElementById('Createrole').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Create a FormData object from the form
+    var formData = new FormData(this);
+fetch('backend/groupingsapi.php', { // The URL of the PHP file that processes the form data
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        // Handle the response from the PHP API
+        if (data.success) {
+            // Show success alert
+            swal.fire({
+                title: 'Success!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Clear the form inputs after closing the alert
+                document.getElementById('CreateAccount').reset();
+            });
+        } else {
+            // Show error alert
+            swal.fire({
+                title: 'Error!',
+                text: data.message,
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+    })
+    .catch(error => {
+        // Handle any errors from the API or network
+        console.error('Error:', error);
+        swal.fire({
+            title: 'Error!',
+            text: 'Already in Database',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+        });
+    });
+});
+</script>
 </div>
 </body>
 </html>

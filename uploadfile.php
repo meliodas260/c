@@ -36,9 +36,9 @@
             $password = "pass";
             $dbname = "repo";
             
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        $pdo = mysqli_connect($servername, $username, $password, $dbname);
         $ResearchID = $_COOKIE["ResearchNya"];
-        $maxsection = $conn->query("SELECT a.filename, a.fileSize FROM `ResearchTBL` a WHERE `ResearchID`='$ResearchID';");
+        $maxsection = $pdo->query("SELECT a.filename, a.fileSize FROM `ResearchTBL` a WHERE `ResearchID`='$ResearchID';");
            $max = $maxsection->fetch_assoc();
            $pastname = $max['filename'];
            $pastsize = $max['fileSize'];
@@ -64,7 +64,7 @@
             // Database connection
            
         // Check connection
-        if (!$conn) {
+        if (!$pdo) {
             die("Connection failed: " . mysqli_connect_error());
         }
         // Upload file
@@ -98,12 +98,12 @@
                 $sql = "UPDATE `ResearchTBL` SET `filename` = '$new_filename' , `fileSize`='$filesize' WHERE `ResearchTBL`.`ResearchID` = $ResearchID;";
                 $insertsql = "INSERT INTO `ResearchFileLogTBL` (`update`, `ResearchID`, `pastfilename`, `pastfilesize`, `newfilename`, `newfilesize`, `timestamp`) VALUES 
                 (NULL, '$ResearchID', '$pastname', '$pastsize', '$new_filename', '$filesize', current_timestamp());";
-                try{ $conn->query($insertsql) === TRUE;
+                try{ $pdo->query($insertsql) === TRUE;
                 }catch(Exception $e) {
                     echo "Error: ";
                 }
                 
-                if (mysqli_query($conn, $sql)) {
+                if (mysqli_query($pdo, $sql)) {
                     echo " Metadata inserted successfully.";
                 } else {
                     echo "Error: ";
@@ -114,7 +114,7 @@
             }
         }
 
-        mysqli_close($conn);
+        mysqli_close($pdo);
         header("Location: uploadfile.php");
     }
     ?>

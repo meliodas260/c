@@ -1,17 +1,17 @@
 <?php
 header('Content-Type: application/json');
-
-$conn = new mysqli("localhost", "mine", "pass", "repo");
+require 'dblogin.php';
+$pdo = new mysqli("localhost", "mine", "pass", "repo");
 
 // Check connection
-if ($conn->connect_error) {
+if ($pdo->connect_error) {
     echo json_encode(['error' => 'Database connection failed']);
     exit;
 }
 
 // SQL query to fetch data
 $sql = "SELECT usertypetbl.`usertypename`, `usertype` FROM `usertypetbl`;";
-$result = $conn->query($sql);
+$result = $pdo->query($sql);
 
 $response = ['userTypes' => [], 'userValues' => []];
 
@@ -26,5 +26,5 @@ if ($result && $result->num_rows > 0) {
 
 echo json_encode($response);
 
-$conn->close();
+$pdo->close();
 ?>

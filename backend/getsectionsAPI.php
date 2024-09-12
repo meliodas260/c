@@ -1,13 +1,7 @@
 <?php
-$host = 'localhost';
-$username = 'mine';
-$password = 'pass';
-$database = 'repo';
-$dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
-
+require 'dblogin.php';
 try {
-    $pdo = new PDO($dsn, $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 
     // Select data from the database
     $stmt = $pdo->query("SELECT * FROM `sectionn&capteachertbl`");

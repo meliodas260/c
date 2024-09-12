@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json'); 
-
+require 'dblogin.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exeption;
@@ -36,18 +36,14 @@ $hashed_password = md5($password);
 // Verify the password
 if ($hashed_password) {
 
-    $conn = new mysqli("localhost", "mine", "pass", "repo");
-  
-    if ($conn->connect_error) {  // Check connection
-        die("Connection failed: " . $conn->connect_error);
-    }
+    
     //Prepare SQL statement to insert data into a table
     $sql = "INSERT INTO `accounttbl` (`UserID`, `Email`, `SchoolId`, `Fname`, `Lname`, `Mname`, `Suffix`, `IsMale`, `imageName`, `Password`, `DateCreated`, `Usertype`) 
     VALUES (NULL, '$email', '$UID', '$fname', '$lname', '$mname', '$suffix', '$gender', NULL, '$hashed_password', DEFAULT, '$status')";
     // $sql = "INSERT INTO accounttbl (UserID, Email, Usertype, Fname, Mname, Lname, Suffix, Gender,Password,asin,DateCreated) 
     //         VALUES ('$UID','$email', '$status', '$fname', '$mname', '$lname', '$suffix', '$gender' , '$hashed_password', '$salt', DEFAULT)";
     
-        try{  $conn->query($sql) === TRUE;
+        try{  $pdo->query($sql) === TRUE;
            
             // $to_email = $email; // Email address to which you want to send the email
             // $subject = "Password giver"; // Subject of the email
@@ -100,7 +96,7 @@ if ($hashed_password) {
         echo "SQL Error: " . $e->getMessage();
     }
     
-    $conn->close();
+    $pdo->close();
 
 
 } else {
@@ -140,14 +136,14 @@ if ($hashed_password) {
             echo implode($data);
             // // Save data to MySQL
             // // Modify this part according to your MySQL connection and table structure
-            // $connection = mysqli_connect("localhost", "username", "password", "database_name");
+            // $pdoection = mysqli_connect("localhost", "username", "password", "database_name");
             // $data = array_map('mysqli_real_escape_string', $data); // Prevent SQL injection
             // $query = "INSERT INTO your_table_name (column1, column2, column3) VALUES ('" . implode("','", $data) . "')";
-            // mysqli_query($connection, $query);
+            // mysqli_query($pdoection, $query);
         }
 
         // Close MySQL connection
-        mysqli_close($connection);
+        mysqli_close($pdoection);
 
         echo "Data imported successfully!";
     } else {

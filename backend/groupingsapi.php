@@ -1,58 +1,79 @@
 <?php 
+header('Content-Type: application/json');
+require 'dblogin.php';
 
 if (isset($_POST['Leader'])) {
-
-    $conn = new mysqli("localhost", "mine", "pass", "repo");
-  
-    if ($conn->connect_error) {  // Check connection
-        die("Connection failed: " . $conn->connect_error);
-    }
-
     $SecID = $_POST['SecNumber'];
     $course = $_POST['course'];
-    $Members = [ $_POST['Member1'],$_POST['Member2'],$_POST['Member3']];
-    $panels = [$_POST['Panel1'], $_POST['Panel2'], $_POST['Panel3']];
+    $Members = [ $_POST['Member1'], $_POST['Member2'], $_POST['Member3'] ];
+    $panels = [ $_POST['Panel1'], $_POST['Panel2'], $_POST['Panel3'] ];
     $LEmail = $_POST['Leader'];
+    $Advicer = $_POST['Advicer'];
+    $Expert = $_POST['Expert'];
+    $errors = []; // Array to collect errors
 
-    $currentDateTime = new DateTime(); // Creates a new DateTime object representing the current date and time
-    $Roleconnector = $currentDateTime->format("YmdHis"); // Retrieves current date and time in YYYY-MM-DD HH:MM:SS format
-    $Lead = "INSERT INTO `ResearchRoleTBL` ( `RoleConnectorKey`, `UID`, `Role`) VALUES ( '$Roleconnector', '$LEmail', 'Leader' );";
-    if ($conn->query($Lead) !== TRUE) {    $errors[] = "Error: " . $Lead . "<br>" . $conn->error;   }
-        
-        $Advicer =$_POST['Advicer'];
-        $Advicersql = "INSERT INTO `ResearchRoleTBL` ( `RoleConnectorKey`, `UID`, `Role`) VALUES ( '$Roleconnector', '$Advicer', 'Adviser' );";
-    if ($conn->query($Advicersql) !== TRUE) {    $errors[] = "Error: " . $Advicersql . "<br>" . $conn->error;   }
-        
-        $Expert = $_POST['Expert'];
-        $Expertsql = "INSERT INTO `ResearchRoleTBL` ( `RoleConnectorKey`, `UID`, `Role`) VALUES ( '$Roleconnector', '$Expert', 'Expert' );";
-    if ($conn->query($Expertsql) !== TRUE) {    $errors[] = "Error: " . $Expertsql . "<br>" . $conn->error;   }
+    // Get the current date and time
+    $currentDateTime = new DateTime(); 
+    $Roleconnector = $currentDateTime->format("YmdHis"); 
 
-    foreach($Members as $key => $value){
-        if(!($Members[$key] == null)){// dito lalagay ung mga input
-            $membersql = "INSERT INTO `ResearchRoleTBL` ( `RoleConnectorKey`, `UID`, `Role`) VALUES ( '$Roleconnector', '$Members[$key]', 'Member' );";
-            if ($conn->query($membersql) !== TRUE) {    $errors[] = "Error: " . $membersql . "<br>" . $conn->error;   }
-                echo $Members[$key] . "<br>";
-            }
+    // Function to insert a research role
+    function insertResearchRole($pdo,$SecID, $Roleconnector, $UID, $role) {
+        $sql = "INSERT INTO `ResearchRoleTBL` (`RoleConnectorKey`, `SectionID`,`UID`, `Role`) VALUES (:Roleconnector,:SecID, :UID, :role)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':Roleconnector' => $Roleconnector,
+            ':SecID' => $SecID,
+            ':UID' => $UID,
+            ':role' => $role
+        ]);
     }
-    foreach($panels as $key => $value){
-        if(!($panels[$key] == null)){// dito lalagay ung mga input
-            $panelsql = "INSERT INTO `ResearchRoleTBL` ( `RoleConnectorKey`, `UID`, `Role`) VALUES ( '$Roleconnector', '$panels[$key]', 'Panel$key' );";
-            if ($conn->query($panelsql) !== TRUE) {    $errors[] = "Error: " . $panelsql . "<br>" . $conn->error;   }
+
+    try {
+        // Insert Leader
+        insertResearchRole($pdo,$SecID, $Roleconnector, $LEmail, 'Leader');
+
+        // Insert Adviser
+        insertResearchRole($pdo,$SecID, $Roleconnector, $Advicer, 'Adviser');
+
+        // Insert Expert
+        insertResearchRole($pdo,$SecID, $Roleconnector, $Expert, 'Expert');
+
+        // Insert Members
+        foreach ($Members as $member) {
+            if (!empty($member)) {
+                insertResearchRole($pdo,$SecID, $Roleconnector, $member, 'Member');
+            }
         }
+
+        // Insert Panels
+        foreach ($panels as $key => $panel) {
+            if (!empty($panel)) {
+                $panelRole = 'Panel' . ($key + 1); // Create panel role like 'Panel1', 'Panel2', 'Panel3'
+                insertResearchRole($pdo,$SecID, $Roleconnector, $panel, $panelRole);
+            }
         }
-}else{
-           // SELECT * FROM `ResearchTBL` a LEFT JOIN `ResearchRoleTBL` b on a.ResearchID = b.ResearchID WHERE `Section` = '7' and b.ResearchID ='6';
-        //    $sql = "INSERT INTO `ResearchTBL` (`ResearchID`, `Title`, `Abstract`, `filename`, `fileSize`, `YRPublished`, `CourseID`, `Status`, `TeacherComment`, `Section`) VALUES ($ReID, NULL, NULL, NULL, NULL, NULL, '$course', NULL, NULL, '$SecID')";
-        //    if ($conn->query($sql) !== TRUE) {
-        //        $errors[] = "Error: " . $sql . "<br>" . $conn->error;
-        //    }
+
+        echo json_encode(['success' => true, 'message' => 'Data inserted successfully']);
+        
+    } catch (PDOException $e) {
+        $errors[] = "Database error: " . $e->getMessage();
+    }
+
+} else {
+    // Handle other scenarios
+    // Example: Querying ResearchTBL
+    // $sql = "INSERT INTO `ResearchTBL` ( `ResearchID`, `Title`, `Abstract`, `filename`, `fileSize`, `YRPublished`, `CourseID`, `Status`, `TeacherComment`, `Section`) VALUES (default, NULL, NULL, NULL, NULL, NULL, '$course', NULL, NULL, '$SecID')";
+    // if ($pdo->query($sql) !== TRUE) {
+    //     $errors[] = "Error: " . $sql . "<br>" . $pdo->error;
+    // }
 }
 
+// Handle errors
+if (!empty($errors)) {
+    echo json_encode(['success' => false, 'errors' => $errors]);
+}
 
-
-
-
-
-
+// Close PDO connection
+$pdo = null;
 
 ?>

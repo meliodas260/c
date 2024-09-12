@@ -53,7 +53,6 @@
                 <thead>
                     <tr>
                         <th scope="col">Section</th>
-                        <th scope="col">School YR</th>
                         <th scope="col">CapstoneTeacher</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -75,8 +74,8 @@
                                 <input type="Text" class="border border-primary form-control " id="SectionName" name="SectionName" placeholder="name@example.com" required>
                                 <label for="SectionName">SectionName</label><!--SectionName -->
                 </div>
-                <label for="Course"  class="mx-3"  > <b>Course</b> </label> <!--Course -->
-                <select id="Course" name="Course" class="form-select w-25 mx-3  mb-3 ">
+                <label for="Course" class="mx-3"><b>Course</b></label> <!-- Course -->
+<select id="Course" name="Course" class="form-select w-25 mx-3 mb-3"></select>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -86,20 +85,23 @@
         .then(response => response.json())
         .then(data => {
             const selectElement = document.getElementById('Course');
-            if (Array.isArray(data.CourseTypes)) {
-                data.CourseTypes.forEach((CourseTypes, index) => {
+
+            // Check if data.CourseTypes is an array
+            if (Array.isArray(data.CourseTypes) && Array.isArray(data.CourseValues)) {
+                data.CourseTypes.forEach((courseType, index) => {
                     const option = document.createElement('option');
-                    option.value = data.CourseValues[index];
-                    option.textContent = CourseTypes;
+                    option.value = data.CourseValues[index]; // Values from the API
+                    option.textContent = courseType;         // Course names from the API
                     selectElement.appendChild(option);
                 });
             } else {
-                console.error("Failed to fetch user types:", data.error);
+                console.error("Failed to fetch course types:", data.error);
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error fetching course data:', error));
     });
 </script>
+
 
                     
         </select>
@@ -110,10 +112,6 @@
                     <input class="border border-primary form-control "type="text" id="ResearchT" autocomplete="off" name="ResearchT" placeholder="juan" required> 
                     <label for="ResearchT">Research Teacher ID #</label>
                     <div id="prediction-container"></div><!--ResearchT -->
-                </div>
-                <div class="form-floating mb-3  w-25">
-                    <input class="border border-primary form-control"type="text"  id="SY" name="SY" placeholder="Mercado" > 
-                    <label for="SY">School Year</label><!--SY -->
                 </div>  
                 
                 </div>
@@ -238,7 +236,6 @@ $(document).ready(function() {
         },
         "columns": [
             { "data": "SectionName" },
-            { "data": "SchoolYR" },
             { "data": "UID_Teacher" },
             { 
                 "data": null, 

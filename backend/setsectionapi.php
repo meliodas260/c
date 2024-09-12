@@ -1,100 +1,97 @@
 <?php
 
 header('Content-Type: application/json');
-$conn = new mysqli("localhost", "mine", "pass", "repo");
-//make sure to have asection first
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require 'dblogin.php';
+
+$errors = []; // Initialize an empty errors array
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-
-// Check connection
-
-    if (isset($_POST['StudentIDField']) && !empty($_POST['StudentIDField']) && isset($_POST['SY']) && isset($_POST['ResearchT']) && isset($_POST['Course']) && isset($_POST['SectionName'])) {
+    if (isset($_POST['StudentIDField']) && !empty($_POST['StudentIDField']) && isset($_POST['ResearchT']) && isset($_POST['Course']) && isset($_POST['SectionName'])) {
         $TeacherEmail = $_POST['ResearchT'];
         $SectionName = $_POST['SectionName'];
         $Course = $_POST['Course'];
-        $SHY = $_POST['SY'];
-         $secID;
-        $maxsection = $conn->query("SELECT MAX(`SectionID`) FROM `Sectionn&CapTeacherTBL` WHERE 1;");
-                        while ($max = $maxsection->fetch_assoc()) {
-                            
-                            $secID = $max['MAX(`SectionID`)'] + 1;}
+        $secID = null;
 
-        $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `SchoolYR`, `UID_Teacher`, `DateCreacted`) VALUES 
-                    ($secID, '$SectionName', '$Course', '$SHY', '$TeacherEmail', DEFAULT);";
+        try {
+            // Get the max section ID
+            $stmt = $pdo->query("SELECT MAX(`SectionID`) as max_id FROM `Sectionn&CapTeacherTBL`;");
+            $max = $stmt->fetch(PDO::FETCH_ASSOC);
+            $secID = $max['max_id'] + 1;
 
+            // Use prepared statements for the section insertion
+            $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `UID_Teacher`, `DateCreacted`) 
+                           VALUES (:secID, :sectionName, :course, :teacherEmail, DEFAULT)";
+            $stmtSection = $pdo->prepare($sqlSection);
+            $stmtSection->execute([
+                ':secID' => $secID,
+                ':sectionName' => $SectionName,
+                ':course' => $Course,
+                ':teacherEmail' => $TeacherEmail
+            ]);
 
-        if ($conn->query($sqlSection) === TRUE) {
-        } else {
-            echo "Error: " . $sqlSection . "<br>" . $conn->error;
-        }
-        
-        
-        // Loop through each input field value
-        foreach ($_POST['StudentIDField'] as $key => $value) {
-            // Output the value
+            // Insert students into Student&SectionTBL
+            $sqlStudent = "INSERT INTO `Student&SectionTBL` (`StudentNSectionID`, `UIDStudent`, `SectionId`, `date`) 
+                           VALUES (default, :uidStudent, :secID, DEFAULT)";
+            $stmtStudent = $pdo->prepare($sqlStudent);
 
-            $escapedInput = $conn->real_escape_string($value);
-
-            // Construct the SQL query to insert data into the database
-            $sql = "INSERT INTO `Student&SectionTBL` (`StudentNSectionID`, `UIDStudent`, `SectionId`,`date`) VALUES (default, '$value', '$secID',default);";
-
-            // Execute the query
-            if ($conn->query($sql) !== TRUE) {
-                // If insertion fails, add an error message to the errors array
-                $errors[] = "Error: " . $sql . "<br>" . $conn->error;
-
+            foreach ($_POST['StudentIDField'] as $studentID) {
+                $stmtStudent->execute([
+                    ':uidStudent' => $studentID,
+                    ':secID' => $secID
+                ]);
             }
-        } 
-        // Return success allcourse
-        echo json_encode([
-            'success' => true,
-            'message' => "Section Created successfully."
-        ]);
-    } else {$r =$_POST['StudentIDField'];
-        echo $r;
-    }
-}     
 
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            // Return success response
+            echo json_encode([
+                'success' => true,
+                'message' => "Section created successfully."
+            ]);
 
-    $sql = "SELECT `CourseID`,`CourseName` FROM `coursetbl`;";
-    $result = $conn->query($sql);
-    
-    $allcourse = ['CourseTypes' => [], 'CourseValues' => []];
-    
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $allcourse['CourseTypes'][] = $row['CourseName'];
-            $allcourse['CourseValues'][] = $row['CourseID'];
+        } catch (PDOException $e) {
+            // Handle any PDO-related errors
+            $errors[] = "Database error: " . $e->getMessage();
         }
+
     } else {
-        $allcourse['error'] = 'No user types found';
+        // Handle missing POST fields
+        $errors[] = "Required fields are missing.";
     }
-    
-    echo json_encode($allcourse);
-
-
 
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
+    try {
+        $sql = "SELECT `CourseID`, `CourseName` FROM `coursetbl`;";
+        $stmt = $pdo->query($sql);
 
+        $allcourse = ['CourseTypes' => [], 'CourseValues' => []];
 
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $allcourse['CourseTypes'][] = $row['CourseName'];
+            $allcourse['CourseValues'][] = $row['CourseID'];
+        }
 
+        echo json_encode($allcourse);
 
-$conn->close();
-
-// Check if there are any errors
-if (!empty($errors)) {
-    // If there are errors, output them
-
-      echo json_encode([
+    } catch (PDOException $e) {
+        echo json_encode([
             'success' => false,
-            'message' => "$errors"]);
-    
+            'message' => 'Error fetching course data: ' . $e->getMessage()
+        ]);
+    }
+}
+
+// Close the PDO connection
+$pdo = null;
+
+// If there are any errors, output them
+if (!empty($errors)) {
+    echo json_encode([
+        'success' => false,
+        'message' => $errors
+    ]);
 }
 
 ?>

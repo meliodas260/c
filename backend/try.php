@@ -1,12 +1,7 @@
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_GET['password'])) {
-    $conn = new mysqli("localhost", "mine", "pass", "repo");
-
-    // Check connection
-    if ($conn->connect_error) {
-        echo "error";
-    }
+    require 'dblogin.php';
 
     // Sanitize user inputs to prevent SQL injection
     $username = $_GET['username'];
@@ -14,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
 
     // SQL query to fetch data
     $sql = "SELECT Password ,UserID, Usertype FROM accounttbl WHERE Email = '$username'   ";
-    $result = $conn->query($sql);
+    $result = $pdo->query($sql);
     
     
     if ($result->num_rows > 0) {
@@ -40,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
 
             $status = $UserInfo['Usertype'];
             $sqlRepSesIDs = "SELECT * FROM `usertypetbl` WHERE `UserStatus` = '$status'";
-            $RepSesIDs = $conn->query($sqlRepSesIDs);
+            $RepSesIDs = $pdo->query($sqlRepSesIDs);
             $UserType = $RepSesIDs->fetch_assoc();
             if ($UserType['usertype'] == 1) {
                 $SESID = $sesid . "1";
@@ -51,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
             } elseif ($UserType['usertype'] == 3) {
                 //check if researcher or capstone teacher
                 $CapT = "SELECT MAX(`DateCreacted`) FROM `Sectionn&CapTeacherTBL` WHERE `UID_Teacher`='$UID' LIMIT 1;";
-                $CheckcapT = $conn->query($CapT);
+                $CheckcapT = $pdo->query($CapT);
                 if($CheckcapT){
                     $anolaman = $CheckcapT->fetch_assoc();
                     if(!($anolaman['MAX(`DateCreacted`)'] == null)){
@@ -63,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                     }else{
 
                         $Role = "SELECT * FROM `ResearchRoleTBL` WHERE `UID` ='$UID';";
-                        $roles = $conn->query($Role);
+                        $roles = $pdo->query($Role);
                         $anolamans = $roles->fetch_assoc();
                             if($anolamans['Role'] == "Leader"){//leader
 
@@ -115,12 +110,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
     }
 
     // Close connection
-       $conn->close();
+       $pdo->close();
 }
 
 
 function updateSessionCookies($sesid, $UID,$dateExpire,$date) {
-    $conn = new mysqli("localhost", "mine", "pass", "repo");
+    $pdo = new mysqli("localhost", "mine", "pass", "repo");
     session_start(); 
     // Set the cookie
     $cookie_name = "RepSesID";
@@ -133,7 +128,7 @@ function updateSessionCookies($sesid, $UID,$dateExpire,$date) {
 
     $Check ="INSERT INTO `logTBL` (`SessionID`, `UID`, `datelogin`, `DateExpire`) 
     VALUES ('$sesid', '$UID', '$date', '$dateExpire');";
-    try{ $conn->query($Check) === TRUE;
+    try{ $pdo->query($Check) === TRUE;
     }catch(Exception $e) {
         echo "Error: ";
     }
@@ -141,7 +136,7 @@ function updateSessionCookies($sesid, $UID,$dateExpire,$date) {
     setcookie($cookie_name, $cookie_Session, $expiration_time, $path, $domain, $secure, $http_only);
 
     
-    $conn->close();
+    $pdo->close();
 }
 
 ?>

@@ -3,21 +3,11 @@ if (isset($_GET['secID'])) {
     $secID = $_GET['secID'];
 
     try {
-        $host = 'localhost';
-        $username = 'mine';
-        $password = 'pass';
-        $database = 'repo';
-        $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
-
-        $pdo = new PDO($dsn, $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        require 'backend/dblogin.php';
 
         // Prepare the SQL query with a placeholder to prevent SQL injection
         $stmt = $pdo->prepare("
-            SELECT b.UserID, b.Fname, b.Mname, b.Lname, b.suffix
-            FROM `Student&SectionTBL` a
-            INNER JOIN `AccountTBL` b ON a.UIDStudent = b.SchoolId
-            WHERE `SectionId` = :secID
+           SELECT b.UserID, b.Fname, b.Mname, b.Lname, b.suffix FROM `Student&SectionTBL` a INNER JOIN `AccountTBL` b ON a.UIDStudent = b.UserID WHERE `SectionId` = :secID
         ");
 
         // Bind the secID parameter to the query

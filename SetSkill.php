@@ -22,13 +22,13 @@ require_once 'verifier.php';
         include 'modal/ResearcherSidebar.php';
         $ResearchID = $_COOKIE["ResearchNya"];
         
-        $conn = new mysqli("localhost", "mine", "pass", "repo");
-        if ($conn->connect_error) {
+        $pdo = new mysqli("localhost", "mine", "pass", "repo");
+        if ($pdo->connect_error) {
             echo "error";
         }
         // SQL query to fetch data
         $sql = "SELECT * FROM `ResearchTBL` WHERE `ResearchID` = '$ResearchID';";
-        $result = $conn->query($sql);
+        $result = $pdo->query($sql);
        
          if ($result) {
             $ResearchInfo = $result->fetch_assoc();

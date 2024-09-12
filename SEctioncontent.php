@@ -12,6 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
@@ -35,49 +36,51 @@
 $receivedSection = $_GET['sectionID'];
 $section = $pdo->query("SELECT * FROM `Sectionn&CapTeacherTBL` WHERE `SectionID` = $receivedSection;");
 $secN = $section->fetch();
+$secID = $secN['SectionID'];
 echo "<h1> " . $secN['SectionName'] ."</h1>";
 ?>
 
-        <table class="table">
+        <table id="StudentTBL" class="table">
             <thead>
                 <tr>
                 <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Middle</th>
-                <th scope="col">Last</th>
+                <th scope="col">FUll NAME</th>
+
                 </tr>
             </thead>
             <tbody>
-                <?php
-                    // Database connection
-                    
 
-                    try {
-                        
-
-                        // Select data from the database
-                        $stmt = $pdo->query("SELECT B.Fname,B.Mname,B.Lname,B.suffix FROM `Student&SectionTBL` AS A INNER JOIN AccountTBL AS B ON A.`UIDStudent` = B.UserID WHERE A.SectionId = $receivedSection;");
-$number = 1;
-                        // Loop through the result set and display data in table rows
-                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-                            echo "<th scope='row'>" . $number . "</td>";
-                            echo "<td>" . $row['Fname'] . "</td>";
-                            echo "<td>" . $row['Mname'] . "</td>";
-                            echo "<td>" . $row['Lname'] . "</td>";
-                            echo "</tr>";
-                            $number++;
-                        }
-                    } catch (PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
-                    }
-                ?>
             </tbody>
         </table>
     </div>
-    <h3>Add Student</h3>
-    <form action="onestudent.php" method="post">
-        
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<!-- Initialization script -->
+<input type="hidden" id="phpVar" value="<?php echo $secID; ?>">
+<script>
+$(document).ready(function() {
+    $('#StudentTBL').DataTable({
+        "ajax": {
+            "url": "sectionStudapi.php",
+            "type": "GET",
+            "data": function(d) {
+                // Retrieve the value of the hidden input field
+                d.secID = $('#phpVar').val();
+            },
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "UserID" },
+            { "data": function(row) {
+                return row.Fname + " " + row.Mname + " " + row.Lname;
+            }}
+        ]
+    });
+});
+</script>
+    <form id="AddStudent" method="POST" onsubmit="submitForm(event)">
+            <h3>Add Student</h3>
         <div class="input-group"><h6></h6>
         <input type="hidden" name="secID" value="<?php echo $receivedSection; ?>">
         <div class="form-floating mb-3 w-75">
@@ -86,17 +89,56 @@ $number = 1;
         </div> 
         <h6></h6>
         </div>
-        <button type="submit" class="btn btn-primary buttonclean" name="submit">Go</button>
+        <button type="submit" class="btn btn-primary buttonclean">submit</button>
     </form>
+<script>
+    document.getElementById('AddStudent').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-    <?php
-    if (isset($_GET['error'])) {
-        echo "<p style='color: red;'>Login failed. Please try again.</p>";
-    }
-    if (isset($_GET['tama'])) {
-        echo "<p style='color: green;'>nasend</p>";
-    }
-    ?>
+    // Create a FormData object from the form
+    var formData = new FormData(this);
+
+    // Send the form data to the PHP API using fetch
+    fetch('onestudent.php', { // The URL of the PHP file that processes the form data
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        // Handle the response from the PHP API
+        if (data.success) {
+            // Show success alert
+            swal.fire({
+                title: 'Success!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Clear the form inputs after closing the alert
+                document.getElementById('AddStudent').reset();
+            });
+        } else {
+            // Show error alert
+            swal.fire({
+                title: 'Error!',
+                text: data.message,
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+    })
+    .catch(error => {
+        // Handle any errors from the API or network
+        console.error('Error:', error);
+        swal.fire({
+            title: 'Error!',
+            text: 'Already in Database',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+        });
+    });
+});
+</script>
 </div>
 </body>
 </html>

@@ -88,7 +88,7 @@
                 { "data": function(row) {
                     return row.Fname + " " + row.Mname + " " + row.Lname;
                 }},
-                { "data": "Usertype" },
+                { "data": "usertypename" },
                 { "data": null, "defaultContent": "<a href='SEctioncontent.php'>More</a>" }
             ]
         });

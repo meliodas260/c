@@ -1,36 +1,31 @@
 <?php
-
-// Database connection
-$conn = new mysqli("localhost", "mine", "pass", "repo");
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require 'dblogin.php';
 
 // Get input values
 $input = $_POST['input'] ?? ''; // Default to empty string if not set
 $sec = $_POST['secid'] ?? '';   // Default to empty string if not set
 
-// Determine which query to run based on the presence of `secid`
+// Prepare the query
 if (!empty($sec)) {
     // Query for Student & Section
-    $stmt = $conn->prepare("SELECT `SchoolIDStudent` FROM `Student&SectionTBL` WHERE `UIDstudent` LIKE ? AND `SectionId` = ?");
+    $stmt = $pdo->prepare("SELECT `SchoolIDStudent` FROM `Student&SectionTBL` WHERE `UIDstudent` LIKE :input AND `SectionId` = :sec");
     $inputParam = "%$input%";
-    $stmt->bind_param("si", $inputParam, $sec);
+    $stmt->bindValue(':input', $inputParam);
+    $stmt->bindValue(':sec', $sec, PDO::PARAM_INT);
 } else {
     // Query for AccountTBL
-    $stmt = $conn->prepare("SELECT `UserID` FROM `accounttbl` WHERE `UserID` LIKE ? AND `Usertype` = '3'");
+    $stmt = $pdo->prepare("SELECT `UserID` FROM `accounttbl` WHERE `UserID` LIKE :input AND `Usertype` = '3'");
     $inputParam = "$input%";
-    $stmt->bind_param("s", $inputParam);
+    $stmt->bindValue(':input', $inputParam);
 }
 
 // Execute query
 $stmt->execute();
-$result = $stmt->get_result();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $predictions = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+if ($result) {
+    foreach ($result as $row) {
         $predictions[] = $row['SchoolIDStudent'] ?? $row['UserID']; // Handle different column names
     }
 }
@@ -38,8 +33,7 @@ if ($result->num_rows > 0) {
 // Return predictions as JSON
 echo json_encode($predictions);
 
-// Close statement and connection
-$stmt->close();
-$conn->close();
+// Close connection
+$pdo = null;
 
 ?>
