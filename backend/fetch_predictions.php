@@ -14,7 +14,11 @@ if (!empty($sec)) {
     $stmt->bindValue(':sec', $sec, PDO::PARAM_INT);
 } else {
     // Query for AccountTBL
-    $stmt = $pdo->prepare("SELECT `UserID` FROM `accounttbl` WHERE `UserID` LIKE :input AND `Usertype` = '3'");
+    $stmt = $pdo->prepare("SELECT CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) AS Fullname 
+FROM `accounttbl` 
+WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE CONCAT('%', :input, '%') 
+AND `Usertype` = '3';
+");
     $inputParam = "$input%";
     $stmt->bindValue(':input', $inputParam);
 }
@@ -26,7 +30,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $predictions = [];
 if ($result) {
     foreach ($result as $row) {
-        $predictions[] = $row['SchoolIDStudent'] ?? $row['UserID']; // Handle different column names
+        $predictions[] = $row['SchoolIDStudent'] ?? $row['Fullname']; // Handle different column names
     }
 }
 

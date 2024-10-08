@@ -75,33 +75,7 @@
                                 <label for="SectionName">SectionName</label><!--SectionName -->
                 </div>
                 <label for="Course" class="mx-3"><b>Course</b></label> <!-- Course -->
-<select id="Course" name="Course" class="form-select w-25 mx-3 mb-3"></select>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch('backend/setsectionapi.php', {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(data => {
-            const selectElement = document.getElementById('Course');
-
-            // Check if data.CourseTypes is an array
-            if (Array.isArray(data.CourseTypes) && Array.isArray(data.CourseValues)) {
-                data.CourseTypes.forEach((courseType, index) => {
-                    const option = document.createElement('option');
-                    option.value = data.CourseValues[index]; // Values from the API
-                    option.textContent = courseType;         // Course names from the API
-                    selectElement.appendChild(option);
-                });
-            } else {
-                console.error("Failed to fetch course types:", data.error);
-            }
-        })
-        .catch(error => console.error('Error fetching course data:', error));
-    });
-</script>
-
+<select id="Coursea" name="Course" class="form-select w-25 mx-3 mb-3"></select>
 
                     
         </select>
@@ -146,7 +120,30 @@
 
     </div>                    
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        const response = await fetch('backend/setsectionapi.php', { method: 'GET' });
+        const data = await response.json();
+        const selectElement = document.getElementById('Coursea');
 
+        // Check if data.CourseTypes is an array
+        if (Array.isArray(data.CourseTypes) && Array.isArray(data.CourseValues)) {
+            data.CourseTypes.forEach((courseType, index) => {
+                const option = document.createElement('option');
+                option.value = data.CourseValues[index]; // Values from the API
+                option.textContent = courseType;         // Course names from the API
+                selectElement.appendChild(option);
+            });
+        } else {
+            console.error("Failed to fetch course types:", data.error);
+        }
+    } catch (error) {
+        console.error('Error fetching course data:', error);
+    }
+});
+
+    </script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script> $(document).ready(function() {
         const inputField = $('#ResearchT');
@@ -255,9 +252,10 @@ $(document).ready(function() {
         window.location.href = `SEctioncontent.php?sectionID=${sectionID}`;
     });
 });
-
 </script>
-      
+
+
+
     <script>
 //makeStudent
 document.getElementById('CreateSection').addEventListener('submit', function(event) {

@@ -16,13 +16,70 @@
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
     <title>Accounts</title>
+    <style>        /* Modal background */
+    
+
+        .read-more {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-top: 10px;
+            background-color: #6795c9;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .read-more:hover {
+            background-color: #1060c9;
+            color:white;
+        }  
+        .flexer {
+            padding-top:2rem;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .half {
+            flex: 1; /* Each child will take up equal space */
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in the width */
+        }
+
+        .left {
+            background-color: lightblue;
+        }
+
+        .right {
+            background-color: lightcoral;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            
+            .half {
+            
+                flex: 1 1 100%;
+            
+            }
+            #research-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .research-card {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+
+</style>
 </head>
 <?php include 'modal/header.php'; 
     include 'modal/CapTSidebar.php'; 
     $secID = $_GET['SecID'];
     $secname = $_GET['Secname'];
     $course = $_GET['course'];
-    
     ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -177,24 +234,33 @@ $(document).ready(function() {
 
         
 
-        <form id="Createrole" method="POST" onsubmit="submitForm(event)">
+    <form id="Createrole" method="POST" onsubmit="submitForm(event)">
         <input type="hidden" id="SecNumber" name="SecNumber" value="<?php echo $secID; ?>">
         <input type="hidden" id="course"  name="course" value="<?php echo $course; ?>">
+        
+        <div class="relative"> 
+            <h2>Research info</h2>
+            <h5><b>RESEARCH TITLE </b></h5>
+            <div class="input-group centerer" style="padding-left:15%; padding-right:15%; ">
+               <input class="border border-primary text-center" type="text" id="Title" name="Title" value= "" required>
+            </div>
+            <BR></BR>
+            <h5><b>RESEARCH ABSTRACT</b></h5>
+
+            <div class="mb-3 centerer"style="padding-left:15%; padding-right:15%;">
+            <textarea class="form-control border border-primary"   id="exampleFormControlTextarea1" name="Abstract" rows="3"></textarea>
+            </div>
+        </div>     
         <h2>Research roles</h2>
         <div class="input-group">
             <h3></h3>
-        <div class="form-floating mb-3 w-50">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Leader" name="Leader" placeholder="Sr./Jr." > <!--suffix -->
+        <div class="form-floating mb-3 w-25">
+             <input class="border border-primary form-control"type="text" autocomplete="off" id="Leader" name="Leader" placeholder="Leader" >
             <label for="Leader">Leader</label>
             <div id="prediction1" class="prediction-container"  style="display: none;"></></div>
         </div>
-        
-        <h3></h3>
-        </div>
-        <div class="input-group">
-            <h3></h3>
-        <div class="form-floating mb-3 w-50">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member1" name="Member1" placeholder="Sr./Jr." > <!--suffix -->
+        <div class="form-floating mb-3 w-25">
+             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member1" name="Member1" placeholder="Member" >
             <label for="Member1">Member1</label>
             <div id="Member1_pre" class="prediction-container"  style="display: none;"></></div>
         </div>  
@@ -203,17 +269,13 @@ $(document).ready(function() {
         </div>
         <div class="input-group">
             <h3></h3>
-        <div class="form-floating mb-3 w-50">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member2" name="Member2" placeholder="Sr./Jr." > <!--suffix -->
+        <div class="form-floating mb-3 w-25">
+             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member2" name="Member2" placeholder="Member" >
             <label for="Member2">Member2</label>
             <div id="Member2_pre" class="prediction-container"  style="display: none;"></></div>
         </div>  
-        <h3></h3>
-        </div>
-        <div class="input-group">
-            <h3></h3>
-        <div class="form-floating mb-3 w-50">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member3" name="Member3" placeholder="Sr./Jr." > <!--suffix -->
+        <div class="form-floating mb-3 w-25">
+             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member3" name="Member3" placeholder="Member" >
             <label for="Member3">Member3</label>
             <div id="Member3_pre" class="prediction-container"  style="display: none;"></></div>
         </div>  
@@ -222,7 +284,7 @@ $(document).ready(function() {
         <div class="input-group">
         
             <div class="form-floating mb-3">
-                <input class="border border-primary form-control"type="text" autocomplete="off" id="Advicer" name="Advicer" placeholder="Sr./Jr." > <!--suffix -->
+                <input class="border border-primary form-control"type="text" autocomplete="off" id="Advicer" name="Advicer" placeholder="Member" >
                 <label for="Advicer">Adviser</label>
                 <div id="Advicer_pre" class="prediction-container"  style="display: none;"></></div>
             </div>  
@@ -252,122 +314,174 @@ $(document).ready(function() {
               
             </div>
             <br>
+            
+            <div class="d-flex justify-content-center text-center">
+                <div id="input-container">
+                    Keywords
+                    <div class="input-group px-2 ">
+                        <input type="text" name="inputField[]" placeholder="Enter something">
+                        <button type="button" class="add-input">+</button>
+                    </div>
+                </div>
+                <div id="input-container2">
+                    Tags
+                    <div class="input-group px-2 ">
+                        <input type="text" name="tags[]" placeholder="Enter something">
+                        <button type="button" class="add-tags">+</button>
+                    </div>
+                </div>
+            </div>
         <button type="submit" class="btn btn-primary buttonclean">Submit</button>
     </form>
 
 
-    <div class="norDiv">
+
                 <?php
-                    // Database connection
-                    $host = 'localhost';
-                    $username = 'mine';
-                    $password = 'pass';
-                    $database = 'repo';
-                    $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
+                    // // Database connection
+                    // $host = 'localhost';
+                    // $username = 'mine';
+                    // $password = 'pass';
+                    // $database = 'repo';
+                    // $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 
-                    try {
-                        $pdo = new PDO($dsn, $username, $password);
-                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        
-                        // Select data from the database
-                        $ResearchSql = $pdo->query("SELECT a.`ResearchID` FROM `ResearchTBL` a WHERE `SectionID` = '7';");
-                        // Loop through the result set and display data in table rows
-                        while ($row = $ResearchSql->fetch(PDO::FETCH_ASSOC)) { 
-                            echo "<div class='norDiv'>";
-                            echo "<h3>" .$row['ResearchID hhhh'] ."</h3>";
-                           $ResID = $row['ResearchID'];
-                           $ResearcherSql = $pdo->query("SELECT * FROM `ResearchTBL` a LEFT JOIN `ResearchRoleTBL` b on a.ResearchID = b.ResearchID left JOIN `AccountTBL` c on b.SchoolidStudent = c.Schoolid WHERE `Section` = '$secID' and b.ResearchID ='$ResID';");
-                        
-                        while ($rowlower = $ResearcherSql->fetch(PDO::FETCH_ASSOC)) { 
-                            echo " <h4>".$rowlower['Email']."\n".$rowlower['Role']."</h4>";
+                    // try {
+                    //     $pdo = new PDO($dsn, $username, $password);
+                    //     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    //     // Select data from the database
+                    //     $ResearchSql = $pdo->query("SELECT * FROM `researchtbl` WHERE `SectionID` = $secID");
+                    //     // Loop through the result set and display data in table rows
+                    //     while ($row = $ResearchSql->fetch(PDO::FETCH_ASSOC)) { 
+                    //         echo "<div class='SpecDiv'>";
+                    //         echo "<h3>" .$row['Title'] ."</h3>";
+                    //        $connector = $row['RoleConnectorKey'];
+                    //        $ResearcherSql = $pdo->query("SELECT * from researchroletbl a left join accounttbl b on b.UserID = a.UID WHERE a.RoleConnectorKey = $connector;");
+                    //        $tags = $pdo->query("SELECT * FROM `reasearchtagtbl` a left join tagtbl b on a.TagID = b.TagId WHERE a.TagConnectorKey =  $connector;");
+                    //        $keyws = $pdo->query("SELECT * FROM `reasearchkeywordstbl` WHERE`KeywordConnectorKey` =   $connector;");
+                    //     while ($rowlower = $ResearcherSql->fetch(PDO::FETCH_ASSOC)) { 
+                    //         echo " <h2>".$rowlower['Fname']."\n".$rowlower['Role']."</h2>";
+                    //     }
+                    //     while ($rowlower = $tags->fetch(PDO::FETCH_ASSOC)) { 
+                    //         echo " <h4>".$rowlower['TagName']."</h4>";
+                    //     }
+                    //     while ($rowlower = $keyws->fetch(PDO::FETCH_ASSOC)) { 
+                    //         echo " <h4>".$rowlower['Keyword']."</h4>";
+                    //     }
+                    //     echo "<button class='btn-more' data-id='".$row['ResearchID']."'> ".$row['ResearchID']." More</button>";
+?>
 
-                        }
-                        echo "</div>";
-                        }
-                    } catch (PDOException $e) {
-                        echo "Connection failed: " . $e->getMessage();
-                    }
+<script>
+    // // Use event delegation or make sure the button exists when this runs
+    // document.querySelectorAll('.btn-more').forEach(button => {
+    //     button.addEventListener('click', function() {
+    //         // Get the ResearchID from the button's data-id attribute
+    //         var researchID = this.getAttribute('data-id');
+            
+    //         // Redirect to the URL with ResearchID as a query parameter
+    //         window.location.href = 'uploadfile.php?ResearchID=' + researchID;
+    //     });
+    // });
+</script>
+<?php
+                    //     echo "</div>";
+                    //     }
+                    // } catch (PDOException $e) {
+                    //     echo "Connection failed: " . $e->getMessage();
+                    // }
                 ?>
 
-        </div>
-<?php 
-$sqlsection = $pdo->query("SELECT * FROM `ResearchTBL` WHERE `SectionID` = '$secID'");
-
-                        // Loop through the result set and display data in table rows
-                        while ($higherRow = $sqlsection->fetch(PDO::FETCH_ASSOC)) {
-                            
-                            $ResearchID = $higherRow['ResearchID'];
-                            $ResearchName = $higherRow['Title'];
-
-                            echo  '<div class="SpecDiv">
-                            <h3> '.$ResearchName.'</h3>
-                                <h4> '.$ResearchID.'</h4>
-                                
-                                <table class="table table-borderless">
-                                            <thead>
-                                                <tr>
-                                                <th scope="col">Student #</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Role</th>
-                                                
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-                                
-                                                    
-
-                                                        // Select data from the database
-                                                        $stmt = $pdo->query("SELECT a.*, b.Fname, b.Lname ,b.Mname, b.suffix ,b.UserID FROM `ResearchRoleTBL` a INNER JOIN AccountTBL b on a.`SchoolId` = b.`SchoolIDstudent` WHERE `ResearchID` ='$ResearchID'");
-
-                                                        // Loop through the result set and display data in table rows
-                                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                                            echo "<tr>";
-                                                            echo "<th scope='row'>" . $row['UserID'] . "</td>";
-                                                            echo "<td>" . $row['Fname'] . " " . $row['Mname'] . " " . $row['Lname'] . " " . $row['suffix'] . "</td>";
-                                                            echo "<td colspan='2'>" . $row['Role'] ."</td>";
-                                                        
-                                                            $section = $row['SectionID'];
-
-                                                            echo "</tr>";
 
 
+</div>
 
+<section id="research-container">
+</section>
 
-                                                        }
-                                                    
-                                        
-                                        echo    '</tbody>
-                                        </table>
-                                </div>';
-   }
-?>
 <script>
-    document.getElementById('Createrole').addEventListener('submit', function(event) {
+const secID = <?php echo json_encode($secID); ?>;
+
+function fetchResearchFiles(secID) {
+    $.ajax({
+        url: 'backend/Researchdata.php',
+        type: 'POST',
+        data: { SecID: secID }, // Ensure this matches the PHP expectation
+        success: function(response) {
+            const container = document.getElementById('research-container');
+            container.innerHTML = ''; // Clear previous content
+
+            // Check if response contains valid data
+            if (Array.isArray(response)) {
+                response.forEach(item => {
+                    const authors = item.Researchers.map(res => `${res.name} (${res.role})`).join(', ');
+                    addResearchCard(item.ID,item.Title, authors, item.Year, item.Description, item.ImageUrl);
+                });
+            } else {
+                console.error('Invalid response format:', response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+
+fetchResearchFiles(secID);
+
+function addResearchCard(ID,title, authors, year, description, imageUrl) {
+    const container = document.getElementById('research-container');
+    const card = document.createElement('div');
+    card.className = 'research-card';
+    card.innerHTML = `
+        <img src="${imageUrl}" alt="Research Image" class="research-image">
+        <h2 class="research-title">${title}</h2>
+        <p class="research-author">Authors: ${authors}</p>
+        <p class="research-year">Year: ${year}</p>
+        <p class="research-description">${description}</p>
+        <a href="ResearchINfo?researchID=${ID}&secID=${secID}" class="read-more">Read More</a>
+    `;
+    container.appendChild(card);
+}
+</script>
+
+
+
+
+
+
+
+<script>
+document.getElementById('Createrole').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
     // Create a FormData object from the form
     var formData = new FormData(this);
-fetch('backend/groupingsapi.php', { // The URL of the PHP file that processes the form data
+
+    // Send the form data to the PHP API using fetch
+    fetch('backend/groupingsapi.php', { // The URL of the PHP file that processes the form data
         method: 'POST',
         body: formData
     })
-    .then(response => response.json()) // Parse the JSON response
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse the JSON response
+    })
     .then(data => {
         // Handle the response from the PHP API
         if (data.success) {
             // Show success alert
-            swal.fire({
+            Swal.fire({
                 title: 'Success!',
                 text: data.message,
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then(() => {
                 // Clear the form inputs after closing the alert
-                document.getElementById('CreateAccount').reset();
+                document.getElementById('Createrole').reset();
             });
         } else {
-            // Show error alert
-            swal.fire({
+            // Show error alert with custom message
+            Swal.fire({
                 title: 'Error!',
                 text: data.message,
                 icon: 'error',
@@ -378,15 +492,80 @@ fetch('backend/groupingsapi.php', { // The URL of the PHP file that processes th
     .catch(error => {
         // Handle any errors from the API or network
         console.error('Error:', error);
-        swal.fire({
+        Swal.fire({
             title: 'Error!',
-            text: 'Already in Database',
+            text: 'An unexpected error occurred. Please try again.',
             icon: 'error',
             confirmButtonText: 'Try Again'
         });
     });
 });
-</script>
-</div>
+
+
+      function toggleInfo() {
+            var infoDiv = document.getElementById("researchInfo");
+            if (infoDiv.style.display === "none") {
+                infoDiv.style.display = "block";
+            } else {
+                infoDiv.style.display = "none";
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+    const inputContainer = document.getElementById('input-container');
+    const addButton = document.querySelector('.add-input');
+    let inputCount = 1;
+    
+    addButton.addEventListener('click', function() {
+        if (inputCount < 5) { // Check if inputCount is less than 5
+            const newInputGroup = document.createElement('div');
+            newInputGroup.classList.add('input-group');
+            newInputGroup.innerHTML = `
+                <input type="text" name="inputField[${inputCount}]" placeholder="Enter something">
+                <button type="button" class="remove-input">-</button>
+            `;
+            inputContainer.appendChild(newInputGroup);
+            inputCount++;
+
+            const removeButtons = document.querySelectorAll('.remove-input');
+            removeButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    newInputGroup.remove();
+                    inputCount--; // Decrement inputCount when removing an input field
+                });
+            });
+        } else {
+            alert("You can't add more than 5 Keywords.");
+        }
+    });
+});
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputContainer2 = document.getElementById('input-container2');
+            let inputCount = 1;
+
+            addButton.addEventListener('click', function() {
+                if (inputCount < 5) {
+                    const newInputtag = document.createElement('div');
+                    newInputtag.classList.add('input-group');
+                    const addButton = document.querySelector('.add-tags');
+                newInputtag.innerHTML = `
+                    <input type="text" name="tags[${inputCount}]" placeholder="Enter something">
+                    <button type="button" class="remove-tags">-</button>
+                `;
+                inputContainer2.appendChild(newInputtag);
+                inputCount++;
+
+                const removeButtons = document.querySelectorAll('.remove-tags');
+                removeButtons.forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        newInputtag.remove();
+                    });
+                });
+            } else {
+            alert("You can't add more than 5 tags.");
+        }
+            });
+        });
+    </script>
 </body>
 </html>

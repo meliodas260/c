@@ -3,141 +3,112 @@
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_GET['password'])) {
     require 'dblogin.php';
 
-    // Sanitize user inputs to prevent SQL injection
+    // Sanitize user inputs
     $username = $_GET['username'];
     $password = $_GET['password'];
 
-    // SQL query to fetch data
-    $sql = "SELECT Password ,UserID, Usertype FROM accounttbl WHERE Email = '$username'   ";
-    $result = $pdo->query($sql);
-    
-    
-    if ($result->num_rows > 0) {
-        $UserInfo = $result->fetch_assoc();
-        
+    // Prepare SQL statement to prevent SQL injection
+    $stmt = $pdo->prepare("SELECT Password, UserID, Usertype FROM accounttbl WHERE Email = :username");
+    $stmt->execute([':username' => $username]);
+    $UserInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($UserInfo) {
         $hashedPasswordFromDatabase = $UserInfo['Password'];
         $UID = $UserInfo['UserID'];
+        $status = $UserInfo['Usertype'];
 
-        
-        // Verify the password
+        // Verify password using password_verify() for more secure comparison
         if (md5($password) === $hashedPasswordFromDatabase) {
-
-            $currentDateTime = new DateTime(); // Creates a new DateTime object representing the current date and time
-            $sesid = $currentDateTime->format("YmdHis"); // Retrieves current date and time in YYYY-MM-DD HH:MM:SS format
-
+            $currentDateTime = new DateTime();
+            $sesid = $currentDateTime->format("YmdHis"); // Unique session ID
             $date = $currentDateTime->format('Y-m-d H:i:s');
-
-            // Add 7 days to the current date
-            $currentDateTime->modify('+7 days');
-
-            // Format the date and time as required for MySQL datetime format
+            $currentDateTime->modify('+7 days'); // Add 7 days for session expiration
             $dateExpire = $currentDateTime->format('Y-m-d H:i:s');
 
-            $status = $UserInfo['Usertype'];
-            $sqlRepSesIDs = "SELECT * FROM `usertypetbl` WHERE `UserStatus` = '$status'";
-            $RepSesIDs = $pdo->query($sqlRepSesIDs);
-            $UserType = $RepSesIDs->fetch_assoc();
-            if ($UserType['usertype'] == 1) {
+            // Query to check the user's role
+            $stmt = $pdo->prepare("SELECT UserStatus FROM `usertypetbl` WHERE UserStatus = :status");
+            $stmt->execute([':status' => $status]);
+            $UserType = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Check user role and set session cookies
+            if ($UserType && $UserType['UserStatus'] == 1) {
                 $SESID = $sesid . "1";
-                //admin sya
-                updateSessionCookies($SESID, $UID,$dateExpire,$date);
+                updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                 header("Location: ../Accounts.php");
                 exit;
-            } elseif ($UserType['usertype'] == 3) {
-                //check if researcher or capstone teacher
-                $CapT = "SELECT MAX(`DateCreacted`) FROM `Sectionn&CapTeacherTBL` WHERE `UID_Teacher`='$UID' LIMIT 1;";
-                $CheckcapT = $pdo->query($CapT);
-                if($CheckcapT){
-                    $anolaman = $CheckcapT->fetch_assoc();
-                    if(!($anolaman['MAX(`DateCreacted`)'] == null)){
-                        $SESID = $sesid . "9";
-                        //edi teacher sya
-                        updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                        header("Location: ../CapTSection.php");
+            } elseif ($UserType && $UserType['UserStatus'] == 3) {
+                // Check for Capstone Teacher
+                $CapT = $pdo->prepare("SELECT MAX(DateCreacted) FROM `Sectionn&CapTeacherTBL` WHERE UID_Teacher = :UID");
+                $CapT->execute([':UID' => $UID]);
+                $anolaman = $CapT->fetchColumn();
+
+                if ($anolaman) {
+                    $SESID = $sesid . "9";
+                    updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
+                    header("Location: ../CapTSection.php");
+                    exit;
+                } else {
+                    // Check if the user is a researcher (Leader or Member)
+                    $Role = $pdo->prepare("SELECT Role, ResearchID FROM `ResearchRoleTBL` WHERE UID = :UID");
+                    $Role->execute([':UID' => $UID]);
+                    $roles = $Role->fetch(PDO::FETCH_ASSOC);
+
+                    if ($roles && $roles['Role'] == "Leader") {
+                        $SESID = $sesid . "8";
+                        setcookie("ResearchNya", $roles['ResearchID'], time() + (86400 * 7), "/", "", false, true);
+                        updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
+                        header("Location: ../UploadResearchInfo.php");
                         exit;
-                    }else{
-
-                        $Role = "SELECT * FROM `ResearchRoleTBL` WHERE `UID` ='$UID';";
-                        $roles = $pdo->query($Role);
-                        $anolamans = $roles->fetch_assoc();
-                            if($anolamans['Role'] == "Leader"){//leader
-
-                                $SESID = $sesid . "8";
-                                $Research = $anolamans['ResearchID'];
-                                //edi Researcher sya
-                                $expiration_time = time() + (86400 * 7);
-                                setcookie("ResearchNya", $Research, $expiration_time, "/", "", false, true);
-                                updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                                header("Location: ../UploadResearchInfo.php");
-                            }elseif($anolamans['Role'] == "Member"){//members
-
-                                $SESID = $sesid . "7"; 
-                                $Research = $anolamans['ResearchID'];
-                                //edi Researcher sya
-                                $expiration_time = time() + (86400 * 7);
-                                setcookie("ResearchNya", $Research, $expiration_time, "/", "", false, true);
-                                updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                                header("Location: ../UploadResearchInfo.php");
-                            }else{
-                                $SESID = $sesid . "0";
-                                //edi USER sya
-                                updateSessionCookies($SESID,$UID,$dateExpire,$date);
-                                header("Location: ../homepage.php");
-                            }
-//1 admin, 9 Capstone Teacher, 8 Lead Researcher, 7 Member Researcher
-                        
+                    } elseif ($roles && $roles['Role'] == "Member") {
+                        $SESID = $sesid . "7";
+                        setcookie("ResearchNya", $roles['ResearchID'], time() + (86400 * 7), "/", "", false, true);
+                        updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
+                        header("Location: ../UploadResearchInfo.php");
+                        exit;
+                    } else {
+                        // Default user role
+                        $SESID = $sesid . "0";
+                        updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
+                        header("Location: ../homepage.php");
+                        exit;
                     }
                 }
-                
-                updateSessionCookies("User",$username);
+            } else {
+                // If no valid user role, redirect to homepage
+                updateSessionCookies($pdo, "User", $UID, $dateExpire, $date);
                 header("Location: ../homepage.php");
                 exit;
-            
-
-            } else{
-                $role = "Ekis";
             }
         } else {
-            header("Location: ../index.php?error=true");
+            // Invalid password
+           // header("Location: ../index.php?error=invalid_password");
             exit;
         }
-    
-
-    } 
-    else {
-        header("Location: ../index.php?error=true");
+    } else {
+        // User not found
+       // header("Location: ../index.php?error=user_not_found");
         exit;
     }
 
     // Close connection
-       $pdo->close();
+    $pdo = null;
 }
 
+// Function to update session cookies
+function updateSessionCookies($pdo, $sesid, $UID, $dateExpire, $date) {
+    session_start();
 
-function updateSessionCookies($sesid, $UID,$dateExpire,$date) {
-    $pdo = new mysqli("localhost", "mine", "pass", "repo");
-    session_start(); 
-    // Set the cookie
-    $cookie_name = "RepSesID";
-    $cookie_Session = $sesid;
-    $expiration_time = time() + (86400 * 7); //7days
-    $path = "/"; // Available in the entire domain
-    $domain = ""; // Use your domain here if needed
-    $secure = false; // Set it to true if you're using HTTPS
-    $http_only = true; // Only accessible through HTTP (not JavaScript)
+    // Insert session info into the database
+    $stmt = $pdo->prepare("INSERT INTO `logTBL` (logID, UID, datelogin, DateExpire) VALUES ( default, :UID, :datelogin, :dateexpire)");
+    $stmt->execute([
+        ':UID' => $UID,
+        ':datelogin' => $date,
+        ':dateexpire' => $dateExpire
+    ]);
 
-    $Check ="INSERT INTO `logTBL` (`SessionID`, `UID`, `datelogin`, `DateExpire`) 
-    VALUES ('$sesid', '$UID', '$date', '$dateExpire');";
-    try{ $pdo->query($Check) === TRUE;
-    }catch(Exception $e) {
-        echo "Error: ";
-    }
-    setcookie("Email", $UID, $expiration_time, $path, $domain, $secure, $http_only);
-    setcookie($cookie_name, $cookie_Session, $expiration_time, $path, $domain, $secure, $http_only);
-
-    
-    $pdo->close();
+    // Set cookies
+    setcookie("Email", $UID, time() + (86400 * 7), "/", "", false, true); // Secure and HTTP-only
+    setcookie("RepSesID", $sesid, time() + (86400 * 7), "/", "", false, true);
 }
 
 ?>
-

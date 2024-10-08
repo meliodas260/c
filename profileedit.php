@@ -10,8 +10,8 @@
 </head>
 <style>
 .profile{
-    width: 400px;
-    height: 400px;
+    width: 20rem;
+    height: 20rem;
     border: 1px solid blue;
     border-radius:50%;
 }

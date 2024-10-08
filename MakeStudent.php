@@ -111,9 +111,9 @@
                 <!-- Form to Upload Excel File -->
                 <h2>For Excel Upload</h2>
                 <br>
-                <form id="" action="backend/adminaccessApi.php" method="POST" onsubmit="submitForm(event)" enctype="multipart/form-data">
-                    <label for="excel_file">Upload Excel File:</label>
-                    <input type="file" name="excel_file" id="excel_file" accept=".xls,.xlsx">
+                <form id="" action="backend/adminaccessApi.php" method="POST" enctype="multipart/form-data">
+                    <label for="file">Upload Excel File:</label>
+                    <input type="file" name="file" id="file" accept=".xls,.xlsx">
                     <br>
                     <button type="submit" class="btn btn-primary buttonclean" name="submit">Upload</button>
                 </form>

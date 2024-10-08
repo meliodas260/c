@@ -51,7 +51,7 @@
         // $result = $pdo->query($sql);
        
         //  if ($result) {
-        //     $ResearchInfo = $result->fetch_assoc();
+        //     $ResearchInfo = $result->fetchAll(PDO::FETCH_ASSOC);
         //     echo $ResearchInfo['CourseID'];
         
         

@@ -60,7 +60,7 @@ INSERT INTO `accounttbl` (`UserID`, `Email`, `SchoolId`, `Fname`, `Lname`, `Mnam
 
 CREATE TABLE `coursetbl` (
   `CourseID` int(5) NOT NULL,
-  `CourseName` varchar(100) NOT NULL,
+  `CourseAcronym` varchar(100) NOT NULL,
   `Description` text NOT NULL,
   `DateAdded` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -69,7 +69,7 @@ CREATE TABLE `coursetbl` (
 -- Dumping data for table `coursetbl`
 --
 
-INSERT INTO `coursetbl` (`CourseID`, `CourseName`, `Description`, `DateAdded`) VALUES
+INSERT INTO `coursetbl` (`CourseID`, `CourseAcronym`, `Description`, `DateAdded`) VALUES
 (1, 'BSIT', 'asasdadsa', '2024-08-29 04:26:05');
 
 -- --------------------------------------------------------

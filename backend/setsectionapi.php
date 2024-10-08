@@ -20,8 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $secID = $max['max_id'] + 1;
 
             // Use prepared statements for the section insertion
-            $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `UID_Teacher`, `DateCreacted`) 
-                           VALUES (:secID, :sectionName, :course, :teacherEmail, DEFAULT)";
+            $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `UID_Teacher`, `DateCreacted`) VALUES (:secID, :sectionName, :course, (SELECT `UserID` FROM `accounttbl` WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE :teacherEmail), DEFAULT);";
             $stmtSection = $pdo->prepare($sqlSection);
             $stmtSection->execute([
                 ':secID' => $secID,
@@ -62,25 +61,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
+    // Fetch the course data from the database
     try {
-        $sql = "SELECT `CourseID`, `CourseName` FROM `coursetbl`;";
+        $sql = "SELECT CourseID, CourseAcronym FROM coursetbl;";
         $stmt = $pdo->query($sql);
-
+    
         $allcourse = ['CourseTypes' => [], 'CourseValues' => []];
-
+    
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $allcourse['CourseTypes'][] = $row['CourseName'];
+            $allcourse['CourseTypes'][] = $row['CourseAcronym'];
             $allcourse['CourseValues'][] = $row['CourseID'];
         }
-
-        echo json_encode($allcourse);
-
+    
+        echo json_encode($allcourse); // Make sure this outputs the correct structure
+    
     } catch (PDOException $e) {
         echo json_encode([
             'success' => false,
             'message' => 'Error fetching course data: ' . $e->getMessage()
         ]);
     }
+    
 }
 
 // Close the PDO connection

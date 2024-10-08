@@ -22,6 +22,7 @@
 <?php include 'modal/header.php'; ?>
 <?php include 'modal/adminSidebar.php'; ?>
 <div class="content">
+<?php include 'modal/AccountTBL.php'; ?>
     <div class="norDiv">
     <?php
                     $host = 'localhost';
@@ -116,6 +117,7 @@ $(document).ready(function() {
             }).then(() => {
                 // Clear the form inputs after closing the alert
                 document.getElementById('AddStudent').reset();
+                location.reload();
             });
         } else {
             // Show error alert

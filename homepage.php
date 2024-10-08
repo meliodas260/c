@@ -109,7 +109,7 @@ include 'modal/header.php';
         }
 
         // Example usage of the function
-        addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
+        addResearchCard('kahit ano', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
         addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
         addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');
         addResearchCard('Dynamic Paper Title', 'Dynamic Author', '2024', 'This is a dynamic description added via JavaScript.', 'img/neust_logo.png');

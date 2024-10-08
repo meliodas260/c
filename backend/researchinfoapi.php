@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Insert keywords
     // $_POST['EmailField'] as $key => $value
     
-        foreach ($_POST['inputField'] as $key => $keyword) {
+    foreach ($_POST['inputField'] as $key => $keyword) {
             if (!empty($keyword)) {
             // Check if keyword exists
             $check_sql = "SELECT * FROM `KeywordsTBL` WHERE Keywords = '$keyword'";
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insert tags
     
-        foreach ($_POST['tags'] as $key => $tag) {
+    foreach ($_POST['tags'] as $key => $tag) {
             if (!empty($tag)) {
             // Check if tag exists
             $check_tag_sql = "SELECT * FROM `TagTBL` WHERE `TagName` = '$tag'";

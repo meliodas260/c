@@ -122,20 +122,6 @@ nav ul li a {
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
-.material-symbols--logout-sharp {
-    display: inline-block;
-    width: 1.7em;
-    height: 1.7em;
-    color :white;
-    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M3 21V3h9v2H5v14h7v2zm13-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z'/%3E%3C/svg%3E");
-    background-color: currentColor;
-    -webkit-mask-image: var(--svg);
-    mask-image: var(--svg);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-  }
   .iconamoon--profile-thin {
         display: inline-block;
         width: 1.7em;
@@ -276,7 +262,19 @@ nav ul li a {
     
     border-radius:20px;
 }
-
+.carbon--search-advanced {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M30 6h-4V2h-2v4h-4v2h4v4h2V8h4zm-6 22.586l-5.975-5.975a9.023 9.023 0 1 0-1.414 1.414L22.586 30zM4 17a7 7 0 1 1 7 7a7.008 7.008 0 0 1-7-7'/%3E%3C/svg%3E");
+    background-color: white;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
 /* Media query for small screens (mobile devices) */
 @media screen and (max-width: 1000px) {
     .image{
@@ -337,12 +335,13 @@ nav ul li a {
 
     /* Show navigation links when the burger menu is clicked */
     nav ul.show {
+        text-align:center;
         display: flex; /* Show navigation links */
         flex-direction: column; /* Stack navigation links vertically */
         position: absolute; /* Position the menu */
         top: 65px; /* Adjust the top position */
         left: 0; /* Align with the left edge */
-        background-color: rgb(21, 47, 87); /* Background color for the menu */
+        background-color: rgba(21, 47, 87, 0.9); /* Background color for the menu */
         width: 100%; /* Full width */
         padding: 10px; /* Add padding */
         z-index: 4; /* Lowest layer */
@@ -354,8 +353,8 @@ nav ul li a {
     }
     .iconamoon--profile-thin {
         display: inline-block;
-        width: 1em;
-        height: 1em;
+        width: 2.8em;
+        height: 2.8em;
         --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000'%3E%3Cpath stroke-linejoin='round' d='M4 18a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z'/%3E%3Ccircle cx='12' cy='7' r='3'/%3E%3C/g%3E%3C/svg%3E");
         background-color: currentColor;
         -webkit-mask-image: var(--svg);
@@ -366,10 +365,6 @@ nav ul li a {
         mask-size: 100% 100%;
         }
     
-
-
-
-
 .removeSearch{
         display: none;
     }
@@ -399,30 +394,55 @@ nav ul li a {
                 <h2>Advanced Search</h2>
                 <form id="searchForm">
                     <div class="form-group">
-                        <label for="keyword">Keyword:</label>
-                        <input type="text" id="keyword" name="keyword">
+                        <input type="text" class="form-control" id="Title" name="Title" placeholder="Title">
                     </div>
                     <div class="form-group">
-                        <label for="category">Category:</label>
-                        <select id="category" name="category">
-                            <option value="">Select Category</option>
-                            <option value="books">Books</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="clothing">Clothing</option>
-                        </select>
+                        <label for="Tag">Tag:</label>
+                        <input type="text" class="form-control" id="Tag" name="Tag">
+                    </div>
+                    <div class="form-group">
+                        <label for="Course">Course:</label>
+                        <input type="text" class="form-control" id="Course" name="Course">
+                    </div>
+                    <div class="form-group">
+                        <label for="Keyword">Keyword:</label>
+                        <input type="text" class="form-control" id="Keyword" name="Keyword">
                     </div>
 
-                    <div class="form-group">
-                        <label for="dateRange">Date Range:</label>
-                        <input type="date" id="startDate" name="startDate">
-                        to
-                        <input type="date" id="endDate" name="endDate">
-                    </div>
                     <button type="submit" class="modalbutton">Search</button>
                     <button type="button" id="clearBtn" class="modalbutton">Clear</button>
                 </form>
             </div>
     </div>
+    <script>
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent the default form submission
+
+    // Gather form data
+    const title = document.getElementById('Title').value;
+    const tag = document.getElementById('Tag').value;
+    const course = document.getElementById('Course').value;
+    const keyword = document.getElementById('Keyword').value;
+
+    // Create URL with query parameters
+    const queryParams = new URLSearchParams();
+    if (title) queryParams.append('Title', title);
+    if (tag) queryParams.append('Tag', tag);
+    if (course) queryParams.append('Course', course);
+    if (keyword) queryParams.append('Keyword', keyword);
+
+    // Redirect to the constructed URL
+    window.location.href = `searchy?${queryParams.toString()}`;
+});
+
+// Clear button functionality
+document.getElementById('clearBtn').addEventListener('click', function() {
+    document.getElementById('Title').value = '';
+    document.getElementById('Tag').value = '';
+    document.getElementById('Course').value = '';
+    document.getElementById('Keyword').value = '';
+});
+</script>
     <nav>
         <ul>
             <li><a href="homepage">Home</a></li>
