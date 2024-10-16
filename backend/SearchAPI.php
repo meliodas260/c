@@ -91,6 +91,7 @@ try {
 
             // Append this research entry into the main data array
             $data[] = [
+                'ID' => $row['ResearchID'],
                 'Title' => $row['Title'],
                 'Year' => $row['YRPublished'], // Ensure this is present in the database
                 'Description' => $row['Abstract'], // Ensure this is present in the database

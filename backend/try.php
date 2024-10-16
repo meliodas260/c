@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
 
             // Check user role and set session cookies
             if ($UserType && $UserType['UserStatus'] == 1) {
-                $SESID = $sesid . "1";
+                $SESID = $sesid . "1"; //admin
                 updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                 header("Location: ../Accounts.php");
                 exit;
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 $anolaman = $CapT->fetchColumn();
 
                 if ($anolaman) {
-                    $SESID = $sesid . "9";
+                    $SESID = $sesid . "9"; //Teacher
                     updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                     header("Location: ../CapTSection.php");
                     exit;
@@ -54,20 +54,20 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                     $roles = $Role->fetch(PDO::FETCH_ASSOC);
 
                     if ($roles && $roles['Role'] == "Leader") {
-                        $SESID = $sesid . "8";
+                        $SESID = $sesid . "8"; //user
                         setcookie("ResearchNya", $roles['ResearchID'], time() + (86400 * 7), "/", "", false, true);
                         updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                         header("Location: ../UploadResearchInfo.php");
                         exit;
                     } elseif ($roles && $roles['Role'] == "Member") {
-                        $SESID = $sesid . "7";
+                        $SESID = $sesid . "7"; //user
                         setcookie("ResearchNya", $roles['ResearchID'], time() + (86400 * 7), "/", "", false, true);
                         updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                         header("Location: ../UploadResearchInfo.php");
                         exit;
                     } else {
                         // Default user role
-                        $SESID = $sesid . "0";
+                        $SESID = $sesid . "0";//user
                         updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                         header("Location: ../homepage.php");
                         exit;

@@ -430,8 +430,10 @@ function addResearchCard(ID,title, authors, year, description, imageUrl) {
     const container = document.getElementById('research-container');
     const card = document.createElement('div');
     card.className = 'research-card';
+    const imageSrc = imageUrl === '' ? 'img/neust_logo.png' : 'UploadIMG/' + imageUrl;
+
     card.innerHTML = `
-        <img src="${imageUrl}" alt="Research Image" class="research-image">
+        <img src="${imageSrc}" alt="Research Image" class="research-image">
         <h2 class="research-title">${title}</h2>
         <p class="research-author">Authors: ${authors}</p>
         <p class="research-year">Year: ${year}</p>

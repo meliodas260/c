@@ -33,6 +33,8 @@
                         
                         
                       </div>
+                      <input type="checkbox" id="showPassword">
+        <label for="showPassword">Show Password</label>
                       <br> 
                         <button type="submit" class="btn btn-primary buttonclean">Login</button>
                         <?php
@@ -41,5 +43,20 @@
     }
     ?>        
                     </form>
+                    <script>
+        // Get references to the password input and checkbox
+        const passwordInput = document.getElementById('password');
+        const showPasswordCheckbox = document.getElementById('showPassword');
+
+        // Add event listener for the checkbox to toggle password visibility
+        showPasswordCheckbox.addEventListener('change', function() {
+            // Check if the checkbox is checked
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = 'text'; // Show password as text
+            } else {
+                passwordInput.type = 'password'; // Hide password
+            }
+        });
+    </script>
 </body>
 </html>

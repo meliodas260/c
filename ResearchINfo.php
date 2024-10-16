@@ -63,7 +63,7 @@ $(document).ready(function() {
                                 <p><strong>Panels:</strong> ${Panels}</p>
                                 <p><strong>Tags:</strong> ${tags}</p>
                                 <p><strong>Keywords:</strong> ${keywords}</p>
-                                <img src="UploadIMG/${research.ImageUrl || 'img/neust_logo.png'}" alt="Image" class="img-fluid">
+                                <img src="${research.ImageUrl === '' ? 'img/neust_logo.png' : 'UploadIMG/'+ research.ImageUrl}" alt="Image" class="img-fluid">    
                             </div>
                         </div>
                     `);

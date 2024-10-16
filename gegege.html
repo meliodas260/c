@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Research</title>
+    <style>
+        .star-rating {
+            display: flex;
+            cursor: pointer;
+            font-size: 30px; /* Adjust size as needed */
+        }
+
+        .star {
+            color: gray; /* Default star color */
+        }
+
+        .star.selected {
+            color: gold; /* Selected star color */
+        }
+    </style>
+</head>
+<body>
+    <h1>Rate the Research</h1>
+    
+    <input type="hidden" name="UID" id="UID" value="35"> <!-- Replace with dynamic student ID -->
+    <input type="hidden" name="ResearchID" id="ResearchID" value="10"> <!-- Replace with dynamic research ID -->
+    
+    <div class="star-rating" id="starRating">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+    </div>
+
+    <button id="submitRating" style="margin-top: 20px;">Submit Rating</button>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.createElement('input');
+        ratingInput.type = 'hidden';
+        ratingInput.name = 'rate';
+        document.body.appendChild(ratingInput); // Append the rating input to the body
+
+        // Pre-select the stars based on the past rating
+        function displayPreviousRating(rating) {
+            if (rating) {
+                ratingInput.value = rating; // Set the previous rating value in the hidden input
+                stars.forEach(s => {
+                    s.classList.remove('selected');
+                });
+                for (let i = 0; i < rating; i++) {
+                    stars[i].classList.add('selected');
+                }
+            }
+        }
+
+        // Fetch the user's previous rating
+        function fetchPreviousRating(UID, ResearchID) {
+            fetch('get_past_rating.php', { // Replace with your PHP script URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'UID': UID,
+                    'ResearchID': ResearchID
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayPreviousRating(data.rating); // Display the previous rating if it exists
+                } else {
+                    console.log('No previous rating found.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching previous rating:', error);
+            });
+        }
+
+        // Add event listener to stars for selecting a new rating
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = star.getAttribute('data-value');
+                ratingInput.value = rating; // Set the rating value
+
+                // Update star colors
+                stars.forEach(s => {
+                    s.classList.remove('selected');
+                });
+                for (let i = 0; i < rating; i++) {
+                    stars[i].classList.add('selected');
+                }
+            });
+        });
+
+        // Submit rating
+        document.getElementById('submitRating').addEventListener('click', () => {
+            const UID = document.getElementById('UID').value;
+            const ResearchID = document.getElementById('ResearchID').value;
+            const rate = ratingInput.value;
+
+            // Check if a rating has been selected
+            if (rate) {
+                fetch('rate_research.php', { // Replace with your PHP script URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'UID': UID,
+                        'ResearchID': ResearchID,
+                        'rate': rate
+                    })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Display the response from the server
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            } else {
+                alert('Please select a rating before submitting.');
+            }
+        });
+
+        // On page load, fetch and display previous rating
+        const UID = document.getElementById('UID').value;
+        const ResearchID = document.getElementById('ResearchID').value;
+        fetchPreviousRating(UID, ResearchID); // Fetch the previous rating for this user and research
+    </script>
+</body>
+</html>
