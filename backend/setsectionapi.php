@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             // Get the max section ID
-            $stmt = $pdo->query("SELECT MAX(`SectionID`) as max_id FROM `Sectionn&CapTeacherTBL`;");
+            $stmt = $pdo->query("SELECT MAX(`SectionID`) as max_id FROM `sectionn&capteachertbl`;");
             $max = $stmt->fetch(PDO::FETCH_ASSOC);
             $secID = $max['max_id'] + 1;
 
@@ -29,14 +29,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':teacherEmail' => $TeacherEmail
             ]);
 
-            // Insert students into Student&SectionTBL
-            $sqlStudent = "INSERT INTO `Student&SectionTBL` (`StudentNSectionID`, `UIDStudent`, `SectionId`, `date`) 
-                           VALUES (default, :uidStudent, :secID, DEFAULT)";
+            // Insert students into sectionn&capteachertbl
+            $sqlStudent = "INSERT INTO `sectionn&capteachertbl` (`StudentNSectionID`, `UID_Teacher`, `SectionId`, `date`) 
+                           VALUES (default, :UID_Teacher, :secID, DEFAULT)";
             $stmtStudent = $pdo->prepare($sqlStudent);
 
             foreach ($_POST['StudentIDField'] as $studentID) {
                 $stmtStudent->execute([
-                    ':uidStudent' => $studentID,
+                    ':UID_Teacher' => $studentID,
                     ':secID' => $secID
                 ]);
             }

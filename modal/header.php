@@ -381,10 +381,8 @@ nav ul li a {
         <h4>RESEARCH REPOSITORY</h4>
     </div>
 </div>
-    <div class="input-group mb-3 endder" style="margin:1rem 15% 0 15%; @media screen and (max-width: 600px) {padding:1rem 5% 0 5%;} ">
-        <input type="text" class="form-control removeSearch" placeholder="Search" aria-label="Search" name="normalSearch">
-        <button class="btn btn-outline-secondary removeSearch rounded" type="button"  ><span class="mdi--search"></span></button>
-        <button class="btn btn-outline-secondary rounded" type="button" id="openModalBtn"><span class="carbon--search-advanced"></span></button>        
+    <div class="input-group mb-3 endder" >
+        <button class="btn btn-outline-secondary rounded" style="margin:1rem 0% 0 90%; @media screen and (max-width: 600px) {padding:1rem 2% 0 5%;} " type="button" id="openModalBtn"><span class="carbon--search-advanced"></span></button>        
     </div>
        
    <!-- modal -->

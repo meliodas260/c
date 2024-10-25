@@ -67,7 +67,7 @@ if (isset($_POST['Leader'])) {
 
     // Function to insert a research role
     function insertResearchRole($pdo,$SecID, $Roleconnector, $UID, $role) {
-        $sql = "INSERT INTO `ResearchRoleTBL` (`RoleConnectorKey`,`UID`, `Role`) VALUES (:Roleconnector, :UID, :role)";
+        $sql = "INSERT INTO `researchroletbl` (`RoleConnectorKey`,`UID`, `Role`) VALUES (:Roleconnector, :UID, :role)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':Roleconnector' => $Roleconnector,

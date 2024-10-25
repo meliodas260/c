@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      $secID = $_POST['secID'];
 
 
-    $sql = "INSERT INTO `Student&SectionTBL` (`StudentNSectionID`, `UIDStudent`, `SectionId`) VALUES (NULL, '$UID', '$secID');";
+    $sql = "INSERT INTO `sectionn&capteachertbl` (`StudentNSectionID`, `UID_Teacher`, `SectionId`) VALUES (NULL, '$UID', '$secID');";
 
     try{  $pdo->query($sql) === TRUE;
 
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
         // Select data from the database
-        $stmt = $pdo->query("SELECT `Fname`, `Mname`, `Lname`, `Usertype`, `UserID` FROM Accounttbl ORDER BY `Fname` ASC");
+        $stmt = $pdo->query("SELECT `Fname`, `Mname`, `Lname`, `Usertype`, `UserID` FROM accounttbl ORDER BY `Fname` ASC");
         
         // Prepare data for DataTables
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

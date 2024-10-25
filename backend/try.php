@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 exit;
             } elseif ($UserType && $UserType['UserStatus'] == 3) {
                 // Check for Capstone Teacher
-                $CapT = $pdo->prepare("SELECT MAX(DateCreacted) FROM `Sectionn&CapTeacherTBL` WHERE UID_Teacher = :UID");
+                $CapT = $pdo->prepare("SELECT MAX(DateCreacted) FROM `sectionn&capteachertbl` WHERE UID_Teacher = :UID");
                 $CapT->execute([':UID' => $UID]);
                 $anolaman = $CapT->fetchColumn();
 
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                     exit;
                 } else {
                     // Check if the user is a researcher (Leader or Member)
-                    $Role = $pdo->prepare("SELECT Role, ResearchID FROM `ResearchRoleTBL` WHERE UID = :UID");
+                    $Role = $pdo->prepare("SELECT Role, ResearchID FROM `researchroletbl` WHERE UID = :UID");
                     $Role->execute([':UID' => $UID]);
                     $roles = $Role->fetch(PDO::FETCH_ASSOC);
 
@@ -99,7 +99,7 @@ function updateSessionCookies($pdo, $sesid, $UID, $dateExpire, $date) {
     session_start();
 
     // Insert session info into the database
-    $stmt = $pdo->prepare("INSERT INTO `logTBL` (logID, UID, datelogin, DateExpire) VALUES ( default, :UID, :datelogin, :dateexpire)");
+    $stmt = $pdo->prepare("INSERT INTO `logtbl` (logID, UID, datelogin, DateExpire) VALUES ( default, :UID, :datelogin, :dateexpire)");
     $stmt->execute([
         ':UID' => $UID,
         ':datelogin' => $date,

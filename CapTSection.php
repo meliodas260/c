@@ -55,7 +55,7 @@
                             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                             $emails = $_COOKIE['Email'];
                             echo $emails;
-                            $Sections = $pdo->query("SELECT a.`SectionName` , a.`SectionID`  ,a.`CourseID` FROM `Sectionn&CapTeacherTBL` as a WHERE `UID_Teacher` = '$emails' order by a.`DateCreacted` DESC;");
+                            $Sections = $pdo->query("SELECT a.`SectionName` , a.`SectionID`  ,a.`CourseID` FROM `sectionn&capteachertbl` as a WHERE `UID_Teacher` = '$emails' order by a.`DateCreacted` DESC;");
 
                             while ($higherrows = $Sections->fetch(PDO::FETCH_ASSOC)) {
                             echo   "<div class='SpecDiv'>
@@ -73,7 +73,7 @@
                                     try {
                                         $sectionId = $higherrows['SectionID'];
                                         // Select data from the database
-                                        $stmt = $pdo->query("SELECT b.`Fname` , b.`Mname` ,b.`Lname`, b.`UserID` FROM `Student&SectionTBL` as a inner JOIN `AccountTBL` as b on a.uidStudent = b.userID WHERE `SectionId` = '$sectionId';");
+                                        $stmt = $pdo->query("SELECT b.`Fname` , b.`Mname` ,b.`Lname`, b.`UserID` FROM `sectionn&capteachertbl` as a inner JOIN `accounttbl` as b on a.UID_Teacher = b.userID WHERE `SectionId` = '$sectionId';");
                 
                                         // Loop through the result set and display data in table row
                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

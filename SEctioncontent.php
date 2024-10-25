@@ -22,7 +22,6 @@
 <?php include 'modal/header.php'; ?>
 <?php include 'modal/adminSidebar.php'; ?>
 <div class="content">
-<?php include 'modal/AccountTBL.php'; ?>
     <div class="norDiv">
     <?php
                     $host = 'localhost';
@@ -35,7 +34,7 @@
 
 // Retrieve the value of 'data' from the URL parameter
 $receivedSection = $_GET['sectionID'];
-$section = $pdo->query("SELECT * FROM `Sectionn&CapTeacherTBL` WHERE `SectionID` = $receivedSection;");
+$section = $pdo->query("SELECT * FROM `sectionn&capteachertbl` WHERE `SectionID` = $receivedSection;");
 $secN = $section->fetch();
 $secID = $secN['SectionID'];
 echo "<h1> " . $secN['SectionName'] ."</h1>";

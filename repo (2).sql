@@ -475,21 +475,21 @@ CREATE TABLE `skilltbl` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `student&sectiontbl`
+-- Table structure for table `sectionn&capteachertbl`
 --
 
-CREATE TABLE `student&sectiontbl` (
+CREATE TABLE `sectionn&capteachertbl` (
   `StudentNSectionID` int(100) NOT NULL,
-  `UIDStudent` int(200) NOT NULL,
+  `UID_Teacher` int(200) NOT NULL,
   `SectionId` int(250) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `student&sectiontbl`
+-- Dumping data for table `sectionn&capteachertbl`
 --
 
-INSERT INTO `student&sectiontbl` (`StudentNSectionID`, `UIDStudent`, `SectionId`, `date`) VALUES
+INSERT INTO `sectionn&capteachertbl` (`StudentNSectionID`, `UID_Teacher`, `SectionId`, `date`) VALUES
 (13, 21, 1, '2024-09-08 12:48:14'),
 (14, 22, 1, '2024-09-08 12:48:14'),
 (15, 22, 2, '2024-09-08 13:12:58'),
@@ -703,12 +703,12 @@ ALTER TABLE `skilltbl`
   ADD PRIMARY KEY (`SkillID`);
 
 --
--- Indexes for table `student&sectiontbl`
+-- Indexes for table `sectionn&capteachertbl`
 --
-ALTER TABLE `student&sectiontbl`
+ALTER TABLE `sectionn&capteachertbl`
   ADD PRIMARY KEY (`StudentNSectionID`),
   ADD KEY `SectionId` (`SectionId`),
-  ADD KEY `UIDStudent` (`UIDStudent`);
+  ADD KEY `UID_Teacher` (`UID_Teacher`);
 
 --
 -- Indexes for table `studentresearchratetbl`
@@ -823,9 +823,9 @@ ALTER TABLE `skilltbl`
   MODIFY `SkillID` int(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `student&sectiontbl`
+-- AUTO_INCREMENT for table `sectionn&capteachertbl`
 --
-ALTER TABLE `student&sectiontbl`
+ALTER TABLE `sectionn&capteachertbl`
   MODIFY `StudentNSectionID` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
@@ -925,11 +925,11 @@ ALTER TABLE `skillconnecttbl`
   ADD CONSTRAINT `skillconnecttbl_ibfk_2` FOREIGN KEY (`ResearchRoleID`) REFERENCES `researchroletbl` (`ResearchRoleID`);
 
 --
--- Constraints for table `student&sectiontbl`
+-- Constraints for table `sectionn&capteachertbl`
 --
-ALTER TABLE `student&sectiontbl`
-  ADD CONSTRAINT `student&sectiontbl_ibfk_2` FOREIGN KEY (`SectionId`) REFERENCES `sectionn&capteachertbl` (`SectionID`),
-  ADD CONSTRAINT `student&sectiontbl_ibfk_3` FOREIGN KEY (`UIDStudent`) REFERENCES `accounttbl` (`UserID`);
+ALTER TABLE `sectionn&capteachertbl`
+  ADD CONSTRAINT `sectionn&capteachertbl_ibfk_2` FOREIGN KEY (`SectionId`) REFERENCES `sectionn&capteachertbl` (`SectionID`),
+  ADD CONSTRAINT `sectionn&capteachertbl_ibfk_3` FOREIGN KEY (`UID_Teacher`) REFERENCES `accounttbl` (`UserID`);
 
 --
 -- Constraints for table `studentresearchratetbl`

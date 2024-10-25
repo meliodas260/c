@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // SQL queries
             $sql = "UPDATE `ResearchTBL` SET `fileName` = :new_filename WHERE `ResearchTBL`.`ResearchID` = :ResearchID;";
-            $insertsql = "INSERT INTO `ResearchFileLogTBL` (`ResearchID`, `newfilename`, `timestamp`) 
+            $insertsql = "INSERT INTO `ResearchFilelogtbl` (`ResearchID`, `newfilename`, `timestamp`) 
                           VALUES (:ResearchID, :new_filename,  current_timestamp());";
 
             try {

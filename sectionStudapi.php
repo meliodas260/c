@@ -7,7 +7,7 @@ if (isset($_GET['secID'])) {
 
         // Prepare the SQL query with a placeholder to prevent SQL injection
         $stmt = $pdo->prepare("
-           SELECT b.UserID, b.Fname, b.Mname, b.Lname, b.suffix FROM `Student&SectionTBL` a INNER JOIN `AccountTBL` b ON a.UIDStudent = b.UserID WHERE `SectionId` = :secID
+           SELECT b.UserID, b.Fname, b.Mname, b.Lname, b.suffix FROM `sectionn&capteachertbl` a INNER JOIN `accounttbl` b ON a.UID_Teacher = b.UserID WHERE `SectionId` = :secID
         ");
 
         // Bind the secID parameter to the query

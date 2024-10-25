@@ -18,7 +18,7 @@ try {
 
     // Query the database
     $query = "SELECT a.`SectionName`, a.`SectionID`, a.`SchoolYR`, a.`CourseID`
-              FROM `Sectionn&CapTeacherTBL` as a
+              FROM `sectionn&capteachertbl` as a
               WHERE `UID_Teacher` = :email
               ORDER BY a.`DateCreacted` DESC";
     
