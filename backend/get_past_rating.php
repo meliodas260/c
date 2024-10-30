@@ -1,9 +1,8 @@
 <?php
-// get_past_rating.php
 
 // Simulating database connection
 // Replace with actual database connection code
-require 'backend/dblogin.php'; // Your DB connection
+require 'dblogin.php'; // Your DB connection
 
 if (isset($_POST['UID']) && isset($_POST['ResearchID'])) {
     $UID = $_POST['UID'];

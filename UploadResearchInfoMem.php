@@ -39,7 +39,7 @@
             echo "error";
         }
         // SQL query to fetch data
-        $sql = "SELECT * FROM `ResearchTBL` WHERE `ResearchID` = '$ResearchID';";
+        $sql = "SELECT * FROM `researchtbl` WHERE `ResearchID` = '$ResearchID';";
         $result = $pdo->query($sql);
        
          if ($result) {

@@ -136,20 +136,20 @@
                     data: { input: inputValue},
                     dataType: 'json',
                     success: function(predictions) {
-                        if (predictions.length > 0) {
-                            predictionContainer.html('');
-                            predictions.forEach(prediction => {
-                                const predictionElement = $('<div>').text(prediction);
-                                predictionElement.on('click', function() {
-                                    inputField.val(prediction);
-                                    predictionContainer.hide();
-                                });
-                                predictionContainer.append(predictionElement);
-                            });
-                            predictionContainer.show();
-                        } else {
+                if (predictions.length > 0) {
+                    predictionContainer.html('');
+                    predictions.forEach(prediction => {
+                        const predictionElement = $('<div>').text(prediction.Fullname); // Display Fullname
+                        predictionElement.on('click', function() {
+                            inputField.val(prediction.Fullname); // Set Fullname in the input field on click
                             predictionContainer.hide();
-                        }
+                        });
+                        predictionContainer.append(predictionElement);
+                    });
+                    predictionContainer.show();
+                    } else {
+                        predictionContainer.hide();
+                    }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching predictions:', error);
