@@ -281,40 +281,32 @@ $(document).ready(function() {
         </div>  
         <h3></h3>
         </div>
-        <div class="input-group">
-        
-            <div class="form-floating mb-3">
-                <input class="border border-primary form-control"type="text" autocomplete="off" id="Advicer" name="Advicer" placeholder="Member" >
-                <label for="Advicer">Adviser</label>
-                <div id="Advicer_pre" class="prediction-container"  style="display: none;"></></div>
-            </div>  
-            <div class="form-floating mb-3 ">
-                <input class="border border-primary form-control"type="text" autocomplete="off" id="Expert" name="Expert" placeholder="Sr./Jr." > <!--suffix -->
-                <label for="Expert">Expert</label>
-                <div id="Expert_pre" class="prediction-container"  style="display: none;"></></div>
-                </div>
-                
-        </div>
-        <div class="input-group">
-        <div class="form-floating mb-3">
-                <input class="border border-primary form-control"type="text" autocomplete="off" id="Panel1" name="Panel1" placeholder="Sr./Jr." > <!--suffix -->
-                <label for="Panel1">Panel 1</label>
-                <div id="Panel1_pre" class="prediction-container"  style="display: none;"></></div>
-            </div>  
-            <div class="form-floating mb-3">
-                <input class="border border-primary form-control"type="text" autocomplete="off" id="Panel2" name="Panel2" placeholder="Sr./Jr." > <!--suffix -->
-                <label for="Panel2">Panel 2</label>
-                <div id="Panel2_pre" class="prediction-container"  style="display: none;"></></div>
-            </div>
-                <div class="form-floating mb-3">
-                    <input class="border border-primary form-control"type="text" autocomplete="off" id="Panel3" name="Panel3" placeholder="Sr./Jr." > <!--suffix -->
-                    <label for="Panel3">Panel 3</label>
-                    <div id="Panel3_pre" class="prediction-container"  style="display: none;"></></div>
-                </div>  
-              
-            </div>
             <br>
-            
+            <h2>Table Input Form with Fixed Columns and Dynamic Rows</h2>
+
+    <table id="inputTable">
+        <tr id="headerRow">
+            <th>teacherName</th>
+            <th>role</th>
+        </tr>
+        <!-- Initial 3 rows -->
+        <tr>
+            <td><input type="text" name="teacherName[]" required></td>
+            <td><input type="text" name="role[]" required></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="teacherName[]" required></td>
+            <td><input type="text" name="role[]" required></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="teacherName[]" required></td>
+            <td><input type="text" name="role[]" required></td>
+        </tr>
+    </table>
+    <button type="button" onclick="addRow()">+ Add Row</button>
+
+
+            <br>
             <div class="d-flex justify-content-center text-center">
                 <div id="input-container">
                     Keywords
@@ -457,8 +449,13 @@ document.getElementById('Createrole').addEventListener('submit', function(event)
     // Create a FormData object from the form
     var formData = new FormData(this);
 
+    // Log the FormData to the console to inspect it
+    formData.forEach(function(value, key) {
+        console.log(key + ": " + value);
+    });
+
     // Send the form data to the PHP API using fetch
-    fetch('backend/groupingsapi.php', { // The URL of the PHP file that processes the form data
+    fetch('backend/groupingsapi.php', {
         method: 'POST',
         body: formData
     })
@@ -469,20 +466,17 @@ document.getElementById('Createrole').addEventListener('submit', function(event)
         return response.json(); // Parse the JSON response
     })
     .then(data => {
-        // Handle the response from the PHP API
+        console.log('Success:', data);
         if (data.success) {
-            // Show success alert
             Swal.fire({
                 title: 'Success!',
                 text: data.message,
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then(() => {
-                // Clear the form inputs after closing the alert
-                document.getElementById('Createrole').reset();
+                document.getElementById('Createrole').reset(); // Reset form after success
             });
         } else {
-            // Show error alert with custom message
             Swal.fire({
                 title: 'Error!',
                 text: data.message,
@@ -492,7 +486,6 @@ document.getElementById('Createrole').addEventListener('submit', function(event)
         }
     })
     .catch(error => {
-        // Handle any errors from the API or network
         console.error('Error:', error);
         Swal.fire({
             title: 'Error!',
@@ -502,6 +495,29 @@ document.getElementById('Createrole').addEventListener('submit', function(event)
         });
     });
 });
+
+// Function to dynamically add a new row to the table
+function addRow() {
+    var table = document.getElementById('inputTable');
+    var newRow = table.insertRow(table.rows.length - 1); // Insert row before last row (button row)
+    
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+
+    var input1 = document.createElement('input');
+    input1.type = 'text';
+    input1.name = 'teacherName[]';
+    input1.required = true;
+    cell1.appendChild(input1);
+
+    var input2 = document.createElement('input');
+    input2.type = 'text';
+    input2.name = 'role[]';
+    input2.required = true;
+    cell2.appendChild(input2);
+}
+
+
 
 
       function toggleInfo() {

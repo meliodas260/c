@@ -36,10 +36,10 @@
 
 
 <body>
-    
-<h1>Teachers</h1>
-    <div id="teacherProfilesContainer"></div>
-
+    <div class="myDiv">
+        <h1>Teachers</h1>
+        <div id="teacherProfilesContainer"></div>
+    </div>
     <script>
         // Function to fetch and display all teacher profiles
         function fetchTeacherProfiles() {
