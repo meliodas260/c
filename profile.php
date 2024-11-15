@@ -43,46 +43,89 @@
             object-fit: cover;
         }
 
-        /* Modal styling */
-        .modal1 {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-        }
+/* Modal styling */
+.modal1 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
 
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-            position: relative;
-            z-index: 21;
-        }
+/* Add animation to the modal */
+.modal1.show {
+    display: flex;
+    animation: fadeIn 0.4s ease, scaleUp 0.4s ease;
+}
 
-        .modal-content img {
-            width: 100%;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 8px;
-        }
+/* Modal content styling */
+.ModalProfileView {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    z-index: 21;
+    transform: scale(0.9); /* Initial scale for animation */
+    opacity: 0; /* Initial opacity for animation */
+    animation: fadeInContent 0.4s ease forwards;
+}
 
-        .close1 {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-        }
+.ModalProfileView img {
+    width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.close1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Keyframes for fade-in effect */
+@keyframes fadeIn {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    to {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Keyframes for scale-up effect */
+@keyframes scaleUp {
+    from {
+        transform: scale(0.9);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Keyframes for modal content fade-in and scale */
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
     </style>
 </head>
 <?php include 'modal/header.php'; ?>
@@ -108,11 +151,11 @@
 
     <!-- Modal Structure -->
     <div id="imageModal" class="modal1">
-        <div class="modal-content">
+        <div class="ModalProfileView">
             <span class="close1">&times;</span>
             <img id="modalImage" src="" alt="Profile Picture">
         </div>
-    </div>
+    </div> 
 
     <script src="modal/ImageZoom.js"></script>
 

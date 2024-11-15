@@ -101,80 +101,76 @@ include 'modal/header.php';
 
 <body>
 <div class="contentor">
-    
     <br>
     <h1>Research Suggestions</h1>
     <div id="research-container"></div>
+</div>
 
-    <script>
-        const researchPapers = [
-            { title: 'Dynamic Web Applications', author: 'Alice Smith', year: '2023', description: 'An in-depth look at web app development.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Machine Learning Basics', author: 'Bob Johnson', year: '2024', description: 'Introduction to machine learning concepts.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Advanced AI Techniques', author: 'Charlie Brown', year: '2022', description: 'Exploring the latest in artificial intelligence.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Understanding Data Science', author: 'David Wilson', year: '2024', description: 'A comprehensive guide to data science.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Web Development Trends', author: 'Eve Davis', year: '2024', description: 'Current trends in web development.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Cybersecurity Fundamentals', author: 'Frank Clark', year: '2023', description: 'Essential principles of cybersecurity.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Quantum Computing Revolution', author: 'Grace Lee', year: '2023', description: 'A look into the future of quantum computing.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Blockchain Technology Explained', author: 'Henry Zhang', year: '2024', description: 'Understanding blockchain and its applications.', imageUrl: 'img/neust_logo.png' },
-            { title: 'The Rise of Robotics', author: 'Isabella White', year: '2023', description: 'Exploring the impact of robotics in modern society.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Data Privacy in the Digital Age', author: 'Jack Thompson', year: '2024', description: 'The importance of data privacy in today\'s world.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Augmented Reality in Education', author: 'Kate Brown', year: '2023', description: 'Enhancing learning through augmented reality.', imageUrl: 'img/neust_logo.png' },
-            { title: 'Artificial Intelligence in Healthcare', author: 'Liam Smith', year: '2024', description: 'How AI is transforming healthcare practices.', imageUrl: 'img/neust_logo.png' }
-        ];
+<script>
+    // Add a research card to the container
+    function addResearchCard(title, date, abstract, imageUrl) {
+    const container = document.getElementById('research-container');
+    const card = document.createElement('div');
+    
+    // Set a default image if `imageUrl` is empty
+    const imageSrc = imageUrl ? imageUrl : '../img/neust_logo.png';
+    
+    card.className = 'research-card';
+    card.innerHTML = `
+        <img src="UploadIMG/${imageSrc}" alt="Research Image" class="research-image">
+        <h2>${title}</h2>
+        <p><strong>Year:</strong> ${date}</p>
+        <p>${abstract}</p>
+        <a href="#" class="read-more">Read More</a>
+    `;
+    container.appendChild(card);
+}
 
-        function addResearchCard(title, author, year, description, imageUrl) {
-            const container = document.getElementById('research-container');
-            const card = document.createElement('div');
-            card.className = 'research-card';
-            card.innerHTML = `
-                <img src="${imageUrl}" alt="Research Image" class="research-image">
-                <h2 class="research-title">${title}</h2>
-                <p class="research-author">Author: ${author}</p>
-                <p class="research-year">Year: ${year}</p>
-                <p class="research-description">${description}</p>
-                <a href="#" class="read-more">Read More</a>
-            `;
-            container.appendChild(card);
+
+    // Suggest research papers based on a query
+    function suggestResearchPapers(researchPapers, query, desiredCount) {
+        const suggestions = researchPapers.filter(paper =>
+            (paper.Title && paper.Title.toLowerCase().includes(query.toLowerCase()))
+        );
+
+        if (suggestions.length < desiredCount) {
+            const remainingCount = desiredCount - suggestions.length;
+            const randomPapers = researchPapers
+                .filter(paper => !suggestions.includes(paper))
+                .sort(() => Math.random() - 0.5)
+                .slice(0, remainingCount);
+            suggestions.push(...randomPapers);
         }
 
-        function suggestResearchPapers(query, desiredCount) {
-            // Filter research papers based on the search query
-            const suggestions = researchPapers.filter(paper =>
-                paper.title.toLowerCase().includes(query.toLowerCase()) ||
-                paper.author.toLowerCase().includes(query.toLowerCase())
-            );
+        return suggestions.slice(0, desiredCount);
+    }
 
-            // If the number of suggestions is less than desiredCount, get the remaining random papers
-            if (suggestions.length < desiredCount) {
-                const remainingPapers = researchPapers.filter(paper => 
-                    !suggestions.includes(paper)
-                );
+    // Fetch and display research suggestions from the API
+    function fetchResearchSuggestions() {
+        fetch('backend/Suggestresearch.php')
+            .then(response => response.json())
+            .then(researchPapers => {
+                const searchQuery = 'dynamic'; // Set query based on requirements
+                const desiredCount = 10; // Number of papers to display
+                const suggestedPapers = suggestResearchPapers(researchPapers, searchQuery, desiredCount);
 
-                // Shuffle remaining papers
-                const shuffledRemaining = remainingPapers.sort(() => 0.5 - Math.random());
-                const additionalCount = desiredCount - suggestions.length;
+                const container = document.getElementById('research-container');
+                container.innerHTML = ''; // Clear previous content
 
-                // Combine suggestions with additional random papers
-                suggestions.push(...shuffledRemaining.slice(0, additionalCount));
-            }
+                suggestedPapers.forEach(paper => {
+                    addResearchCard(paper.Title, paper.date, paper.Abstract, paper.ImageName);
+                });
 
-            return suggestions;
-        }
+                if (suggestedPapers.length === 0) {
+                    container.innerHTML = '<p>No research papers found for your query.</p>';
+                }
+            })
+            .catch(error => console.error('Error fetching research papers:', error));
+    }
 
-        // Example usage of the function
-        const searchQuery = 'Machine'; // Change this to test different queries
-        const desiredCount = 10; // Number of papers you want to display
-        const suggestedPapers = suggestResearchPapers(searchQuery, desiredCount);
-
-        if (suggestedPapers.length > 0) {
-            suggestedPapers.forEach(paper => {
-                addResearchCard(paper.title, paper.author, paper.year, paper.description, paper.imageUrl);
-            });
-        } else {
-            const container = document.getElementById('research-container');
-            container.innerHTML = '<p>No research papers found for your query.</p>';
-        }
-    </script>
+    // Fetch research suggestions on page load
+    fetchResearchSuggestions();
+</script>
     <div class="flexer">
         <div class="half left"> 
 
@@ -190,74 +186,5 @@ include 'modal/header.php';
             </ul>
         </div>
     </div>
-    
-
-
-    
 </body>
 </html>
-<script>
-// function addResearchCard(title, author, year, description, imageUrl) {
-//     const container = document.getElementById('research-container');
-//     const card = document.createElement('div');
-//     card.className = 'research-card';
-//     card.innerHTML = `
-//         <img src="${imageUrl}" alt="Research Image" class="research-image">
-//         <h2 class="research-title">${title}</h2>
-//         <p class="research-author">Author: ${author}</p>
-//         <p class="research-year">Year: ${year}</p>
-//         <p class="research-description">${description}</p>
-//         <a href="#" class="read-more">Read More</a>
-//     `;
-//     container.appendChild(card);
-// }
-
-// function suggestResearchPapers(researchPapers, query, desiredCount) {
-//     // Filter research papers based on the search query
-//     const suggestions = researchPapers.filter(paper =>
-//         paper.Title.toLowerCase().includes(query.toLowerCase()) ||
-//         paper.Author.toLowerCase().includes(query.toLowerCase())
-//     );
-
-//     // If there are fewer suggestions than desired, get random papers to fill the gap
-//     if (suggestions.length < desiredCount) {
-//         const remainingCount = desiredCount - suggestions.length;
-//         const randomPapers = researchPapers
-//             .filter(paper => !suggestions.includes(paper)) // Exclude already suggested papers
-//             .sort(() => Math.random() - 0.5) // Shuffle remaining papers
-//             .slice(0, remainingCount); // Take only the required number
-//         suggestions.push(...randomPapers);
-//     }
-
-//     return suggestions.slice(0, desiredCount); // Return the desired number of suggestions
-// }
-
-// function fetchResearchSuggestions() {
-//     fetch('backend/Suggestresearch.php')
-//         .then(response => response.json())
-//         .then(researchPapers => {
-//             const searchQuery = 'dynamic'; // You can change this to test different queries
-//             const desiredCount = 10; // Set the desired count of suggestions
-
-//             const suggestedPapers = suggestResearchPapers(researchPapers, searchQuery, desiredCount);
-
-//             // Clear existing content before adding new cards
-//             const container = document.getElementById('research-container');
-//             container.innerHTML = '';
-
-//             // Add each suggested paper to the DOM
-//             suggestedPapers.forEach(paper => {
-//                 addResearchCard(paper.Title, paper.Author, paper.Year, paper.Description, paper.ImageName);
-//             });
-
-//             // Handle case if no papers are found
-//             if (suggestedPapers.length === 0) {
-//                 container.innerHTML = '<p>No research papers found for your query.</p>';
-//             }
-//         })
-//         .catch(error => console.error('Error fetching research papers:', error));
-// }
-
-// // Call the function to fetch research suggestions on page load
-// fetchResearchSuggestions();
-</script>

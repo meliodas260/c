@@ -331,8 +331,8 @@ $(document).ready(function() {
                 <?php
                     // // Database connection
                     // $host = 'localhost';
-                    // $username = 'mine';
-                    // $password = 'pass';
+                    // $username = 'root';
+                    // $password = '';
                     // $database = 'repo';
                     // $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 

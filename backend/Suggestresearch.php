@@ -7,9 +7,8 @@ $lastYear = date('Y', strtotime('-1 year'));
 
 // Prepare the query to fetch research papers for the current year and last year
 $stmt = $pdo->prepare("
-    SELECT `Title`, `Author`, `Year`, `Description`, `ImageName`
-    FROM `researchtbl`
-    WHERE `Year` IN (:currentYear, :lastYear)
+
+SELECT `ResearchID`,`Title`, year(`date`) as date, `Abstract`, `ImageName` FROM `researchtbl` WHERE Year(date) IN (:currentYear, :lastYear)
 ");
 
 // Bind the parameters
