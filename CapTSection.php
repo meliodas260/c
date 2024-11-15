@@ -73,7 +73,7 @@
                                     try {
                                         $sectionId = $higherrows['SectionID'];
                                         // Select data from the database
-                                        $stmt = $pdo->query("SELECT b.`Fname` , b.`Mname` ,b.`Lname`, b.`UserID` FROM `sectionn&capteachertbl` as a inner JOIN `accounttbl` as b on a.UID_Teacher = b.userID WHERE `SectionId` = '$sectionId';");
+                                        $stmt = $pdo->query("SELECT b.`Fname` , b.`Mname` ,b.`Lname`, b.`UserID` FROM `student&sectiontbl` as a left JOIN `accounttbl` as b on a.UIDStudent = b.userID WHERE `SectionId` = '$sectionId';");
                 
                                         // Loop through the result set and display data in table row
                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

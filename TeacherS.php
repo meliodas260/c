@@ -4,30 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link href="css/custom2.css" rel="stylesheet"> 
     <title>Teachers Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* Basic styling for profile cards */
         .profile-card {
+            background-color: #eef3f7 ;
             display: flex;
             align-items: center;
-            margin: 10px;
-            padding: 10px;
+            margin: auto;
+            padding: auto;
+            padding: .5rem .9rem;
+            margin: .5rem .5rem;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 300px;
+            border-radius:20px;
+            width: auto;
             cursor: pointer;
         }
         .profile-card img {
-            width: 50px;
-            height: 50px;
+            width: 5rem;
+            height: 5rem;
             border-radius: 50%;
             margin-right: 15px;
+            border: 1px solid #bae3f0;
         }
         .profile-card .fullname {
-            font-size: 16px;
-            font-weight: bold;
+            margin-left: 1rem;
+            font-size: 1.5rem;
+            font-family: 'Nunito', sans-serif;
         }
     </style>
 </head>
@@ -36,7 +42,7 @@
 
 
 <body>
-    <div class="myDiv">
+    <div class="norDiv">
         <h1>Teachers</h1>
         <div id="teacherProfilesContainer"></div>
     </div>
@@ -54,7 +60,7 @@
                         const profileCard = $('<div>').addClass('profile-card');
 
                         // Profile image
-                        const imagePath = prediction.imageName ? 'img/' + prediction.imageName : 'img/avatar-default-icon-1024x1024-dvpl2mz1.png';
+                        const imagePath = prediction.imageName ? 'Profiles/' + prediction.imageName : 'img/avatar-default-icon-1024x1024-dvpl2mz1.png';
                         const profileImage = $('<img>').attr('src', imagePath);
                         profileCard.append(profileImage);
 

@@ -1,12 +1,18 @@
+<style>
+    .red {
+    background-color:  #e7f2f8;
+}
 
-<div class="SpecDiv">
+</style>
+
+<div class="SpecDiv red">
     <table id="accountsTable" class="table display">
                 <thead>
                     <tr>
                         <th scope="col">UserID</th>
                         <th scope="col">Name</th>
                         <th scope="col">UserType</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col">Edit UserType</th>
                     </tr>
                 </thead>
                 <tbody>
