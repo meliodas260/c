@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Viewer with Single and All Page View</title>
+    <link href="css/custom2.css" rel="stylesheet">
+    <link href="css/sidebar.css" rel="stylesheet">
     <style>
         body { font-family: Arial, sans-serif; }
         #pdf-container { text-align: center; margin: 20px; }
@@ -11,8 +13,40 @@
         #page-controls { margin: 10px 0; }
         #page-jump { margin-top: 10px; }
         #all-pages-view { display: none; } /* Initially hidden */
-    </style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* Prevent horizontal overflow */
+    }
+
+    #pdf-container {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 100%; /* Restrict the container width to the screen width */
+    }
+
+    canvas {
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        max-width: 100%; /* Ensure the canvas does not overflow horizontally */
+        height: auto; /* Maintain aspect ratio */
+    }
+
+    #page-controls, #page-jump {
+        margin: 10px 0;
+    }
+
+    #all-pages-view canvas {
+        margin-bottom: 10px;
+        max-width: 100%;
+        height: auto;
+    }
+    
+</style>
+
 </head>
+<?php include 'modal/header.php'; ?>
 <body>
     <div id="pdf-container">
         <div>

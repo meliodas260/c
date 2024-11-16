@@ -16,6 +16,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="css/datatable.css" rel="stylesheet">
@@ -98,26 +101,16 @@ try {
             </a>
         </div>
 
-        <form id="createCourseForm">
-            <h3>Create new course</h3>
-            <div class="form-floating mb-3 w-50" style="margin: 0 auto;">
-                <input class="border border-primary form-control" type="text" autocomplete="off" id="Course1" name="Course" placeholder="Course" required>
-                <label for="Course">New Course</label>
-            </div>
-            <br>
-            <div class="form-floating mb-3 w-50" style="margin: 0 auto;">
-                <input class="border border-primary form-control" type="text" autocomplete="off" id="Acronym" name="Acronym" placeholder="Acronym" required>
-                <label for="Acronym">New Course Acronym</label>
-            </div>
-            <br>
-            <div class="form-floating mb-3 w-50" style="margin: 0 auto;">
-                <input class="border border-primary form-control" type="text" autocomplete="off" id="desc" name="desc" placeholder="Description" required>
-                <label for="desc">New Course Description</label>
-            </div>
+<!-- Button to Trigger Modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCourseModal">
+    Add New Course
+</button>
 
-            <button type="button" id="submitButton" class="btn btn-primary buttonclean">Submit</button>
-        </form>
 
+
+<!-- Bootstrap CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Include SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -183,6 +176,33 @@ console.log($('#Course1').val()); // Check the value of the field
 
     </div>
 </div>
-
+<!-- Modal Structure -->
+<div class="modal fade" id="AddCourseModal" tabindex="-1" aria-labelledby="AddCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"  style="max-width: 50%; margin: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddCourseModalLabel">Create New Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createCourseForm">
+                    <div class="form-floating mb-3 w-100">
+                        <input class="border border-primary form-control" type="text" autocomplete="off" id="Course1" name="Course" placeholder="Course" required>
+                        <label for="Course1">New Course</label>
+                    </div>
+                    <div class="form-floating mb-3 w-100">
+                        <input class="border border-primary form-control" type="text" autocomplete="off" id="Acronym" name="Acronym" placeholder="Acronym" required>
+                        <label for="Acronym">New Course Acronym</label>
+                    </div>
+                    <div class="form-floating mb-3 w-100">
+                        <input class="border border-primary form-control" type="text" autocomplete="off" id="desc" name="desc" placeholder="Description" required>
+                        <label for="desc">New Course Description</label>
+                    </div>
+                    <button type="button" id="submitButton" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

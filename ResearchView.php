@@ -5,30 +5,44 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="css/custom2.css" rel="stylesheet"> 
+    <link href="css/custom2.css" rel="stylesheet">
+    <link href="css/sidebar.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <title>PDF File Upload</title>
 </head>
 <style>
-        .heart-button {
-            width: 50px;
-            height: 50px;
-            background-color: gray; /* Default color */
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .heart {
-            width: 20px;
-            height: 20px;
-            background-color: red; /* Heart color when active */
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Simple heart shape */
-            display: none; /* Hide by default */
-        }
+.heart-button {
+  width: 50px;
+  height: 50px;
+  background-color: transparent; /* Make the background transparent */
+  border: none;
+  border-radius: 50%; /* Makes the button circular */
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.HEART {
+  display: inline-block;
+  width: 2rem; /* Adjust size as needed */
+  height: 2rem;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff0000' d='m12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z'/%3E%3C/svg%3E");
+  background-color: pink;
+  -webkit-mask-image: var(--svg);
+  mask-image: var(--svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.heart-button:hover .HEART {
+  background-color: orange; /* Change heart color on hover */
+}
+
+
+
         .star-rating {
             display: flex;
             cursor: pointer;
@@ -63,22 +77,25 @@ if (isset($_COOKIE['Email'])) {
 
 
 <?php   include 'modal/header.php'; 
-        include 'modal/ResearcherSidebar.php';
         ?>
-<div class="container mt-5">
+        <div class="content">
+    <div class="sidebar">
+        <?php include 'modal/adminSidebar.php'; ?>
+    </div>
+    <div class="main-content">
+        <div class="container mt-5">
 
 
-    <h1>Research Details</h1>
+            <h1>Research Details</h1>
 
-  <div>
+        <div>
+        <button class="heart-button" id="favoriteButton">
+                <div class="HEART" id="heart"> </div>
+        </button>
+        <h1>Rate the Research</h1>
     
-<button class="heart-button" id="favoriteButton">
-        <div class="heart" id="heart"></div>
-    </button>
-    <h1>Rate the Research</h1>
-    
-    <input type="hidden" name="UID" id="UID" value="<?php echo $email ?>"> <!-- Replace with dynamic student ID -->
-    <input type="hidden" name="ResearchID" id="ResearchID" value="<?php echo $researchID ?> "> <!-- Replace with dynamic research ID -->
+        <input type="hidden" name="UID" id="UID" value="<?php echo $email ?>"> <!-- Replace with dynamic student ID -->
+        <input type="hidden" name="ResearchID" id="ResearchID" value="<?php echo $researchID ?> "> <!-- Replace with dynamic research ID -->
     
     <div class="star-rating" id="starRating">
         <span class="star" data-value="1">★</span>
@@ -95,35 +112,41 @@ if (isset($_COOKIE['Email'])) {
 
         // Function to check favorite status
         function checkFavorite() {
-            fetch('hahaha.php', { // Replace with your PHP script URL
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    'studentId': studentId,
-                    'id': id
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const heartButton = document.getElementById('favoriteButton');
-                const heart = document.getElementById('heart');
+    fetch('hahaha.php', { // Replace with your PHP script URL
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'studentId': studentId, // Ensure studentId is defined
+            'id': id, // Ensure id is defined
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            const heartButton = document.getElementById('favoriteButton');
+            const heart = document.getElementById('heart');
 
-                if (data.status == 1) {
-                    // Item is favorited
-                    heart.style.display = 'block'; // Show heart
-                    heartButton.style.backgroundColor = 'red'; // Change button color to red
-                } else {
-                    // Item is not favorited
-                    heart.style.display = 'none'; // Hide heart
-                    heartButton.style.backgroundColor = 'gray'; // Change button color to gray
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
+            if (data.status === 1) {
+                // Item is favorited
+                heart.style.display = 'block'; // Show heart
+                heartButton.style.backgroundColor = 'red'; // Change button color to red
+            } else {
+                // Item is not favorited
+                heart.style.display = 'block'; // Hide heart
+                heartButton.style.backgroundColor = 'gray'; // Change button color to gray
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+        });
+}
+
         // Call the function to check the favorite status on page load
         checkFavorite();
 
@@ -148,7 +171,7 @@ if (isset($_COOKIE['Email'])) {
                 document.getElementById('heart').classList.remove('filled');
             }
             // Refresh the page
-window.location.reload();
+        window.location.reload();
 
         },
         error: function(error) {
@@ -313,5 +336,6 @@ $(document).ready(function() {
         const ResearchID = document.getElementById('ResearchID').value;
         fetchPreviousRating(UID, ResearchID); // Fetch the previous rating for this user and research
     </script>
+</div>
 </body>
 </html>

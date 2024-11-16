@@ -126,22 +126,24 @@ input{
 .contentor{
     padding: 0 15% 0 15% ;
 }
+
 .content {
     display: flex;
     width: 100%;
     flex-wrap: wrap;
-}
-
-.sidebar {
-    flex: 0 0 20%;
+    }
     
-}
-
-.main-content {
-    margin-top: 10px;
+    .sidebar {
+    flex: 0 0 20%;
+    background-color: #d8e1fd; /* Optional: Add background color to distinguish */
+    }
+    
+    .main-content {
+    margin-top: 3%;
     flex: 0 0 70%;
     background-color: #ffffff; /* Optional: Add background color to distinguish */
-}
+    }
+    
 
 
 /* Media query for smaller screens */
@@ -202,4 +204,3 @@ input{
     border: 1px solid rgb(188, 219, 236);
 
 }
-

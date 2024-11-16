@@ -3,18 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Admin Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background-color: transparent;
+        }
+        #sidebar .nav-link {
+            color: #000; /* Dark text for better visibility */
+            border-radius: 15px;
+        }
+        #sidebar .nav-link:hover {
+            background-color: rgba(0, 0, 6, 0.3); /* Subtle hover effect */
+        }
+    </style>
 </head>
-  <ul>
-    <li><a href="./Accounts">Accounts</a></li>
-    <li><a href="./setSection">Sections</a></li>
-    <li><a href="#">Tags & Programs</a></li>
-    <li><a href="#">Reports</a></li>
-  </ul>
+        <!-- Sidebar -->
+        <div id="sidebar" class="">
+            <h5 class="text-center py-3">Menu</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="./Accounts">Accounts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./setSection">Sections</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Tags & Programs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Reports</a>
+                </li>
+            </ul>
+        </div>
 <body>
     
     
 
-   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

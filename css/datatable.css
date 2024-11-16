@@ -15,19 +15,3 @@ mask-size: 100% 100%;
 .edit-btn{
 border:0px;
 }
-.content {
-display: flex;
-width: 100%;
-flex-wrap: wrap;
-}
-
-.sidebar {
-flex: 0 0 20%;
-background-color: #6a7aa5; /* Optional: Add background color to distinguish */
-}
-
-.main-content {
-margin-top: 3%;
-flex: 0 0 70%;
-background-color: #ffffff; /* Optional: Add background color to distinguish */
-}

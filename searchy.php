@@ -11,15 +11,25 @@
             background-color: #f8f9fa; /* Light background color */
         }
         .card {
-            transition: transform 0.2s; /* Smooth transition for hover effect */
+            transition: transform 0.2s; 
+            width: 70%;
+            height: auto;
+            ustify-content: center;
+            margin: 0 auto; 
+            
         }
         .card:hover {
-            transform: scale(1.05); /* Slightly enlarge card on hover */
+            transform: scale(1.03); /* Slightly enlarge card on hover */
         }
         .research-image {
-            height: 200px; /* Set a fixed height for images */
-            object-fit: cover; /* Crop image to fit */
-        }
+            margin: 1.2rem auto; 
+    width: 50rem !important;
+    height: 30rem !important;
+    object-fit: cover; /* Ensure proper cropping */
+    border: 1px solid #a0c4ff; /* Add border to debug */
+    border-radius: 10%;
+}
+
         .card-title {
             font-size: 1.5rem; /* Increase title font size */
             font-weight: bold; /* Make title bold */
@@ -27,18 +37,19 @@
         .card-text {
             font-size: 1rem; /* Standard font size for text */
         }
-        .btn {
-            background-color: #007bff; /* Bootstrap primary color */
-            color: white; /* White text color for button */
+        .FullView {
+            background-color: #007bff !important;
+            color: white !important; 
         }
-        .btn:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+        .FullView:hover {
+            background-color: #0056b3 !important;   
         }
         .alert {
             margin-top: 20px; /* Spacing for alerts */
         }
     </style>
 </head>
+<?php include 'modal/header.php'; ?>
 <body>
 
 <div class="container mt-5">
@@ -100,7 +111,7 @@ $(document).ready(function() {
                                     <p><strong>Panels:</strong> ${panels}</p>
                                     <p class="card-text"><strong>Year:</strong> ${item.Year}</p>
                                     <p class="card-text">${item.Description}</p>
-                                    <a href="ResearchView?researchID=${item.ID}" class="btn">Read More</a>
+                                    <a href="ResearchView?researchID=${item.ID}" class="btn FullView">View full info</a>
                                 </div>
                             </div>
                         `);

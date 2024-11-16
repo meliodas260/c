@@ -6,7 +6,6 @@ body, ul {
   
   /* Sidebar styles */
   .sidebarold {
-    
     width: auto;
     height: 100%;
     background-color: #ffffff;
@@ -19,7 +18,6 @@ body, ul {
     border-bottom: #244153 solid 1px;
     z-index: 0;
   }
-  
   .sidebar ul {
     list-style: none;
     padding: 20px;
