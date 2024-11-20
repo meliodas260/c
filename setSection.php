@@ -237,7 +237,7 @@ $(document).ready(function() {
         },
         "columns": [
             { "data": "SectionName" },
-            { "data": "UID_Teacher" },
+            { "data": "FUllname" },
             { 
                 "data": null, 
                 "render": function(data, type, row) {
