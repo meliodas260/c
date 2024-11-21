@@ -51,21 +51,9 @@
     <div class="main-content">
 
     <br>
-    <div class="SpecDiv">
-            <h3>BSIT</h3>
-            <table id="BSITTBL" class="table display">
-                <thead>
-                    <tr>
-                        <th scope="col">Section</th>
-                        <th scope="col">CapstoneTeacher</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated here by DataTables -->
-                </tbody>
-            </table>
-        </div>
+
+<div id="courseTables"></div>
+
 
 
 
@@ -88,7 +76,7 @@
                 <div class="input-group">
                 <div class="form-floating mb-3 w-50">
                     <input class="border border-primary form-control "type="text" id="ResearchT" autocomplete="off" name="ResearchT" placeholder="juan" required> 
-                    <label for="ResearchT">Research Teacher ID #</label>
+                    <label for="ResearchT">Research Teacher Name</label>
                     <div id="prediction-container"></div><!--ResearchT -->
                 </div>  
                 
@@ -150,48 +138,53 @@ document.addEventListener('DOMContentLoaded', async function () {
     </script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script> $(document).ready(function() {
-        const inputField = $('#ResearchT');
-        const predictionContainer = $('#prediction-container');
-    
-        // Event listener for input field
-        inputField.on('input', function() {
-            const inputValue = inputField.val().toLowerCase();
-    
-            // AJAX request to fetch predictions
-            $.ajax({
-                url: 'backend/fetch_predictions.php', // PHP script to fetch predictions
-                method: 'POST',
-                data: { input: inputValue },
-                dataType: 'json',
-                success: function(predictions) {
-                    if (predictions.length > 0) {
-                        predictionContainer.html('');
-                        predictions.forEach(prediction => {
-                            const predictionElement = $('<div>').text(prediction);
-                            predictionElement.on('click', function() {
-                                inputField.val(prediction);
+    const inputField = $('#ResearchT');
+    const predictionContainer = $('#prediction-container');
+
+    // Event listener for input field
+    inputField.on('input', function() {
+        const inputValue = inputField.val().toLowerCase();
+
+        // AJAX request to fetch predictions
+        $.ajax({
+            url: 'backend/fetch_predictions.php', // PHP script to fetch predictions
+            method: 'POST',
+            data: { input: inputValue },
+            dataType: 'json',
+            success: function(predictions) {
+                if (predictions.length > 0) {
+                    predictionContainer.html(''); // Clear previous predictions
+                    predictions.forEach(prediction => {
+                        const predictionElement = $('<div>')
+                            .text(prediction.Fullname) // Only display the Fullname
+                            .addClass('prediction-item') // Optional: Add a class for styling
+                            .on('click', function() {
+                                inputField.val(prediction.Fullname); // Set input value to selected Fullname
                                 predictionContainer.hide();
                             });
-                            predictionContainer.append(predictionElement);
-                        });
-                        predictionContainer.show();
-                    } else {
-                        predictionContainer.hide();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching predictions:', error);
+                        predictionContainer.append(predictionElement); // Append the prediction element
+                    });
+                    predictionContainer.show();
+                } else {
+                    predictionContainer.hide();
                 }
-            });
-        });
-    
-        // Hide predictions when clicking outside the input field
-        $(document).on('click', function(event) {
-            if (!inputField.is(event.target) && !predictionContainer.is(event.target) && predictionContainer.has(event.target).length === 0) {
-                predictionContainer.hide();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching predictions:', error);
             }
         });
     });
+
+    // Hide predictions when clicking outside the input field
+    $(document).on('click', function(event) {
+        if (!inputField.is(event.target) && 
+            !predictionContainer.is(event.target) && 
+            predictionContainer.has(event.target).length === 0) {
+            
+        }
+    });
+});
+
 
     document.addEventListener('DOMContentLoaded', function() {
             const inputContainer = document.getElementById('input-container');
@@ -226,87 +219,131 @@ document.addEventListener('DOMContentLoaded', async function () {
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 <!-- Initialization script -->
-    <script>
-$(document).ready(function() {
-    // Initialize DataTable
-    $('#BSITTBL').DataTable({
-        "ajax": {
-            "url": "backend/getsectionsAPI.php", // Your PHP file that returns JSON data
-            "type": "GET",
-            "dataSrc": ""
-        },
-        "columns": [
-            { "data": "SectionName" },
-            { "data": "FUllname" },
-            { 
-                "data": null, 
-                "render": function(data, type, row) {
-                    // Render the button with sectionID as a data attribute
-                    return `<button class='btn-more' data-sectionid='${row.SectionID}'>More</button>`;
-                }
-            }
-        ]
-    });
+<script>
+$(document).ready(function () {
+    // Function to initialize a DataTable for a given CourseID and CourseAcronym
+    function initializeTable(courseID, courseAcronym) {
+        // Create a unique table for the CourseID
+        const tableID = `courseTable_${courseID}`;
+        const tableHTML = `
+        <div class="norDiv" >
+            <h3>Course: ${courseAcronym}</h3>
+            <table id="${tableID}" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Section Name</th>
+                        <th>Teacher Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <br>
+        `;
+        $('#courseTables').append(tableHTML);
 
-    // Attach event listener to the 'More' button
-    $('#BSITTBL tbody').on('click', '.btn-more', function() {
-        var sectionID = $(this).attr('data-sectionid'); // Get the sectionID from the button's data attribute
-        
-        // Redirect to SEctioncontent.php with sectionID as query parameter
-        window.location.href = `SEctioncontent.php?sectionID=${sectionID}`;
+        // Initialize DataTable for the specific CourseID
+        $(`#${tableID}`).DataTable({
+            "ajax": {
+                "url": "backend/getsectionsAPI.php",
+                "type": "GET",
+                "data": { CourseID: courseID }, // Send CourseID as a query parameter
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "SectionName" },
+                { "data": "Fullname" },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `<button class='btn-more' data-sectionid='${row.SectionID}'>More</button>`;
+                    }
+                }
+            ]
+        });
+
+        // Attach event listener for "More" buttons inside this table
+        $(`#${tableID} tbody`).on('click', '.btn-more', function () {
+            const sectionID = $(this).attr('data-sectionid'); // Get sectionID
+            // Redirect to SEctioncontent.php with sectionID as query parameter
+            window.location.href = `SEctioncontent.php?sectionID=${sectionID}`;
+        });
+    }
+
+    // Fetch course list and initialize tables
+    $.ajax({
+        url: "backend/getcoursesAPI.php", // Your API endpoint for fetching course data
+        type: "GET",
+        success: function (data) {
+            if (typeof data === "string") {
+                data = JSON.parse(data); // Parse string response if needed
+            }
+
+            // For each course, create a table
+            data.forEach(course => {
+                initializeTable(course.CourseID, course.CourseAcronym); // Pass CourseAcronym
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching course data:", error);
+        }
     });
 });
 </script>
 
 
 
-    <script>
-//makeStudent
-document.getElementById('CreateSection').addEventListener('submit', function(event) {
-event.preventDefault(); // Prevent the default form submission
 
-// Create a FormData object from the form
-var formData = new FormData(this);
 
-// Send the form data to the PHP API using fetch
-fetch('backend/setsectionapi.php', { // The URL of the PHP file that processes the form data
-method: 'POST',
-body: formData
-})
-.then(response => response.json()) // Parse the JSON response
-.then(data => {
-// Handle the response from the PHP API
-if (data.success) {
-    // Show success alert
-    swal.fire({
-        title: 'Success!',
-        text: data.message,
-        icon: 'success',
-        confirmButtonText: 'OK'
-    }).then(() => {
-        // Clear the form inputs after closing the alert
-        document.getElementById('CreateSection').reset();
-    });
-} else {
-    // Show error alert
+<script>
+    //makeStudent
+    document.getElementById('CreateSection').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Create a FormData object from the form
+    var formData = new FormData(this);
+
+    // Send the form data to the PHP API using fetch
+    fetch('backend/setsectionapi.php', { // The URL of the PHP file that processes the form data
+    method: 'POST',
+    body: formData
+    })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+    // Handle the response from the PHP API
+    if (data.success) {
+        // Show success alert
+        swal.fire({
+            title: 'Success!',
+            text: data.message,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            // Clear the form inputs after closing the alert
+            document.getElementById('CreateSection').reset();
+        });
+    } else {
+        // Show error alert
+        swal.fire({
+            title: 'Error!',
+            text: data.message,
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+        });
+    }
+    })
+    .catch(error => {
+    // Handle any errors from the API or network
+    console.error('Error:', error);
     swal.fire({
         title: 'Error!',
-        text: data.message,
+        text: error,
         icon: 'error',
         confirmButtonText: 'Try Again'
     });
-}
-})
-.catch(error => {
-// Handle any errors from the API or network
-console.error('Error:', error);
-swal.fire({
-    title: 'Error!',
-    text: error,
-    icon: 'error',
-    confirmButtonText: 'Try Again'
-});
-});
-});</script>
+    });
+    });
+    </script>
 </body>
 </html>

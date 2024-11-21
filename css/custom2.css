@@ -5,7 +5,13 @@ h2{
     text-align: center;
 }
 .card {
-    margin-top: 20px;
+    background: #ffffff !;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    padding: 20px;
+    text-align: center;
 }
 .relative{
     position: relative;
@@ -134,13 +140,13 @@ input{
     }
     
     .sidebar {
-    flex: 0 0 20%;
-    background-color: #d8e1fd; /* Optional: Add background color to distinguish */
+    flex: 0 0 10%;
+    background-color: #98ABEE; /* Optional: Add background color to distinguish */
     }
     
     .main-content {
     margin-top: 3%;
-    flex: 0 0 70%;
+    flex: 0 0 85%;
     background-color: #ffffff; /* Optional: Add background color to distinguish */
     }
     

@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $secID = $max['max_id'] + 1;
 
             // Use prepared statements for the section insertion
-            $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `UID_Teacher`, `DateCreacted`) VALUES (:secID, :sectionName, :course, (SELECT `UserID` FROM `accounttbl` WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE :teacherEmail), DEFAULT);";
+            $sqlSection = "INSERT INTO `sectionn&capteachertbl` (`SectionID`, `SectionName`, `CourseID`, `UID_Teacher`, `DateCreacted`) VALUES (:secID, :sectionName, :course, (SELECT `UserID` FROM `accounttbl` WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE :teacherEmail LIMIT 1), DEFAULT);";
             $stmtSection = $pdo->prepare($sqlSection);
             $stmtSection->execute([
                 ':secID' => $secID,
@@ -30,13 +30,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ]);
 
             // Insert students into sectionn&capteachertbl
-            $sqlStudent = "INSERT INTO `sectionn&capteachertbl` (`StudentNSectionID`, `UID_Teacher`, `SectionId`, `date`) 
-                           VALUES (default, :UID_Teacher, :secID, DEFAULT)";
+            $sqlStudent = "INSERT INTO `student&sectiontbl` (`StudentNSectionID`, `UIDStudent`, `SectionId`, `date`) 
+                           VALUES (default, :studentID, :secID, DEFAULT)";
             $stmtStudent = $pdo->prepare($sqlStudent);
 
             foreach ($_POST['StudentIDField'] as $studentID) {
                 $stmtStudent->execute([
-                    ':UID_Teacher' => $studentID,
+                    ':studentID' => $studentID,
                     ':secID' => $secID
                 ]);
             }

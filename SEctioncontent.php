@@ -20,8 +20,11 @@
 </head>
 <body>
 <?php include 'modal/header.php'; ?>
-<?php include 'modal/adminSidebar.php'; ?>
 <div class="content">
+    <div class="sidebar">
+<?php  include 'modal/adminSidebar.php';  ?>
+    </div>
+    <div class="main-content">
     <div class="norDiv">
     <?php
                     $host = 'localhost';
@@ -140,6 +143,7 @@ $(document).ready(function() {
     });
 });
 </script>
+    </div>
 </div>
 </body>
 </html>

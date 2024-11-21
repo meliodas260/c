@@ -23,12 +23,29 @@
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="css/datatable.css" rel="stylesheet">
     <title>Accounts</title>
+    <style>
+.rigthbutton{
+    display: flex;
+    margin: 10px 20px; /* Optional spacing */
+}
+.rigthbutton a {
+    margin-left: auto;
+    margin-right: 8rem; /* Push the button slightly to the right */
+}
+.rigthbutton_btn {
+    display: inline-block; /* Ensure it doesn't stretch */
+    margin-left: auto;     /* Push the button to the right */
+    margin-right: 5rem;    /* Adjust this for fine-tuning */
+    position: relative;
+}
+</style>
 </head>
 <style>
+
         .card {
             background: #fff;
             border: 1px solid #ddd;
-            border-radius: 20px;
+            border-radius: 50px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
             width: 200px;
             padding: 20px;
@@ -90,16 +107,37 @@ try {
             </div>
         <?php endforeach; ?>
     </div>
-        <h2>Programs & Sections</h2>
-        
-        <?php include 'modal/accounttbl.php'; ?>
-        
+        <div class="norDiv">
+            <h2>Programs & Sections</h2>
+            <div class="rigthbutton">
+                <a href="MakeStudent.php">
+                    <button class="btn btn-primary buttonclean">Add Account</button>
+                </a>
+            </div>
+             <?php include 'modal/accounttbl.php'; ?>
+        </div>
 
         <div class="norDiv">
-            <a href="MakeStudent.php">
-                <button class="btn btn-primary buttonclean">Add Account</button>
-            </a>
+            <hr>
+
+            <h3>All Roles</h3>
+            <div class="rigthbutton">
+                <button type="button" class="btn btn-primary rigthbutton_btn" data-bs-toggle="modal" data-bs-target="#ExpertType">
+                    Add ExpertType
+                </button>
+            </div>
+            <table id="rolesTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Role ID</th>
+                        <th>Role Name</th>
+                        <th>Date Created</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
+
 
 <!-- Button to Trigger Modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCourseModal">
@@ -110,9 +148,7 @@ try {
     Add New Usertype
 </button>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExpertType">
-    Add New ExpertType
-</button>
+
 
 <!-- Bootstrap CSS and JS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -180,16 +216,23 @@ console.log($('#Course1').val()); // Check the value of the field
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post">
-                <H3>Create new ExpertType</H3>
-                <div class="form-floating mb-23 w-50"  style="margin-left:20%; magrin-right:20%; ">
-                    <input class="border border-primary form-control"type="text" autocomplete="off" id="ExpertTypeInput" name="ExpertTypeInput" placeholder="ExpertTypeInput" >
-                    <label for="ExpertTypeInput">New ExpertType</label>
-                </div>
-                <br>
-
-                <button type="submit" class="btn btn-primary buttonclean">Submit</button>
+                <form id="createExpertTypeForm">
+                    <h3>Create new ExpertType</h3>
+                    <div class="form-floating mb-23 w-50" style="margin-left:20%; margin-right:20%;">
+                        <input
+                            class="border border-primary form-control"
+                            type="text"
+                            autocomplete="off"
+                            id="ExpertTypeInput"
+                            name="ExpertTypeInput"
+                            placeholder="ExpertTypeInput"
+                        >
+                        <label for="ExpertTypeInput">New ExpertType</label>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary buttonclean">Submit</button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -252,6 +295,135 @@ console.log($('#Course1').val()); // Check the value of the field
             </div>
         </div>
     </div>
+
+
+<script>
+document.getElementById('createExpertTypeForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent form's default submission
+
+    // Get input value
+    const expertType = document.getElementById('ExpertTypeInput').value.trim();
+
+    if (expertType === '') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ExpertType cannot be empty!',
+        });
+        return;
+    }
+
+    // Send data to API via AJAX
+    fetch('backend/createExpertTypeAPI.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            ExpertTypeInput: expertType,
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.message,
+                }).then(() => {
+                    // Clear input field
+                    document.getElementById('ExpertTypeInput').value = '';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                });
+            }
+        })
+        .catch((error) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Something went wrong. Please try again later.',
+            });
+            console.error('Error:', error);
+        });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const rolesTableBody = document.querySelector('#rolesTable tbody');
+    const roleForm = document.getElementById('createRoleForm');
+
+    // Function to fetch and populate roles
+    function fetchRoles() {
+        fetch('backend/createExpertTypeAPI.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    rolesTableBody.innerHTML = ''; // Clear existing rows
+                    data.data.forEach(role => {
+                        const row = `
+                            <tr>
+                                <td>${role.RoleID}</td>
+                                <td>${role.RoleName}</td>
+                                <td>${new Date(role.DateCreated).toLocaleString()}</td>
+                            </tr>
+                        `;
+                        rolesTableBody.innerHTML += row;
+                    });
+                } else {
+                    console.error(data.message);
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching roles:', error);
+                Swal.fire('Error', 'Unable to fetch roles.', 'error');
+            });
+    }
+
+    // Fetch roles on page load
+    fetchRoles();
+
+    // Handle role creation form submission
+    roleForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const roleName = document.getElementById('roleName').value.trim();
+
+        if (!roleName) {
+            Swal.fire('Warning', 'Role name cannot be empty.', 'warning');
+            return;
+        }
+
+        fetch('backend/createExpertTypeAPI.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roleName })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Success', data.message, 'success');
+                    fetchRoles(); // Refresh roles table
+                    roleForm.reset(); // Clear the form
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error creating role:', error);
+                Swal.fire('Error', 'Unable to create role.', 'error');
+            });
+    });
+});
+</script>
+
+
 </div>
 </body>
 </html>
