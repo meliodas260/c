@@ -1,235 +1,189 @@
+<?php
+require 'backend/dblogin.php'; // Include the database connection
+
+// Fetch all courses
+$coursesQuery = "SELECT CourseID, CourseAcronym FROM coursetbl"; // Replace with your table name
+$coursesStmt = $pdo->prepare($coursesQuery);
+$coursesStmt->execute();
+$courses = $coursesStmt->fetchAll();
+
+// Get the current and last year dynamically
+$currentYear = date('Y');
+$lastYear = $currentYear - 1;
+
+// Function to render star ratings
+function renderRatingStars($averageRating) {
+    $wholeStars = floor($averageRating); // Number of full stars
+    $fraction = $averageRating - $wholeStars; // Remaining fraction of the last star
+    $totalStars = 5; // Total stars to display
+
+    $output = '';
+
+    // Render full stars
+    for ($i = 1; $i <= $wholeStars; $i++) {
+        $output .= '<svg class="starRATE filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>';
+    }
+
+    // Render partial star (if applicable)
+    if ($fraction > 0) {
+        $percentage = $fraction * 100; // Convert fraction to percentage
+        $output .= '<svg class="starRATE partial" style="--percent: ' . $percentage . '%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>';
+    }
+
+    // Render empty stars
+    for ($i = $wholeStars + ($fraction > 0 ? 1 : 0); $i < $totalStars; $i++) {
+        $output .= '<svg class="starRATE" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>';
+    }
+
+    return $output;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Draggable List with Drop Zone and Role Dropdown</title>
+    <title>Top Research by Course</title>
     <style>
-        #container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 20px;
+        .starRATE {
+            width: 20px;
+            height: 20px;
+            fill: #ccc;
         }
-        #dropZoneContainer {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+
+        .starRATE.filled {
+            fill: #FFD700;
         }
-        .drop-zone-wrapper {
+
+        .starRATE.partial {
+            position: relative;
+        }
+
+        .starRATE.partial path {
+            fill: #FFD700;
+            clip-path: polygon(0 0, var(--percent, 0%) 0, var(--percent, 0%) 100%, 0% 100%);
+        }
+
+        .research-sidebar {
+            position: fixed; /* Fix the sidebar to the right side */
+            top: 100px;
+            right: 20px;
+            width: 250px;
+            max-height: 600px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-section {
+            margin-bottom: 30px;
+        }
+
+        .research-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
-        }
-        .drop-zone {
-            width: 200px;
-            height: 200px;
-            border: 2px dashed #333;
-            background-color: #f9f9f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 16px;
-        }
-        .drop-zone.hover {
-            background-color: #e0ffe0;
-        }
-        .drop-zone.dropped {
-            background-color: #d0ffd0;
-        }
-        select {
-            width: 200px;
-            padding: 5px;
-        }
-        .draggable-item {
+            margin-bottom: 15px;
             padding: 10px;
-            margin: 5px;
-            background-color: lightblue;
-            border: 1px solid #000;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            width: 100%;
             cursor: pointer;
+            text-decoration: none; /* Remove underline */
         }
-        .red {
-            background-color: red !important;
+
+        .research-item img {
+            width: 100%;
+            height: 120px; /* Smaller image height */
+            object-fit: cover;
+            border-radius: 5px;
         }
-        .non-draggable {
-            cursor: not-allowed;
-        }
-        #draggableListContainer h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
+
+        .research-item h5 {
+            font-size: 14px;
+            font-weight: bold;
             text-align: center;
+            margin: 0;
+        }
+
+        .research-item p {
+            text-align: center;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .research-item:hover {
+            background-color: #f0f0f0; /* Light hover effect */
         }
     </style>
 </head>
 <body>
+    <h1>Top 10 Research by Course</h1>
+    <div class="research-sidebar">
+        <?php
+        foreach ($courses as $course) {
+            $courseID = $course['CourseID'];
+            $courseAcronym = htmlspecialchars($course['CourseAcronym']);
 
-<!-- Hidden input to pass PHP variable to JavaScript -->
-<input type="hidden" id="phpVar" value="2">
+            // Fetch top 10 research for this course
+            $researchQuery = "
+                SELECT A.ResearchID, ROUND(AVG(A.Rate), 1) AS Rates, B.Title, B.ImageName 
+                FROM studentresearchratetbl AS A 
+                LEFT JOIN researchtbl AS B ON A.ResearchID = B.ResearchID 
+                WHERE B.CourseID = :courseID 
+                  AND YEAR(B.date) BETWEEN :lastYear AND :currentYear
+                GROUP BY A.ResearchID 
+                ORDER BY Rates DESC 
+                LIMIT 10";
+            $researchStmt = $pdo->prepare($researchQuery);
+            $researchStmt->execute([
+                'courseID' => $courseID,
+                'lastYear' => $lastYear,
+                'currentYear' => $currentYear
+            ]);
+            $researchItems = $researchStmt->fetchAll();
 
-<!-- Form with drop zone and dynamic draggable items -->
-<form id="dropForm" method="POST" action="backend/backo.php">
-    <div id="container">
-        <!-- Drop Zone Container -->
-        <div id="dropZoneContainer">
-            <div class="drop-zone-wrapper">
-                <div class="drop-zone">Drop here</div>
-                <select class="role-dropdown">
-                    <option value="" disabled selected>Select Role</option>
-                    <option value="Leader">Leader</option>
-                    <option value="Member">Member</option>
-                    <option value="Observer">Observer</option>
-                </select>
-            </div>
-        </div>
+            echo "<div class='course-section'>";
+            echo "<h2>Top Research for $courseAcronym</h2>";
 
-        <!-- Button to Add New Drop Zone -->
-        <button type="button" id="addDropZoneButton">Add Drop Zone</button>
-        
-        <!-- Draggable List Container -->
-        <div id="draggableListContainer">
-            <h2>Students</h2>
-            <div id="draggableList">
-                <!-- Draggable items will be appended here dynamically -->
-            </div>
-        </div>
+            if (count($researchItems) > 0) {
+                foreach ($researchItems as $research) {
+                    $title = htmlspecialchars($research['Title']);
+                    $imageUrl = !empty($research['ImageName']) ? "UploadIMG/" . htmlspecialchars($research['ImageName']) : "img/neust_logo.png";
+                    $averageRating = $research['Rates'];
+                    $researchID = $research['ResearchID'];
+                    ?>
+
+                    <a href="ResearchView?researchID=<?= $researchID ?>" class="research-item">
+                        <img src="<?= $imageUrl ?>" alt="Research Image">
+                        <h5><?= $title ?></h5>
+                        <p>Average Rating: <?= $averageRating ?> / 5</p>
+                        <div class="starsDiv">
+                            <?= renderRatingStars($averageRating) ?>
+                        </div>
+                    </a>
+
+                    <?php
+                }
+            } else {
+                echo "<p>No research found for this course.</p>";
+            }
+
+            echo "</div>";
+        }
+        ?>
     </div>
-
-    <!-- Hidden Input to store dropped values -->
-    <input type="hidden" id="dropInput" name="droppedStudents" value="[]">
-
-    <!-- Submit Button -->
-    <button type="submit">Submit</button>
-</form>
-
-<!-- jQuery Library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    let droppedStudents = []; // Track dropped students with roles and drop zones
-
-    // Fetch data from API and generate draggable items
-    function loadDraggableItems() {
-        $.ajax({
-            url: 'sectionStudapi.php',
-            type: 'GET',
-            data: { secID: $('#phpVar').val() },
-            success: function(data) {
-                if (typeof data === 'string') {
-                    try {
-                        data = JSON.parse(data);
-                    } catch (e) {
-                        console.error("Error parsing data:", e);
-                        return;
-                    }
-                }
-
-                if (Array.isArray(data) && data.length > 0) {
-                    $('#draggableList').empty(); // Clear existing items
-
-                    data.forEach(function(student) {
-                        const fullName = `${student.Fname} ${student.Mname} ${student.Lname}`;
-                        const userID = student.UserID;
-                        const roleConnectorKey = student.RoleConnectorKey;
-
-                        if (fullName && userID) {
-                            const item = $('<div></div>')
-                                .addClass('draggable-item')
-                                .attr('draggable', roleConnectorKey === null)
-                                .data('userID', userID)
-                                .text(fullName);
-
-                            if (roleConnectorKey !== null) {
-                                item.addClass('red').addClass('non-draggable');
-                            }
-
-                            item.on('dragstart', function(event) {
-                                if (!roleConnectorKey) {
-                                    event.originalEvent.dataTransfer.setData('text', $(this).data('userID'));
-                                }
-                            });
-
-                            $('#draggableList').append(item);
-                        }
-                    });
-                } else {
-                    $('#draggableList').html('<p>No students found or data format incorrect.</p>');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching data:", status, error);
-            }
-        });
-    }
-
-    loadDraggableItems();
-
-    // Configure Drop Zone functionality
-    function configureDropZone(wrapper) {
-        const dropZone = wrapper.find('.drop-zone');
-        const dropdown = wrapper.find('.role-dropdown');
-
-        dropZone.on('dragover', function(event) {
-            event.preventDefault();
-            dropZone.addClass('hover');
-        });
-
-        dropZone.on('dragleave', function() {
-            dropZone.removeClass('hover');
-        });
-
-        dropZone.on('drop', function(event) {
-            event.preventDefault();
-            dropZone.removeClass('hover').addClass('dropped');
-
-            const userID = event.originalEvent.dataTransfer.getData('text');
-
-            if (droppedStudents.some(student => student.userID === userID)) {
-                alert("This student has already been dropped!");
-                return;
-            }
-
-            const selectedRole = dropdown.val();
-            if (!selectedRole) {
-                alert("Please select a role before dropping!");
-                return;
-            }
-
-            droppedStudents.push({ userID, role: selectedRole });
-            dropZone.text('Student dropped!');
-
-            $(`.draggable-item[data-userid='${userID}']`).remove();
-        });
-    }
-
-    // Add new drop zone with dropdown on button click
-    $('#addDropZoneButton').on('click', function() {
-        const wrapper = $('<div></div>').addClass('drop-zone-wrapper');
-        const dropZone = $('<div></div>').addClass('drop-zone').text('Drop here');
-        const dropdown = $('<select></select>').addClass('role-dropdown').html(`
-            <option value="" disabled selected>Select Role</option>
-            <option value="Leader">Leader</option>
-            <option value="Member">Member</option>
-            <option value="Observer">Observer</option>
-        `);
-
-        wrapper.append(dropZone, dropdown);
-        $('#dropZoneContainer').append(wrapper);
-        configureDropZone(wrapper);
-    });
-
-    // Configure the initial drop zone
-    configureDropZone($('.drop-zone-wrapper').first());
-
-    // Update the hidden input with dropped students when form is submitted
-    $('#dropForm').submit(function(event) {
-        event.preventDefault();
-        $('#dropInput').val(JSON.stringify(droppedStudents));
-        this.submit();
-    });
-});
-</script>
-
 </body>
 </html>

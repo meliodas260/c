@@ -140,13 +140,13 @@ input{
     }
     
     .sidebar {
-    flex: 0 0 10%;
-    background-color: #98ABEE; /* Optional: Add background color to distinguish */
+    flex: 0 0 17%;
+    background-color: #9ca6cc; /* Optional: Add background color to distinguish */
     }
     
     .main-content {
     margin-top: 3%;
-    flex: 0 0 85%;
+    flex: 0 0 78%;
     background-color: #ffffff; /* Optional: Add background color to distinguish */
     }
     
@@ -209,4 +209,24 @@ input{
 .borderer{
     border: 1px solid rgb(188, 219, 236);
 
+}
+.starsDiv {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.starRATE {
+    width: 24px;
+    height: 24px;
+    fill: #ddd; /* Default color */
+}
+
+.starRATE.filled {
+    fill: gold; /* Fully filled star */
+}
+
+.starRATE.partial {
+    fill: gold;
+    clip-path: inset(0 calc(100% - var(--percent)) 0 0); /* Controls the fill of the partial star */
 }

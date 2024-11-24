@@ -7,8 +7,8 @@ $lastYear = date('Y', strtotime('-1 year'));
 
 // Prepare the query to fetch research papers for the current year and last year
 $stmt = $pdo->prepare("
-
-SELECT `ResearchID`,`Title`, year(`date`) as date, `Abstract`, `ImageName` FROM `researchtbl` WHERE Year(date) IN (:currentYear, :lastYear)
+SELECT A.`ResearchID`,`Title`, year(A.`date`) as date, `Abstract`, `ImageName` ,round(AVG(b.Rate), 1) as RATES FROM `researchtbl` as A 
+left join `studentresearchratetbl` as b on A.ResearchID = b.ResearchID WHERE Year(A.date) IN(:currentYear, :lastYear) group by `Title`;
 ");
 
 // Bind the parameters

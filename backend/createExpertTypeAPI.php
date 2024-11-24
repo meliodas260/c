@@ -1,30 +1,32 @@
 <?php
-require 'dblogin.php'; // Include your database connection file
+require 'dblogin.php';
 
 header('Content-Type: application/json');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Handle creating a new role
-        $data = json_decode(file_get_contents('php://input'), true);
-        
-        if (!isset($data['roleName']) || empty(trim($data['roleName']))) {
-            echo json_encode(['success' => false, 'message' => 'Role name is required.']);
+        parse_str(file_get_contents('php://input'), $data);
+
+        if (!isset($data['ExpertTypeInput']) || empty(trim($data['ExpertTypeInput'])) ||
+            !isset($data['Usertype']) || empty(trim($data['Usertype']))) {
+            echo json_encode(['success' => false, 'message' => 'All fields are required.']);
             exit;
         }
 
-        $roleName = trim($data['roleName']);
+        $expertType = trim($data['ExpertTypeInput']);
+        $userType = trim($data['Usertype']);
 
-        // Insert the new role
-        $stmt = $pdo->prepare("INSERT INTO roletbl (RoleName, DateCreated) VALUES (:roleName, current_timestamp())");
-        $stmt->execute([':roleName' => $roleName]);
+        $stmt = $pdo->prepare("INSERT INTO roletbl (RoleName, Usertype, DateCreated) VALUES (:roleName, :userType, NOW())");
+        $stmt->execute([
+            ':roleName' => $expertType,
+            ':userType' => $userType,
+        ]);
 
-        echo json_encode(['success' => true, 'message' => 'Role created successfully.']);
+        echo json_encode(['success' => true, 'message' => 'ExpertType created successfully.']);
     } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Handle fetching all roles
-        $stmt = $pdo->query("SELECT RoleID, RoleName, DateCreated FROM roletbl");
+        $stmt = $pdo->query("SELECT RoleID, RoleName,b.usertypename as Usertype, DateCreated FROM roletbl as a left join usertypetbl as b on a.Usertype = b.usertype;");
         $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    
         echo json_encode(['success' => true, 'data' => $roles]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid request method.']);

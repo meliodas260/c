@@ -7,6 +7,28 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <style>
+        .starsDiv {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .starRATE {
+            width: 24px;
+            height: 24px;
+            fill: #ddd; /* Default color */
+        }
+
+        .starRATE.filled {
+            fill: gold; /* Fully filled star */
+        }
+
+        .starRATE.partial {
+            fill: gold;
+            clip-path: inset(0 calc(100% - var(--percent)) 0 0); /* Controls the fill of the partial star */
+        }
+    </style>
+    <style>
         body {
             background-color: #f8f9fa; /* Light background color */
         }
@@ -99,11 +121,16 @@ $(document).ready(function() {
                     `);
                 } else {
                     data.forEach(item => {
+                        // Check if FileName is null or empty
+                        if (!item.FileName || item.FileName.trim() === '') {
+                            return; // Skip this item if FileName is null or empty
+                        }
+
                         let researchers = item.Researchers.map(res => res.name).join(', ');
                         let panels = item.Panels.map(pan => pan.name).join(', '); // Use item.Panels if it exists
 
                         $('#results').append(`
-                            <div class="card mb-3">
+                            <div class="card mb-3" data-id="${item.ID}">
                                 <img src="${item.ImageUrl === '' ? 'img/neust_logo.png' : 'UploadIMG/'+ item.ImageUrl}" class="card-img-top research-image" alt="Research Image">
                                 <div class="card-body">
                                     <h5 class="card-title">${item.Title}</h5>
@@ -112,9 +139,55 @@ $(document).ready(function() {
                                     <p class="card-text"><strong>Year:</strong> ${item.Year}</p>
                                     <p class="card-text">${item.Description}</p>
                                     <a href="ResearchView?researchID=${item.ID}" class="btn FullView">View full info</a>
+
+                                    <h1>Star Rating for Research ID ${item.ID}</h1>
+                                    <p>Total Ratings: <span class="totalRatings">0</span></p>
+                                    <p>Average Rating: <span class="averageRating">0</span> / 5</p>
+                                    <div class="starsDiv"></div>
                                 </div>
                             </div>
                         `);
+                    });
+
+                    // After appending the content, fetch the rating data for each research
+                    $('.card').each(function() {
+                        const researchID = $(this).data('id');  // Extract research ID from the card's data attribute
+                        const starsDiv = $(this).find('.starsDiv');
+                        const totalRatings = $(this).find('.totalRatings');
+                        const averageRating = $(this).find('.averageRating');
+
+                        // Fetch the rating data from your backend API
+                        fetch(`backend/RATEAVG.php?researchID=${researchID}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Set the total ratings and average rating
+                                totalRatings.text(data.totalRatings);
+                                averageRating.text(data.averageRating);
+
+                                // Handle the star rendering
+                                const wholeStars = Math.floor(data.averageRating);
+                                const fraction = data.averageRating - wholeStars;
+                                const totalStars = 5;
+
+                                // Render full stars
+                                for (let i = 1; i <= wholeStars; i++) {
+                                    starsDiv.append('<svg class="starRATE filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>');
+                                }
+
+                                // Render partial star (if applicable)
+                                if (fraction > 0) {
+                                    const percentage = fraction * 100;
+                                    starsDiv.append(`<svg class="starRATE partial" style="--percent: ${percentage}%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`);
+                                }
+
+                                // Render empty stars
+                                for (let i = wholeStars + (fraction > 0 ? 1 : 0); i < totalStars; i++) {
+                                    starsDiv.append('<svg class="starRATE" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                            });
                     });
                 }
             }

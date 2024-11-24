@@ -354,7 +354,7 @@ nav ul li a {
     </div>
 </div>
     <div class="input-group mb-3 endder" >
-        <button class="btn btn-outline-secondary rounded" data-bs-toggle="modal" data-bs-target="#advancedSearchModal" style="margin:1rem 0% 0 90%; @media screen and (max-width: 600px) {padding:1rem 2% 0 5%;} " type="button" id="openModalBtn"><span class="carbon--search-advanced"></span></button>        
+        <button class="btn btn-outline-secondary rounded" data-bs-toggle="modal" data-bs-target="#advancedSearchModal" style="margin:1rem 0% 0 90%; @media screen and (max-width: 600px) {padding:1rem 3rem 0 0;} " type="button" id="openModalBtn"><span class="carbon--search-advanced"></span></button>        
     </div>
        
 <!-- Bootstrap Modal -->
@@ -468,7 +468,7 @@ document.getElementById('clearBtn').addEventListener('click', function() {
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="modal/modal.js"></script>
+
 
 </body>
 </html>

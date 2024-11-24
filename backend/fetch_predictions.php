@@ -8,7 +8,8 @@ $sec = $_POST['secid'] ?? '';   // Default to empty string if not set
 // Prepare the query
 if (!empty($sec)) {
     // Query for Student & Section
-    $stmt = $pdo->prepare("SELECT `SchoolIDStudent` AS UserID FROM `sectionn&capteachertbl` WHERE `UID_Teacher` LIKE :input AND `SectionId` = :sec");
+    $stmt = $pdo->prepare(" SELECT CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) AS UserID FROM `student&sectiontbl` as a left join `accounttbl` as b on a.UIDStudent = b.UserID 
+    WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE :input AND `SectionId` = :sec");
     $inputParam = "%$input%";
     $stmt->bindValue(':input', $inputParam);
     $stmt->bindValue(':sec', $sec, PDO::PARAM_INT);

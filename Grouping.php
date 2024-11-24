@@ -75,6 +75,7 @@
                 max-width: 500px;
             }
         }
+        
 
 </style>
 </head>
@@ -86,103 +87,68 @@
     ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        function setupPrediction(inputFieldID, predictionContainerID) {
-            const inputField = $('#' + inputFieldID);
-            const predictionContainer = $('#' + predictionContainerID);
+       function setupPrediction(inputFieldID, predictionContainerID, secID) {
+    const inputField = $('#' + inputFieldID);
+    const predictionContainer = $('#' + predictionContainerID);
 
-            inputField.on('input', function() {
-                const inputValue = inputField.val().toLowerCase();
+    inputField.on('input', function () {
+        const inputValue = inputField.val().toLowerCase();
 
-                $.ajax({
-                    url: 'backend/fetch_predictions.php',
-                    method: 'POST',
-                    data: { input: inputValue , secid : <?php echo $secID; ?>},
-                    dataType: 'json',
-                    success: function(predictions) {
-                        if (predictions.length > 0) {
-                            predictionContainer.html('');
-                            predictions.forEach(prediction => {
-                                const predictionElement = $('<div>').text(prediction);
-                                predictionElement.on('click', function() {
-                                    inputField.val(prediction);
-                                    predictionContainer.hide();
-                                });
-                                predictionContainer.append(predictionElement);
-                            });
-                            predictionContainer.show();
-                        } else {
-                            predictionContainer.hide();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching predictions:', error);
-                    }
-                });
-            });
+        $.ajax({
+    url: 'backend/fetch_predictions.php',
+    method: 'POST',
+    data: { input: inputValue, secid: secID }, // Pass secID dynamically
+    dataType: 'json',
+    success: function (predictions) {
+        if (predictions.length > 0) {
+            predictionContainer.html(''); // Clear previous predictions
+            predictions.forEach(prediction => {
+                // Use Fullname if available, fallback to UserID
+                const displayText = prediction.Fullname ? prediction.Fullname : prediction.UserID;
 
-            $(document).on('click', function(event) {
-                if (!inputField.is(event.target) && !predictionContainer.is(event.target) && predictionContainer.has(event.target).length === 0) {
-                    predictionContainer.hide();
-                }
-            });
-        }
-        function teacher(inputFieldID, predictionContainerID) {
-            const inputField = $('#' + inputFieldID);
-            const predictionContainer = $('#' + predictionContainerID);
-
-            inputField.on('input', function() {
-                const inputValue = inputField.val().toLowerCase();
-
-                $.ajax({
-                    url: 'backend/fetch_predictions.php',
-                    method: 'POST',
-                    data: { input: inputValue},
-                    dataType: 'json',
-                    success: function(predictions) {
-                if (predictions.length > 0) {
-                    predictionContainer.html('');
-                    predictions.forEach(prediction => {
-                        const predictionElement = $('<div>').text(prediction.Fullname); // Display Fullname
-                        predictionElement.on('click', function() {
-                            inputField.val(prediction.Fullname); // Set Fullname in the input field on click
-                            predictionContainer.hide();
-                        });
-                        predictionContainer.append(predictionElement);
+                const predictionElement = $('<div>')
+                    .text(displayText) // Display Fullname or UserID
+                    .addClass('prediction-item') // Optional: Add a class for styling
+                    .on('click', function () {
+                        inputField.val(displayText); // Set the selected value
+                        predictionContainer.hide(); // Hide container after selection
                     });
-                    predictionContainer.show();
-                    } else {
-                        predictionContainer.hide();
-                    }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching predictions:', error);
-                    }
-                });
+
+                predictionContainer.append(predictionElement);
             });
 
-            $(document).on('click', function(event) {
-                if (!inputField.is(event.target) && !predictionContainer.is(event.target) && predictionContainer.has(event.target).length === 0) {
-                    predictionContainer.hide();
-                }
-            });
+            predictionContainer.show(); // Show container if predictions are available
+        } else {
+            predictionContainer.hide(); // Hide container if no predictions
         }
+    },
+    error: function (xhr, status, error) {
+        console.error('Error fetching predictions:', error);
+    }
+});
 
-        $(document).ready(function() {
-            
-            
-            teacher('Advicer', 'Advicer_pre');
-            teacher('Expert', 'Expert_pre');
-            teacher('Panel1', 'Panel1_pre');
-            teacher('Panel2', 'Panel2_pre');
-            teacher('Panel3', 'Panel3_pre');
-            // Call the function for the first input field and prediction container
-            setupPrediction('Leader', 'prediction1');
+    });
 
-            // Call the function for the second input field and prediction container
-            setupPrediction('Member1', 'Member1_pre');
-            setupPrediction('Member2', 'Member2_pre');
-            setupPrediction('Member3', 'Member3_pre');
-        });
+    // Hide the prediction container when clicking outside
+    $(document).on('click', function (event) {
+        if (!inputField.is(event.target) &&
+            !predictionContainer.is(event.target) &&
+            predictionContainer.has(event.target).length === 0) {
+            predictionContainer.hide();
+        }
+    });
+}
+
+$(document).ready(function () {
+    const secID = <?php echo $secID; ?>; // Pass secID dynamically from PHP
+
+    // Call setupPrediction for each field
+    setupPrediction('Leader', 'prediction1', secID);
+    setupPrediction('Member1', 'Member1_pre', secID);
+    setupPrediction('Member2', 'Member2_pre', secID);
+    setupPrediction('Member3', 'Member3_pre', secID);
+});
+
     </script>
 
 <body>
@@ -259,58 +225,71 @@ $(document).ready(function() {
             </div>
         </div>     
         <h2>Research roles</h2>
-        <div class="input-group">
-            <h3></h3>
-        <div class="form-floating mb-3 w-25">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Leader" name="Leader" placeholder="Leader" >
-            <label for="Leader">Leader</label>
-            <div id="prediction1" class="prediction-container"  style="display: none;"></></div>
-        </div>
-        <div class="form-floating mb-3 w-25">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member1" name="Member1" placeholder="Member" >
-            <label for="Member1">Member1</label>
-            <div id="Member1_pre" class="prediction-container"  style="display: none;"></></div>
-        </div>  
-        
-        <h3></h3>
-        </div>
-        <div class="input-group">
-            <h3></h3>
-        <div class="form-floating mb-3 w-25">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member2" name="Member2" placeholder="Member" >
-            <label for="Member2">Member2</label>
-            <div id="Member2_pre" class="prediction-container"  style="display: none;"></></div>
-        </div>  
-        <div class="form-floating mb-3 w-25">
-             <input class="border border-primary form-control"type="text" autocomplete="off" id="Member3" name="Member3" placeholder="Member" >
-            <label for="Member3">Member3</label>
-            <div id="Member3_pre" class="prediction-container"  style="display: none;"></></div>
-        </div>  
+        <div class="form-floating mb-3 w-50">
+                <!-- Leader Dropdown -->
+            <div class="form-floating mb-3">
+                <select id="leaderDropdown" name="leader" class="form-control" required>
+                    <option value="" disabled selected>Select Leader</option>
+                </select>
+                <input type="hidden" name="Leader"id="leaderHidden" value="3">
+                <label for="leaderDropdown">Leader</label>
+            </div>
+
+                <!-- Members Section -->
+            <div id="membersContainer">
+                <!-- Member Dropdowns will be added here dynamically -->
+            </div>
+<!-- Button to Add Member -->
+<button type="button" id="addMemberBtn" class="btn btn-primary">Add Member</button>
+
         <h3></h3>
         </div>
             <br>
             <h2>Table Input Form with Fixed Columns and Dynamic Rows</h2>
 
-    <table id="inputTable">
-        <tr id="headerRow">
-            <th>teacherName</th>
-            <th>role</th>
-        </tr>
-        <!-- Initial 3 rows -->
+
+        <?php
+// Fetch roles from the database
+require 'backend/dblogin.php';
+
+try {
+    $stmt = $pdo->query("SELECT RoleID, RoleName FROM roletbl");
+    $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
+}
+?>
+
+<table id="inputTable">
+    <thead>
         <tr>
-            <td><input type="text" name="teacherName[]" required></td>
-            <td><input type="text" name="role[]" required></td>
+            <th>Teacher Name</th>
+            <th>Role</th>
         </tr>
+    </thead>
+    <tbody>
         <tr>
-            <td><input type="text" name="teacherName[]" required></td>
-            <td><input type="text" name="role[]" required></td>
+            <td>
+                <input id="Teacher_0" type="text" name="teacherName[]" required>
+                <div id="PredictTeacher_0" class="prediction-container" style="display: none;"></div>
+            </td>
+            <td>
+                <select name="role[]" required>
+                    <option value="" disabled selected>Select Role</option>
+                    <?php foreach ($roles as $role): ?>
+                        <option value="<?php echo htmlspecialchars($role['RoleID']); ?>">
+                            <?php echo htmlspecialchars($role['RoleName']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
         </tr>
-        <tr>
-            <td><input type="text" name="teacherName[]" required></td>
-            <td><input type="text" name="role[]" required></td>
-        </tr>
-    </table>
-    <button type="button" onclick="addRow()">+ Add Row</button>
+    </tbody>
+</table>
+<button type="button" id="addRowButton">+ Add Row</button>
+
+
+
 
 
             <br>
@@ -334,40 +313,81 @@ $(document).ready(function() {
     </form>
 
 
+ 
 
-                <?php
-                    // // Database connection
-                    // $host = 'localhost';
-                    // $username = 'root';
-                    // $password = '';
-                    // $database = 'repo';
-                    // $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const secID = document.getElementById('phpVar').value; // Hidden input for secID
+    const leaderDropdown = document.getElementById('leaderDropdown');
+    const membersContainer = document.getElementById('membersContainer');
+    const addMemberBtn = document.getElementById('addMemberBtn');
 
-                    // try {
-                    //     $pdo = new PDO($dsn, $username, $password);
-                    //     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    //     // Select data from the database
-                    //     $ResearchSql = $pdo->query("SELECT * FROM `researchtbl` WHERE `SectionID` = $secID");
-                    //     // Loop through the result set and display data in table rows
-                    //     while ($row = $ResearchSql->fetch(PDO::FETCH_ASSOC)) { 
-                    //         echo "<div class='SpecDiv'>";
-                    //         echo "<h3>" .$row['Title'] ."</h3>";
-                    //        $connector = $row['RoleConnectorKey'];
-                    //        $ResearcherSql = $pdo->query("SELECT * from researchroletbl a left join accounttbl b on b.UserID = a.UID WHERE a.RoleConnectorKey = $connector;");
-                    //        $tags = $pdo->query("SELECT * FROM `reasearchtagtbl` a left join tagtbl b on a.TagID = b.TagId WHERE a.TagConnectorKey =  $connector;");
-                    //        $keyws = $pdo->query("SELECT * FROM `reasearchkeywordstbl` WHERE`KeywordConnectorKey` =   $connector;");
-                    //     while ($rowlower = $ResearcherSql->fetch(PDO::FETCH_ASSOC)) { 
-                    //         echo " <h2>".$rowlower['Fname']."\n".$rowlower['Role']."</h2>";
-                    //     }
-                    //     while ($rowlower = $tags->fetch(PDO::FETCH_ASSOC)) { 
-                    //         echo " <h4>".$rowlower['TagName']."</h4>";
-                    //     }
-                    //     while ($rowlower = $keyws->fetch(PDO::FETCH_ASSOC)) { 
-                    //         echo " <h4>".$rowlower['Keyword']."</h4>";
-                    //     }
-                    //     echo "<button class='btn-more' data-id='".$row['ResearchID']."'> ".$row['ResearchID']." More</button>";
-?>
+    let memberCount = 0; // Limit members to 4
+    let students = []; // Store all student data
 
+    // Fetch students from API
+    async function fetchStudents() {
+        try {
+            const response = await fetch(`sectionStudApi?secID=${secID}`);
+            const data = await response.json();
+            if (data && data.length > 0) {
+                // Filter students where RoleConnectorKey is null
+                students = data.filter(student => !student.RoleConnectorKey);
+                populateDropdown(leaderDropdown, students);
+            } else {
+                Swal.fire('Error', 'No students found for the selected section.', 'error');
+            }
+        } catch (error) {
+            console.error('Error fetching students:', error);
+            Swal.fire('Error', 'Failed to load student data.', 'error');
+        }
+    }
+
+    // Populate dropdown with student data
+    function populateDropdown(dropdown, studentList) {
+        dropdown.innerHTML = '<option value="" disabled selected>Select</option>'; // Reset dropdown
+        studentList.forEach(student => {
+            const option = document.createElement('option');
+            option.value = `${student.Fname} ${student.Mname} ${student.Lname}`;
+            option.textContent = `${student.Fname} ${student.Mname} ${student.Lname}`;
+            dropdown.appendChild(option);
+        });
+    }
+
+    // Add a new member dropdown with a hidden input
+    function addMemberDropdown() {
+        if (memberCount >= 4) {
+            Swal.fire('Warning', 'You can only add up to 4 members.', 'warning');
+            return;
+        }
+
+        memberCount++;
+        const memberDiv = document.createElement('div');
+        memberDiv.className = 'form-floating mb-3';
+        memberDiv.innerHTML = `
+            <select id="memberDropdown${memberCount}" name="members[]" class="form-control" required>
+                <option value="" disabled selected>Select Member</option>
+            </select>
+            <input type="hidden" name="MemberRole" id="memberHidden${memberCount}" value="5">
+            <label for="memberDropdown${memberCount}">Member ${memberCount}</label>
+        `;
+
+        membersContainer.appendChild(memberDiv);
+
+        const memberDropdown = document.getElementById(`memberDropdown${memberCount}`);
+        populateDropdown(memberDropdown, students); // Populate without excluding selections
+    }
+
+    // Add event listener for Add Member button
+    addMemberBtn.addEventListener('click', addMemberDropdown);
+
+    // Fetch students and populate leader dropdown on page load
+    fetchStudents();
+});
+</script>
+
+
+    
 <script>
     // // Use event delegation or make sure the button exists when this runs
     // document.querySelectorAll('.btn-more').forEach(button => {
@@ -391,8 +411,119 @@ $(document).ready(function() {
 
 
 </div>
+<script>
+    $(document).ready(function () {
+        // Initialize prediction setup for the first row
+        setupPredictionT('#Teacher_0', '#PredictTeacher_0');
+    });
 
-<section id="research-container">
+    // Ensure the event listener for the add row button is added once the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        const addRowButton = document.getElementById('addRowButton');
+        if (addRowButton) {
+            addRowButton.onclick = addRow;
+        }
+    });
+
+    function addRow() {
+        const table = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
+        const rowCount = table.rows.length;
+        const newRow = table.insertRow();
+
+        // Teacher Name Input
+        const cell1 = newRow.insertCell(0);
+        const teacherInput = document.createElement('input');
+        teacherInput.type = 'text';
+        teacherInput.name = 'teacherName[]';
+        teacherInput.id = `Teacher_${rowCount}`;
+        teacherInput.required = true;
+        cell1.appendChild(teacherInput);
+
+        const predictionContainer = document.createElement('div');
+        predictionContainer.id = `PredictTeacher_${rowCount}`;
+        predictionContainer.className = 'prediction-container';
+        predictionContainer.style.display = 'none';
+        cell1.appendChild(predictionContainer);
+
+        // Role Dropdown
+        const cell2 = newRow.insertCell(1);
+        const roleSelect = document.createElement('select');
+        roleSelect.name = 'role[]';
+        roleSelect.required = true;
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.text = 'Select Role';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        roleSelect.appendChild(defaultOption);
+
+        // Loop through roles and create the option elements
+        <?php foreach ($roles as $role): ?>
+            // Declare roleOption inside the loop
+            var roleOption = document.createElement('option');
+            roleOption.value = "<?php echo htmlspecialchars($role['RoleID']); ?>";
+            roleOption.text = "<?php echo htmlspecialchars($role['RoleName']); ?>";
+            roleSelect.appendChild(roleOption);
+        <?php endforeach; ?>
+
+        cell2.appendChild(roleSelect);
+
+        // Initialize prediction setup for the newly added row
+        setupPredictionT(`#Teacher_${rowCount}`, `#PredictTeacher_${rowCount}`);
+    }
+
+    function setupPredictionT(inputFieldSelector, predictionContainerSelector) {
+        const inputField = $(inputFieldSelector);
+        const predictionContainer = $(predictionContainerSelector);
+
+        inputField.on('input', function () {
+            const inputValue = inputField.val().toLowerCase();
+
+            $.ajax({
+                url: 'backend/fetch_predictions.php',
+                method: 'POST',
+                data: { input: inputValue },
+                dataType: 'json',
+                success: function (predictions) {
+                    if (predictions.length > 0) {
+                        predictionContainer.html(''); // Clear previous predictions
+                        predictions.forEach(prediction => {
+                            const displayText = prediction.Fullname || prediction.UserID;
+
+                            const predictionElement = $('<div>')
+                                .text(displayText)
+                                .addClass('prediction-item')
+                                .on('click', function () {
+                                    inputField.val(displayText);
+                                    predictionContainer.hide();
+                                });
+
+                            predictionContainer.append(predictionElement);
+                        });
+
+                        predictionContainer.show();
+                    } else {
+                        predictionContainer.hide();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching predictions:', error);
+                }
+            });
+        });
+
+        // Hide predictions when clicking outside
+        $(document).on('click', function (event) {
+            if (!inputField.is(event.target) &&
+                !predictionContainer.is(event.target) &&
+                predictionContainer.has(event.target).length === 0) {
+                predictionContainer.hide();
+            }
+        });
+    }
+</script>
+<section id="research-container"> 
 </section>
 
 <script>
@@ -488,7 +619,7 @@ document.getElementById('Createrole').addEventListener('submit', function(event)
                 title: 'Error!',
                 text: data.message,
                 icon: 'error',
-                confirmButtonText: 'Try Again'
+                confirmButtonText: 'Try Again1'
             });
         }
     })
@@ -498,31 +629,13 @@ document.getElementById('Createrole').addEventListener('submit', function(event)
             title: 'Error!',
             text: 'An unexpected error occurred. Please try again.',
             icon: 'error',
-            confirmButtonText: 'Try Again'
+            confirmButtonText: 'Try Again2'
         });
     });
 });
 
 // Function to dynamically add a new row to the table
-function addRow() {
-    var table = document.getElementById('inputTable');
-    var newRow = table.insertRow(table.rows.length - 1); // Insert row before last row (button row)
-    
-    var cell1 = newRow.insertCell(0);
-    var cell2 = newRow.insertCell(1);
-
-    var input1 = document.createElement('input');
-    input1.type = 'text';
-    input1.name = 'teacherName[]';
-    input1.required = true;
-    cell1.appendChild(input1);
-
-    var input2 = document.createElement('input');
-    input2.type = 'text';
-    input2.name = 'role[]';
-    input2.required = true;
-    cell2.appendChild(input2);
-}
+   
 
 
 
@@ -537,10 +650,10 @@ function addRow() {
         }
         document.addEventListener('DOMContentLoaded', function() {
     const inputContainer = document.getElementById('input-container');
-    const addButton = document.querySelector('.add-input');
+    const addButton1 = document.querySelector('.add-input');
     let inputCount = 1;
     
-    addButton.addEventListener('click', function() {
+    addButton1.addEventListener('click', function() {
         if (inputCount < 5) { // Check if inputCount is less than 5
             const newInputGroup = document.createElement('div');
             newInputGroup.classList.add('input-group');
@@ -566,13 +679,14 @@ function addRow() {
 
         document.addEventListener('DOMContentLoaded', function() {
             const inputContainer2 = document.getElementById('input-container2');
+            const addButton2 = document.querySelector('.add-tags');
             let inputCount = 1;
 
-            addButton.addEventListener('click', function() {
+            addButton2.addEventListener('click', function() {
                 if (inputCount < 5) {
                     const newInputtag = document.createElement('div');
                     newInputtag.classList.add('input-group');
-                    const addButton = document.querySelector('.add-tags');
+                    
                 newInputtag.innerHTML = `
                     <input type="text" name="tags[${inputCount}]" placeholder="Enter something">
                     <button type="button" class="remove-tags">-</button>
@@ -591,6 +705,8 @@ function addRow() {
         }
             });
         });
-    </script>
+
+</script>
+
 </body>
 </html>

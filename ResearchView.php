@@ -48,13 +48,32 @@
             cursor: pointer;
             font-size: 30px; /* Adjust size as needed */
         }
-
         .star {
             color: gray; /* Default star color */
         }
 
         .star.selected {
             color: gold; /* Selected star color */
+        }
+        .starsDiv {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .starRATE {
+            width: 24px;
+            height: 24px;
+            fill: #ddd; /* Default color */
+        }
+
+        .starRATE.filled {
+            fill: gold; /* Fully filled star */
+        }
+
+        .starRATE.partial {
+            fill: gold;
+            clip-path: inset(0 calc(100% - var(--percent)) 0 0); /* Controls the fill of the partial star */
         }
     </style>
 
@@ -71,6 +90,25 @@ if (isset($_COOKIE['Email'])) {
     // Capture secID and researchID from URL parameters (GET request)
     $secID = "'' or 1=1 --";
     $researchID = isset($_GET['researchID']) ? $_GET['researchID'] : null;
+
+    require 'backend/dblogin.php';
+    
+    try {
+        // Query to get count and average
+        $query = "SELECT COUNT(*) AS count, AVG(`Rate`) AS ratercount FROM `studentresearchratetbl` WHERE `ResearchID` = :researchID";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([':researchID' => $researchID]);
+    
+        // Fetch result
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalRatings = $result['count'];
+        $averageRating = round($result['ratercount'], 1); // Round to 1 decimal place
+        $exactRatingPercentage = ($result['ratercount'] / 5) * 100; // Calculate exact percentage
+    } catch (PDOException $e) {
+        die("Database connection failed: " . $e->getMessage());
+    }
+    
+
 ?>
 
 
@@ -104,7 +142,6 @@ if (isset($_COOKIE['Email'])) {
         <span class="star" data-value="4">★</span>
         <span class="star" data-value="5">★</span>
     </div>
-
     <button id="submitRating" style="margin-top: 20px;">Submit Rating</button>
     <script>
         const studentId = <?php echo $email; ?>;
@@ -183,8 +220,31 @@ if (isset($_COOKIE['Email'])) {
     <div id="researchDetails" class="mt-4"></div>
     </div>
 </div>
+    <p>Total Ratings: <?= $totalRatings ?></p>
+    <p>Average Rating: <?= $averageRating ?> / 5</p>
+    <div class="starsDiv">
+        <?php
+        $wholeStars = floor($averageRating); // Number of full stars
+        $fraction = $averageRating - $wholeStars; // Remaining fraction of the last star
+        $totalStars = 5; // Total stars to display
 
+        // Render full stars
+        for ($i = 1; $i <= $wholeStars; $i++) {
+            echo '<svg class="starRATE filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+        }
 
+        // Render partial star (if applicable)
+        if ($fraction > 0) {
+            $percentage = $fraction * 100; // Convert fraction to percentage
+            echo '<svg class="starRATE partial" style="--percent: ' . $percentage . '%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+        }
+
+        // Render empty stars
+        for ($i = $wholeStars + ($fraction > 0 ? 1 : 0); $i < $totalStars; $i++) {
+            echo '<svg class="starRATE" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+        }
+        ?>
+    </div>
 
 <script>
 $(document).ready(function() {

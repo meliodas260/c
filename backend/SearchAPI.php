@@ -96,6 +96,7 @@ try {
                 'Year' => $row['YRPublished'], // Ensure this is present in the database
                 'Description' => $row['Abstract'], // Ensure this is present in the database
                 'ImageUrl' => $row['ImageName'], // Ensure this is present in the database
+                'FileName' => $row['FileName'], // Add the 'FileName' field
                 'Researchers' => $researchers,
                 'Panels' => $panels,
                 'Tags' => $tagsArray,

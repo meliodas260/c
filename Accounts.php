@@ -16,8 +16,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 
     <link href="css/custom2.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
@@ -67,6 +65,9 @@
             gap: 20px;
             justify-content: center;
         }
+        .lightblue{
+            color:skyblue;
+        }
     </style>
 <body>
 <?php include 'modal/header.php'; ?>
@@ -103,7 +104,7 @@ try {
         <?php foreach ($userData as $user) : ?>
             <div class="card">
                 <h2><?php echo htmlspecialchars($user['UserType']); ?></h2>
-                <p>Count: <?php echo htmlspecialchars($user['UserCount']); ?></p>
+                <p> <span class="lightblue"> <?php echo htmlspecialchars($user['UserCount']); ?></span></p>
             </div>
         <?php endforeach; ?>
     </div>
@@ -131,11 +132,13 @@ try {
                     <tr>
                         <th>Role ID</th>
                         <th>Role Name</th>
+                        <th>Usertype</th> <!-- New column -->
                         <th>Date Created</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
+
         </div>
 
 
@@ -229,9 +232,24 @@ console.log($('#Course1').val()); // Check the value of the field
                         >
                         <label for="ExpertTypeInput">New ExpertType</label>
                     </div>
+                    
+                    <!-- New Dropdown for User Type -->
+                    <div class="form-floating mb-23 w-50" style="margin-left:20%; margin-right:20%;">
+                        <select
+                            id="UsertypeDropdown"
+                            name="userType"
+                            class="border border-primary form-control"
+                            required
+                        >
+                            <option value="" disabled selected>Select User Type</option>
+                        </select>
+                        <label for="UsertypeDropdown">User Type</label>
+                    </div>
+                    
                     <br>
                     <button type="submit" class="btn btn-primary buttonclean">Submit</button>
                 </form>
+
 
             </div>
         </div>
@@ -261,6 +279,7 @@ console.log($('#Course1').val()); // Check the value of the field
 
                 <button type="submit" class="btn btn-primary buttonclean">Submit</button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -297,129 +316,130 @@ console.log($('#Course1').val()); // Check the value of the field
     </div>
 
 
+
+
 <script>
-document.getElementById('createExpertTypeForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent form's default submission
+    document.addEventListener('DOMContentLoaded', function () {
+        const userTypeDropdown = document.getElementById('UsertypeDropdown'); // Fixed ID
 
-    // Get input value
-    const expertType = document.getElementById('ExpertTypeInput').value.trim();
+        // Fetch user types from the API
+        fetch('backend/getUserTypes.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.userTypes && data.userValues) {
+                    for (let i = 0; i < data.userTypes.length; i++) {
+                        const option = document.createElement('option');
+                        option.value = data.userValues[i];
+                        option.textContent = data.userTypes[i];
+                        userTypeDropdown.appendChild(option);
+                    }
+                } else {
+                    console.error('Invalid response structure:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user types:', error);
+            });
 
-    if (expertType === '') {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'ExpertType cannot be empty!',
-        });
-        return;
-    }
+        // Attach submit event listener
+        document.getElementById('createExpertTypeForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-    // Send data to API via AJAX
-    fetch('backend/createExpertTypeAPI.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            ExpertTypeInput: expertType,
-        }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: data.message,
-                }).then(() => {
-                    // Clear input field
-                    document.getElementById('ExpertTypeInput').value = '';
-                });
-            } else {
+            const expertType = document.getElementById('ExpertTypeInput').value.trim();
+            const userType = document.getElementById('UsertypeDropdown').value;
+
+            if (expertType === '' || userType === '') {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: data.message,
+                    title: 'Oops...',
+                    text: 'All fields are required!',
                 });
+                return;
             }
-        })
-        .catch((error) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Something went wrong. Please try again later.',
-            });
-            console.error('Error:', error);
+
+            fetch('backend/createExpertTypeAPI.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    ExpertTypeInput: expertType,
+                    Usertype: userType,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: data.message,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message,
+                        });
+                    }
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong. Please try again later.',
+                    });
+                    console.error('Error:', error);
+                });
         });
-});
+    });
+
 </script>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
     const rolesTableBody = document.querySelector('#rolesTable tbody');
     const roleForm = document.getElementById('createRoleForm');
 
     // Function to fetch and populate roles
     function fetchRoles() {
-        fetch('backend/createExpertTypeAPI.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    rolesTableBody.innerHTML = ''; // Clear existing rows
-                    data.data.forEach(role => {
-                        const row = `
-                            <tr>
-                                <td>${role.RoleID}</td>
-                                <td>${role.RoleName}</td>
-                                <td>${new Date(role.DateCreated).toLocaleString()}</td>
-                            </tr>
-                        `;
-                        rolesTableBody.innerHTML += row;
-                    });
-                } else {
-                    console.error(data.message);
-                    Swal.fire('Error', data.message, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching roles:', error);
-                Swal.fire('Error', 'Unable to fetch roles.', 'error');
-            });
-    }
+    const rolesTableBody = document.querySelector('#rolesTable tbody');
+
+    fetch('backend/createExpertTypeAPI.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                rolesTableBody.innerHTML = ''; // Clear existing rows
+
+                data.data.forEach(role => {
+                    const row = `
+                        <tr>
+                            <td>${role.RoleID}</td>
+                            <td>${role.RoleName}</td>
+                            <td>${role.Usertype}</td> <!-- Display Usertype -->
+                            <td>${new Date(role.DateCreated).toLocaleString()}</td>
+                        </tr>
+                    `;
+                    rolesTableBody.innerHTML += row;
+                });
+            } else {
+                console.error(data.message);
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching roles:', error);
+            Swal.fire('Error', 'Unable to fetch roles.', 'error');
+        });
+}
+
 
     // Fetch roles on page load
     fetchRoles();
 
-    // Handle role creation form submission
-    roleForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const roleName = document.getElementById('roleName').value.trim();
-
-        if (!roleName) {
-            Swal.fire('Warning', 'Role name cannot be empty.', 'warning');
-            return;
-        }
-
-        fetch('backend/createExpertTypeAPI.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roleName })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire('Success', data.message, 'success');
-                    fetchRoles(); // Refresh roles table
-                    roleForm.reset(); // Clear the form
-                } else {
-                    Swal.fire('Error', data.message, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error creating role:', error);
-                Swal.fire('Error', 'Unable to create role.', 'error');
-            });
-    });
 });
 </script>
 
