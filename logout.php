@@ -1,7 +1,7 @@
 <?php 
 setcookie("RepSesID", "", time() - 1, "/");
 setcookie("Email", "", time() - 1, "/");
-setcookie("ResearchNya", "", time() - 1, "/");
+
 
 
 

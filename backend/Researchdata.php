@@ -20,11 +20,11 @@ try {
         // Fetch tags related to the research
         $tags = $pdo->query("SELECT * FROM `reasearchtagtbl` a 
                              LEFT JOIN tagtbl b ON a.TagID = b.TagId 
-                             WHERE a.TagConnectorKey = $connector");
+                             WHERE a.RoleConnectorKey = $connector");
 
         // Fetch keywords related to the research
         $keyws = $pdo->query("SELECT * FROM `reasearchkeywordstbl` 
-                              WHERE `KeywordConnectorKey` = $connector");
+                              WHERE `RoleConnectorKey` = $connector");
 
         // Collect researchers, tags, and keywords into arrays
         $researchers = [];

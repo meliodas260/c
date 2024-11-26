@@ -31,7 +31,7 @@
                     <a class="nav-link" href="./setSection">Sections</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Tags & Programs</a>
+                    <a class="nav-link" href="./SetBestResearch.php">Set Best Research</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Reports</a>

@@ -54,7 +54,7 @@
                                         if (Array.isArray(data.userTypes)) {
                                             data.userTypes.forEach((userType, index) => {
                                                 const option = document.createElement('option');
-                                                option.value = data.userValues[index];
+                                                option.value = data.userType[index];
                                                 option.textContent = userType;
                                                 selectElement.appendChild(option);
                                             });
@@ -111,20 +111,50 @@
                 <!-- Form to Upload Excel File -->
                 <h2>For Excel Upload</h2>
                 <br>
-                <form id="" action="backend/adminaccessApi.php" method="POST" enctype="multipart/form-data">
-                    <label for="file">Upload Excel File:</label>
-                    <input type="file" name="file" id="file" accept=".xls,.xlsx">
-                    <br>
-                    <button type="submit" class="btn btn-primary buttonclean" name="submit">Upload</button>
-                </form>
-                <?php
-                if (isset($_GET['error'])) {
-                    echo "<p style='color: red;'>Error: " . htmlspecialchars($_GET['error']) . "</p>";
-                }
-                if (isset($_GET['success'])) {
-                    echo "<p style='color: green;'>Success: " . htmlspecialchars($_GET['success']) . "</p>";
-                }
-                ?>
+                <!-- Form -->
+                    <form id="uploadForm" action="backend/adminaccessApi.php" method="POST" enctype="multipart/form-data" onsubmit="showLoadingModal()">
+                        <label for="file" class="form-label">Upload Excel File:</label>
+                        <input type="file" name="file" id="file" class="form-control" accept=".xls,.xlsx">
+                        <br>
+                        <button type="submit" class="btn btn-primary" name="submit">Upload</button>
+                    </form>
+
+                    <!-- Success/Error Messages -->
+                    <?php
+                    if (isset($_GET['error'])) {
+                        echo "<p class='text-danger'>Error: " . htmlspecialchars($_GET['error']) . "</p>";
+                    }
+                    if (isset($_GET['success'])) {
+                        echo "<p class='text-success'>Success: " . htmlspecialchars($_GET['success']) . "</p>";
+                    }
+                    ?>
+
+                    <!-- Bootstrap Modal -->
+                    <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content text-center">
+                                <div class="modal-body">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Uploading file, please wait...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                    function showLoadingModal() {
+                        // Show the loading modal
+                        const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+                        loadingModal.show();
+                    }
+                    </script>
+
+                    <!-- Include Bootstrap JS if not already included -->
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
         </div>
     </div>
 </div>

@@ -21,7 +21,7 @@ try {
         $params['title'] = "%$title%";
     }
     if ($tag) {
-        $query .= " AND `RoleConnectorKey` IN (SELECT TagConnectorKey FROM `reasearchtagtbl` WHERE TagID IN (SELECT TagId FROM `tagtbl` WHERE TagName LIKE :tag))";
+        $query .= " AND `RoleConnectorKey` IN (SELECT RoleConnectorKey FROM `reasearchtagtbl` WHERE TagID IN (SELECT TagId FROM `tagtbl` WHERE TagName LIKE :tag))";
         $params['tag'] = "%$tag%";
     }
     if ($course) { 
@@ -29,7 +29,7 @@ try {
         $params['course'] = "%$course%";
     }
     if ($keyword) {
-        $query .= " AND `RoleConnectorKey` IN (SELECT KeywordConnectorKey FROM `reasearchkeywordstbl` WHERE Keyword LIKE :keyword)";
+        $query .= " AND `RoleConnectorKey` IN (SELECT RoleConnectorKey FROM `reasearchkeywordstbl` WHERE Keyword LIKE :keyword)";
         $params['keyword'] = "%$keyword%";
     }
 
@@ -49,12 +49,12 @@ try {
             // Fetch tags related to the research
             $tags = $pdo->prepare("SELECT b.TagName FROM `reasearchtagtbl` a 
                                     LEFT JOIN tagtbl b ON a.TagID = b.TagId 
-                                    WHERE a.TagConnectorKey = :connector");
+                                    WHERE a.RoleConnectorKey = :connector");
             $tags->execute(['connector' => $connector]);
 
             // Fetch keywords related to the research
             $keyws = $pdo->prepare("SELECT Keyword FROM `reasearchkeywordstbl` 
-                                    WHERE `KeywordConnectorKey` = :connector");
+                                    WHERE `RoleConnectorKey` = :connector");
             $keyws->execute(['connector' => $connector]);
 
             // Separate researchers and panels based on role

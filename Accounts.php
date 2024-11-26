@@ -115,7 +115,9 @@ try {
                     <button class="btn btn-primary buttonclean">Add Account</button>
                 </a>
             </div>
-             <?php include 'modal/accounttbl.php'; ?>
+            
+            <?php include 'modal/accounttbl.php'; ?>
+
         </div>
 
         <div class="norDiv">
@@ -209,6 +211,31 @@ console.log($('#Course1').val()); // Check the value of the field
     </div>
 </div>
 
+<!-- Edit User Type Modal -->
+<div class="modal fade" id="editUserTypeModal" tabindex="-1" aria-labelledby="editUserTypeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserTypeModalLabel">Edit User Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserTypeForm">
+                    <input type="hidden" id="editUserID" name="userID">
+                    <label for="editUserType" class="form-label">New User Type</label>
+                    <select class="form-select" id="editUserType" name="newUsertype" required>
+                        <option value="" disabled selected>Loading...</option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveUserTypeBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <div class="modal fade" id="ExpertType" tabindex="-1" aria-labelledby="ExpertTypeLabel" aria-hidden="true">
@@ -265,25 +292,35 @@ console.log($('#Course1').val()); // Check the value of the field
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post">
-                <H3>Create new USERTYPE</H3>
-                <div class="form-floating mb-23 w-50"  style="margin-left:20%; magrin-right:20%; ">
-                    <input class="border border-primary form-control"type="text" autocomplete="off" id="USERTYPENAME" name="USERTYPENAME" placeholder="USERTYPENAME" >
-                    <label for="USERTYPENAME">New UserType</label>
-                </div>
-                <br>
-                <div class="form-floating mb-23 w-50"  style="margin-left:20%; magrin-right:20%; ">
-                    <input class="border border-primary form-control"type="text" autocomplete="off" id="Access" name="Access" placeholder="Access" >
-                    <label for="sdsd"> UserType Access</label>
-                </div>
+            <form id="createUserTypeForm" method="post">
+    <h3>Create New USERTYPE</h3>
 
-                <button type="submit" class="btn btn-primary buttonclean">Submit</button>
-                </form>
+    <div class="form-floating mb-23 w-50" style="margin-left:20%; margin-right:20%; ">
+        <input class="border border-primary form-control" type="text" autocomplete="off" id="USERTYPENAME" name="USERTYPENAME" placeholder="USERTYPENAME" required>
+        <label for="USERTYPENAME">New UserType</label>
+    </div>
+
+    <br>
+
+    <div class="form-floating mb-23 w-50" style="margin-left:20%; margin-right:20%;">
+        <select class="border border-primary form-control" id="Access" name="Access" required>
+            <option value="" disabled selected>Select Access Type</option>
+            <option value="1">Admin</option>
+            <option value="3">Teacher</option>
+            <option value="2">User</option>
+        </select>
+        <label for="Access">Usertype's Access</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary buttonclean">Submit</button>
+</form>
+
 
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -400,48 +437,98 @@ console.log($('#Course1').val()); // Check the value of the field
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
-    const rolesTableBody = document.querySelector('#rolesTable tbody');
-    const roleForm = document.getElementById('createRoleForm');
+    document.addEventListener('DOMContentLoaded', function () {
+        const rolesTableBody = document.querySelector('#rolesTable tbody');
+        const roleForm = document.getElementById('createRoleForm');
 
-    // Function to fetch and populate roles
-    function fetchRoles() {
-    const rolesTableBody = document.querySelector('#rolesTable tbody');
+        // Function to fetch and populate roles
+        function fetchRoles() {
+        const rolesTableBody = document.querySelector('#rolesTable tbody');
 
-    fetch('backend/createExpertTypeAPI.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                rolesTableBody.innerHTML = ''; // Clear existing rows
+        fetch('backend/createExpertTypeAPI.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    rolesTableBody.innerHTML = ''; // Clear existing rows
 
-                data.data.forEach(role => {
-                    const row = `
-                        <tr>
-                            <td>${role.RoleID}</td>
-                            <td>${role.RoleName}</td>
-                            <td>${role.Usertype}</td> <!-- Display Usertype -->
-                            <td>${new Date(role.DateCreated).toLocaleString()}</td>
-                        </tr>
-                    `;
-                    rolesTableBody.innerHTML += row;
-                });
-            } else {
-                console.error(data.message);
-                Swal.fire('Error', data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching roles:', error);
-            Swal.fire('Error', 'Unable to fetch roles.', 'error');
-        });
-}
+                    data.data.forEach(role => {
+                        const row = `
+                            <tr>
+                                <td>${role.RoleID}</td>
+                                <td>${role.RoleName}</td>
+                                <td>${role.Usertype}</td> <!-- Display Usertype -->
+                                <td>${new Date(role.DateCreated).toLocaleString()}</td>
+                            </tr>
+                        `;
+                        rolesTableBody.innerHTML += row;
+                    });
+                } else {
+                    console.error(data.message);
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching roles:', error);
+                Swal.fire('Error', 'Unable to fetch roles.', 'error');
+            });
+    }
 
 
-    // Fetch roles on page load
-    fetchRoles();
+        // Fetch roles on page load
+        fetchRoles();
 
-});
+    });
 </script>
+
+<script>
+document.getElementById('createUserTypeForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Get the form data
+    const formData = new FormData(this);
+
+    // Send form data to the server
+    fetch('backend/CreateUserType.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())  // Assuming the server returns JSON
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            Swal.fire({
+                title: 'Success!',
+                text: 'UserType created successfully.',
+                icon: 'success',
+                confirmButtonText: 'Okay'
+            }).then(() => {
+                // Optionally, reset the form or do something else
+                document.getElementById('createUserTypeForm').reset();
+            });
+        } else {
+            // Show error message
+            Swal.fire({
+                title: 'Error!',
+                text: data.error || 'An error occurred.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        }
+    })
+    .catch(error => {
+        // Handle any errors in the fetch call
+        console.error('Error submitting form:', error);
+        Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred while submitting the form.',
+            icon: 'error',
+            confirmButtonText: 'Okay'
+        });
+    });
+});
+
+</script>
+
 
 
 </div>

@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                 header("Location: ../Accounts.php");
                 exit;
-            } elseif ($UserType && $UserType['UserStatus'] == 3) {
+            } elseif ($UserType && $UserType['UserStatus'] == 2) {
                 // Check for Capstone Teacher
                 $CapT = $pdo->prepare("SELECT MAX(DateCreacted) FROM `sectionn&capteachertbl` WHERE UID_Teacher = :UID");
                 $CapT->execute([':UID' => $UID]);
@@ -81,12 +81,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
             }
         } else {
             // Invalid password
-           // header("Location: ../index.php?error=invalid_password");
+           header("Location: ../index.php?error=invalid_password");
             exit;
         }
     } else {
         // User not found
-       // header("Location: ../index.php?error=user_not_found");
+       header("Location: ../index.php?error=user_not_found");
         exit;
     }
 

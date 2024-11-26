@@ -103,12 +103,30 @@
 
             <h3>Upload Section in Excel</h3>
         <br>
-        <form action="adminaccessApi.php" method="post" enctype="multipart/form-data">
-            <label for="excel_file">Upload Excel File:</label>
-            <input type="file" name="excel_file" id="excel_file" accept=".xls,.xlsx">
-            <br>
-            <button type="submit" class="btn btn-primary buttonclean" name="submit">Upload</button>
-        </form>
+        <form action="backend/CreateSectionFileupload.php" method="post" enctype="multipart/form-data">
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Upload Excel File</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="excel_file">Upload Excel File:</label>
+                            <input type="file" name="excel_file" id="excel_file" accept=".xls,.xlsx" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-primary" name="submit">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 
     </div>                    
 </div>

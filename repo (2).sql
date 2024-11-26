@@ -156,7 +156,7 @@ INSERT INTO `logtbl` (`logID`, `UID`, `datelogin`, `DateExpire`) VALUES
 
 CREATE TABLE `reasearchkeywordstbl` (
   `ReasearchKeyWordsD` int(255) NOT NULL,
-  `KeywordConnectorKey` bigint(250) NOT NULL,
+  `RoleConnectorKey` bigint(250) NOT NULL,
   `Keyword` varchar(50) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -165,7 +165,7 @@ CREATE TABLE `reasearchkeywordstbl` (
 -- Dumping data for table `reasearchkeywordstbl`
 --
 
-INSERT INTO `reasearchkeywordstbl` (`ReasearchKeyWordsD`, `KeywordConnectorKey`, `Keyword`, `date`) VALUES
+INSERT INTO `reasearchkeywordstbl` (`ReasearchKeyWordsD`, `RoleConnectorKey`, `Keyword`, `date`) VALUES
 (1, 2147483647, 'oo', '2024-09-16 11:24:37'),
 (2, 2147483647, 'oo', '2024-09-16 11:25:50'),
 (3, 2147483647, 'oo', '2024-09-16 11:27:40'),
@@ -199,7 +199,7 @@ INSERT INTO `reasearchkeywordstbl` (`ReasearchKeyWordsD`, `KeywordConnectorKey`,
 
 CREATE TABLE `reasearchtagtbl` (
   `ResearchTagID` int(200) NOT NULL,
-  `TagConnectorKey` bigint(250) NOT NULL,
+  `RoleConnectorKey` bigint(250) NOT NULL,
   `TagID` int(2) NOT NULL,
   `dateCreated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -208,7 +208,7 @@ CREATE TABLE `reasearchtagtbl` (
 -- Dumping data for table `reasearchtagtbl`
 --
 
-INSERT INTO `reasearchtagtbl` (`ResearchTagID`, `TagConnectorKey`, `TagID`, `dateCreated`) VALUES
+INSERT INTO `reasearchtagtbl` (`ResearchTagID`, `RoleConnectorKey`, `TagID`, `dateCreated`) VALUES
 (1, 2147483647, 1, '2024-09-16 11:44:22'),
 (2, 2147483647, 1, '2024-09-16 11:45:52'),
 (3, 2147483647, 1, '2024-09-16 11:46:38'),
@@ -638,7 +638,7 @@ ALTER TABLE `logtbl`
 --
 ALTER TABLE `reasearchkeywordstbl`
   ADD PRIMARY KEY (`ReasearchKeyWordsD`),
-  ADD KEY `KeywordConnectorKey` (`KeywordConnectorKey`);
+  ADD KEY `RoleConnectorKey` (`RoleConnectorKey`);
 
 --
 -- Indexes for table `reasearchtagtbl`
@@ -646,7 +646,7 @@ ALTER TABLE `reasearchkeywordstbl`
 ALTER TABLE `reasearchtagtbl`
   ADD PRIMARY KEY (`ResearchTagID`),
   ADD KEY `TagID` (`TagID`),
-  ADD KEY `TagConnectorKey` (`TagConnectorKey`);
+  ADD KEY `RoleConnectorKey` (`RoleConnectorKey`);
 
 --
 -- Indexes for table `requesttbl`
@@ -905,8 +905,8 @@ ALTER TABLE `researchroletbl`
 --
 ALTER TABLE `researchtbl`
   ADD CONSTRAINT `researchtbl_ibfk_1` FOREIGN KEY (`CourseID`) REFERENCES `coursetbl` (`CourseID`),
-  ADD CONSTRAINT `researchtbl_ibfk_10` FOREIGN KEY (`RoleConnectorKey`) REFERENCES `reasearchkeywordstbl` (`KeywordConnectorKey`),
-  ADD CONSTRAINT `researchtbl_ibfk_11` FOREIGN KEY (`RoleConnectorKey`) REFERENCES `reasearchtagtbl` (`TagConnectorKey`),
+  ADD CONSTRAINT `researchtbl_ibfk_10` FOREIGN KEY (`RoleConnectorKey`) REFERENCES `reasearchkeywordstbl` (`RoleConnectorKey`),
+  ADD CONSTRAINT `researchtbl_ibfk_11` FOREIGN KEY (`RoleConnectorKey`) REFERENCES `reasearchtagtbl` (`RoleConnectorKey`),
   ADD CONSTRAINT `researchtbl_ibfk_5` FOREIGN KEY (`SectionID`) REFERENCES `sectionn&capteachertbl` (`SectionID`),
   ADD CONSTRAINT `researchtbl_ibfk_9` FOREIGN KEY (`RoleConnectorKey`) REFERENCES `researchroletbl` (`RoleConnectorKey`);
 

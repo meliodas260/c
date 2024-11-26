@@ -17,7 +17,7 @@ try {
         $tags = $pdo->query("SELECT `TagName` 
                              FROM `tagtbl` a 
                              LEFT JOIN `reasearchtagtbl` b ON a.TagId = b.TagID 
-                             WHERE b.TagConnectorKey = $connector");
+                             WHERE b.RoleConnectorKey = $connector");
 
         // Collect tags into an array
         $tagsArray = [];

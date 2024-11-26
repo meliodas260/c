@@ -81,63 +81,90 @@ function renderRatingStars($averageRating) {
             clip-path: polygon(0 0, var(--percent, 0%) 0, var(--percent, 0%) 100%, 0% 100%);
         }
 
-        .research-sidebar {
-            position: fixed; /* Fix the sidebar to the right side */
-            top: 100px;
-            right: 20px;
-            width: 250px;
-            max-height: 600px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+/* Main container for the sidebars */
+.rightbar-container {
+    display: flex;
+    flex-wrap: wrap; /* Wrap sidebars for smaller screens */
+    gap: 20px; /* Space between sidebars */
+    padding: 10px;
+}
 
-        .course-section {
-            margin-bottom: 30px;
-        }
+/* Each sidebar */
+.research-sidebar {
+    flex: 1 1 300px; /* Minimum width of 300px, but flexible */
+    max-width: 300px; /* Limit maximum width for a consistent layout */
+    background-color: #c7ccce;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 600px; /* Ensure it doesn’t grow too tall */
+}
 
-        .research-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            cursor: pointer;
-            text-decoration: none; /* Remove underline */
-        }
+/* Course Title */
+.course-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
 
-        .research-item img {
-            width: 100%;
-            height: 120px; /* Smaller image height */
-            object-fit: cover;
-            border-radius: 5px;
-        }
+/* Items Container */
+.course-research-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-        .research-item h5 {
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            margin: 0;
-        }
+/* No Research Found Message */
+.no-research-msg {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+}
 
-        .research-item p {
-            text-align: center;
-            font-size: 12px;
-            margin: 0;
-        }
+/* Research Item */
+.research-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
 
-        .research-item:hover {
-            background-color: #f0f0f0; /* Light hover effect */
-        }
+.research-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.research-item h5 {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    color: #333;
+}
+
+.research-item p {
+    font-size: 12px;
+    text-align: center;
+    margin: 0;
+    color: #555;
+}
+
+.research-item:hover {
+    background-color: #b5e9ec;
+}
+
     #research-container {
             display: flex;
             flex-wrap: wrap;
@@ -182,27 +209,30 @@ function renderRatingStars($averageRating) {
         }
 
         .half {
-            flex: 1; /* Each child will take up equal space */
-            padding: 10px;
-            box-sizing: border-box; /* Include padding in the width */
-        }
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in the width */
+}
 
-        .left {
-            background-color: lightblue;
-        }
+.left {
+    flex: 8; /* Takes 80% of the available space */
+}
 
-        .right {
-            background-color: lightcoral;
-        }
+.right {
+    flex: 2; /* Takes 20% of the available space */
+}
+
 
         /* Responsive adjustments */
         @media screen and (max-width: 600px) {
             
             .half {
-            
-                flex: 1 1 100%;
-            
-            }
+        flex-direction: column; /* Stack items vertically */
+    }
+
+    .left, .right {
+        flex: 1; /* Equal width when stacked vertically */
+        width: 100%; /* Ensure full width */
+    }
             #research-container {
                 flex-direction: column;
                 align-items: center;
@@ -222,36 +252,110 @@ include 'modal/header.php';
 
 <body>
 <div class="contentor">
-    <br>
-    <h1>Research Suggestions</h1>
-    <div id="research-container"></div>
+
 </div>
 
-<script>
+    <div class="flexer">
+        <div class="half left"> 
+                <br>
+            <h1>Research Suggestions</h1>
+            <div id="research-container"></div>
+                </div>
+
+                <div class="half right">   
+                <div class="rightbar-container">
+            <?php foreach ($courses as $course) : ?>
+                <?php
+                $courseID = $course['CourseID'];
+                $courseAcronym = htmlspecialchars($course['CourseAcronym']);
+
+                // Fetch top 10 research for this course
+                $researchQuery = "
+                    SELECT 
+                        A.ResearchID, 
+                        ROUND(AVG(A.Rate), 1) AS Rates, 
+                        B.Title, 
+                        B.ImageName 
+                    FROM 
+                        studentresearchratetbl AS A 
+                    LEFT JOIN 
+                        researchtbl AS B ON A.ResearchID = B.ResearchID 
+                    WHERE 
+                        B.CourseID = :courseID 
+                        AND YEAR(B.date) BETWEEN :lastYear AND :currentYear
+                    GROUP BY 
+                        A.ResearchID 
+                    ORDER BY 
+                        Rates DESC 
+                    LIMIT 10";
+                $researchStmt = $pdo->prepare($researchQuery);
+                $researchStmt->execute([
+                    'courseID' => $courseID,
+                    'lastYear' => $lastYear,
+                    'currentYear' => $currentYear
+                ]);
+                $researchItems = $researchStmt->fetchAll();
+                ?>
+
+                <!-- Sidebar for Each Course -->
+                <div class="research-sidebar">
+                    <h2 class="course-title"><?= htmlspecialchars($courseAcronym) ?> - Top Research</h2>
+                    <div class="course-research-items">
+                        <?php if (!empty($researchItems)) : ?>
+                            <?php foreach ($researchItems as $research) : ?>
+                                <?php
+                                $title = htmlspecialchars($research['Title']);
+                                $imageUrl = !empty($research['ImageName']) ? "UploadIMG/" . htmlspecialchars($research['ImageName']) : "img/neust_logo.png";
+                                $averageRating = $research['Rates'];
+                                $researchID = $research['ResearchID'];
+                                ?>
+                                <a href="ResearchView?researchID=<?= $researchID ?>" class="research-item">
+                                    <img src="<?= $imageUrl ?>" alt="<?= $title ?>">
+                                    <h5><?= $title ?></h5>
+                                    <p>Average Rating: <?= $averageRating ?> / 5</p>
+                                    <div class="starsDiv">
+                                        <?= renderRatingStars($averageRating) ?>
+                                    </div>
+                                </a>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <p class="no-research-msg">No research found for this course.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+
+        </div>
+    </div>
+    <script>
     // Add a research card to the container
-    function addResearchCard(title, date, abstract, imageUrl, rate) {
-        const container = document.getElementById('research-container');
-        const card = document.createElement('div');
+// Add a research card to the container
+function addResearchCard(researchID, title, date, abstract, imageUrl, rate) {
+    const container = document.getElementById('research-container');
+    const card = document.createElement('div');
 
-        // Set a default image if `imageUrl` is empty
-        const imageSrc = imageUrl ? imageUrl : '../img/neust_logo.png';
+    // Set a default image if `imageUrl` is empty
+    const imageSrc = imageUrl ? imageUrl : '../img/neust_logo.png';
 
-        card.className = 'research-card';
-        card.innerHTML = `
-            <img src="UploadIMG/${imageSrc}" alt="Research Image" class="research-image">
-            <h2>${title}</h2>
-            <p><strong>Year:</strong> ${date}</p>
-            <p>${abstract}</p>
-            <div class="rating">
-                <strong>Average Rating:</strong> ${rate} / 5
-                <div class="stars">${generateStars(rate)}</div>
-            </div>
-            <a href="#" class="read-more">Read More</a>
-        `;
-        container.appendChild(card);
-    }
+    card.className = 'research-card';
+    card.innerHTML = `
+        <img src="UploadIMG/${imageSrc}" alt="Research Image" class="research-image">
+        <h2>${title}</h2>
+        <p><strong>Year:</strong> ${date}</p>
+        <p>${abstract}</p>
+        <div class="rating">
+            <strong>Average Rating:</strong> ${rate} / 5
+            <div class="stars">${generateStars(rate)}</div>
+        </div>
+        <a href="ResearchView?researchID=${researchID}" class="read-more">Read More</a>
+    `;
+    container.appendChild(card);
+}
 
-    function generateStars(rate) {
+// Generate stars for rating display
+function generateStars(rate) {
     const totalStars = 5;
     const wholeStars = Math.floor(rate);
     const fraction = rate - wholeStars;
@@ -279,121 +383,57 @@ include 'modal/header.php';
     return starsHTML;
 }
 
+// Suggest research papers based on a query
+function suggestResearchPapers(researchPapers, query, desiredCount) {
+    const suggestions = researchPapers.filter(paper =>
+        paper.Title && paper.Title.toLowerCase().includes(query.toLowerCase())
+    );
 
-    // Suggest research papers based on a query
-    function suggestResearchPapers(researchPapers, query, desiredCount) {
-        const suggestions = researchPapers.filter(paper =>
-            (paper.Title && paper.Title.toLowerCase().includes(query.toLowerCase()))
-        );
-
-        if (suggestions.length < desiredCount) {
-            const remainingCount = desiredCount - suggestions.length;
-            const randomPapers = researchPapers
-                .filter(paper => !suggestions.includes(paper))
-                .sort(() => Math.random() - 0.5)
-                .slice(0, remainingCount);
-            suggestions.push(...randomPapers);
-        }
-
-        return suggestions.slice(0, desiredCount);
+    if (suggestions.length < desiredCount) {
+        const remainingCount = desiredCount - suggestions.length;
+        const randomPapers = researchPapers
+            .filter(paper => !suggestions.includes(paper))
+            .sort(() => Math.random() - 0.5)
+            .slice(0, remainingCount);
+        suggestions.push(...randomPapers);
     }
 
-    // Fetch and display research suggestions from the API
-    function fetchResearchSuggestions() {
-        fetch('backend/Suggestresearch.php')
-            .then(response => response.json())
-            .then(researchPapers => {
-                const searchQuery = 'dynamic'; // Set query based on requirements
-                const desiredCount = 10; // Number of papers to display
-                const suggestedPapers = suggestResearchPapers(researchPapers, searchQuery, desiredCount);
+    return suggestions.slice(0, desiredCount);
+}
 
-                const container = document.getElementById('research-container');
-                container.innerHTML = ''; // Clear previous content
+// Fetch and display research suggestions from the API
+function fetchResearchSuggestions() {
+    fetch('backend/Suggestresearch.php')
+        .then(response => response.json())
+        .then(researchPapers => {
+            const searchQuery = 'dynamic'; // Set query based on requirements
+            const desiredCount = 10; // Number of papers to display
+            const suggestedPapers = suggestResearchPapers(researchPapers, searchQuery, desiredCount);
 
-                suggestedPapers.forEach(paper => {
-                    addResearchCard(paper.Title, paper.date, paper.Abstract, paper.ImageName, paper.RATES);
-                });
+            const container = document.getElementById('research-container');
+            container.innerHTML = ''; // Clear previous content
 
-                if (suggestedPapers.length === 0) {
-                    container.innerHTML = '<p>No research papers found for your query.</p>';
-                }
-            })
-            .catch(error => console.error('Error fetching research papers:', error));
-    }
+            suggestedPapers.forEach(paper => {
+                addResearchCard(
+                    paper.ResearchID,
+                    paper.Title,
+                    paper.date,
+                    paper.Abstract,
+                    paper.ImageName,
+                    paper.RATES
+                );
+            });
 
-    // Fetch research suggestions on page load
-    fetchResearchSuggestions();
-</script>
-
-    <div class="flexer">
-        <div class="half left"> 
-
-        </div>
-
-        <div class="half right">   
-            <h2> What We Offer</h2>
-            <ul>
-            <li> Centralized repo: Our system provides a secure and organized space where you can upload and access research papers, theses, dissertations, and other scholarly materials. With robust search and retrieval functionalities, finding relevant research has never been easier.
-                </li>
-            <li> Enhanced Collaboration: Collaborate with peers and colleagues by sharing your research and accessing others’ work. Our platform supports collaborative projects, allowing you to engage with a network of researchers and contribute to the academic community.
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="research-sidebar">
-        <?php
-        foreach ($courses as $course) {
-            $courseID = $course['CourseID'];
-            $courseAcronym = htmlspecialchars($course['CourseAcronym']);
-
-            // Fetch top 10 research for this course
-            $researchQuery = "
-                SELECT A.ResearchID, ROUND(AVG(A.Rate), 1) AS Rates, B.Title, B.ImageName 
-                FROM studentresearchratetbl AS A 
-                LEFT JOIN researchtbl AS B ON A.ResearchID = B.ResearchID 
-                WHERE B.CourseID = :courseID 
-                  AND YEAR(B.date) BETWEEN :lastYear AND :currentYear
-                GROUP BY A.ResearchID 
-                ORDER BY Rates DESC 
-                LIMIT 10";
-            $researchStmt = $pdo->prepare($researchQuery);
-            $researchStmt->execute([
-                'courseID' => $courseID,
-                'lastYear' => $lastYear,
-                'currentYear' => $currentYear
-            ]);
-            $researchItems = $researchStmt->fetchAll();
-
-            echo "<div class='course-section'>";
-            echo "<h2>Top Research for $courseAcronym</h2>";
-
-            if (count($researchItems) > 0) {
-                foreach ($researchItems as $research) {
-                    $title = htmlspecialchars($research['Title']);
-                    $imageUrl = !empty($research['ImageName']) ? "UploadIMG/" . htmlspecialchars($research['ImageName']) : "img/neust_logo.png";
-                    $averageRating = $research['Rates'];
-                    $researchID = $research['ResearchID'];
-                    ?>
-
-                    <a href="ResearchView?researchID=<?= $researchID ?>" class="research-item">
-                        <img src="<?= $imageUrl ?>" alt="Research Image">
-                        <h5><?= $title ?></h5>
-                        <p>Average Rating: <?= $averageRating ?> / 5</p>
-                        <div class="starsDiv">
-                            <?= renderRatingStars($averageRating) ?>
-                        </div>
-                    </a>
-
-                    <?php
-                }
-            } else {
-                echo "<p>No research found for this course.</p>";
+            if (suggestedPapers.length === 0) {
+                container.innerHTML = '<p>No research papers found for your query.</p>';
             }
+        })
+        .catch(error => console.error('Error fetching research papers:', error));
+}
 
-            echo "</div>";
-        }
-        ?>
-    </div>
+// Fetch research suggestions on page load
+fetchResearchSuggestions();
+
+</script>
 </body>
 </html>

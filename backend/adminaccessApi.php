@@ -47,39 +47,55 @@ function putusers( $UID, $email,  $status, $fname, $mname, $lname, $suffix, $gen
     if ($hashed_password) {
         //Prepare SQL statement to insert data into a table
         $sql = "INSERT INTO `accounttbl` (`UserID`, `Email`, `SchoolId`, `Fname`, `Lname`, `Mname`, `Suffix`, `IsMale`, `imageName`, `Password`, `DateCreated`, `Usertype`) 
-        VALUES (NULL, '$email', '$UID', '$fname', '$lname', '$mname', '$suffix', '$gender', NULL, '$hashed_password', DEFAULT, '$status')";
+VALUES (NULL, '$email', '$UID', '$fname', '$lname', '$mname', '$suffix', '$gender', NULL, '$hashed_password', DEFAULT, 
+        (SELECT `usertype` FROM `usertypetbl` WHERE `usertypename` = '$status'));
+";
         
             try{  $pdo->query($sql) === TRUE;
                
-                $to_email = $email; // Email address to which you want to send the email
-                $subject = "Password giver"; // Subject of the email
-                $message = " your password to repo system is $password"; // Body of the email
+                //disabled because just
+                // $to_email = $email; // Email address to which you want to send the email
+                // $subject = "Password giver"; // Subject of the email
+                // $message = " your password to repo system is $password"; // Body of the email
     
-                // Gmail SMTP configuration
-                $smtp_username = "lestersayson206@gmail.com"; // Your Gmail email address
-                $smtp_password = "mzvv vlse dpyb vtpn"; // Your Gmail app-specific password
+                // // Gmail SMTP configuration
+                // $smtp_username = "lestersayson206@gmail.com"; // Your Gmail email address
+                // $smtp_password = "mzvv vlse dpyb vtpn"; // Your Gmail app-specific password
                 
-                // Create PHPMailer object
-                $mail = new PHPMailer;
+                // // Create PHPMailer object
+                // $mail = new PHPMailer;
     
-                // SMTP configuration
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = $smtp_username;
-                $mail->Password = $smtp_password;
-                $mail->SMTPSecure = 'ssl';
-                $mail->Port = 465;
+                // // SMTP configuration
+                // $mail->isSMTP();
+                // $mail->Host = 'smtp.gmail.com';
+                // $mail->SMTPAuth = true;
+                // $mail->Username = $smtp_username;
+                // $mail->Password = $smtp_password;
+                // $mail->SMTPSecure = 'ssl';
+                // $mail->Port = 465;
     
-                // Email content
-                $mail->setFrom($smtp_username);
-                $mail->addAddress($to_email);
-                $mail->Subject = $subject;
-                $mail->Body = $message;
-    
+                // // Email content
+                // $mail->setFrom($smtp_username);
+                // $mail->addAddress($to_email);
+                // $mail->Subject = $subject;
+                // $mail->Body = $message;
+                // Data to save in the text file
+
+            $data = "$email,$password\n"; // Append email and password as comma-separated values
+
+            // File path where the data will be saved
+            $file_path = 'credentials.txt';
+
+            // Append the data to the file
+            file_put_contents($file_path, $data, FILE_APPEND | LOCK_EX);
+
+            // Notify the developer
+            echo "Credentials have been appended to $file_path.";
+
+            $mail = true;
             // Send email
-            if ($mail->send()) {
-    
+            // if ($mail->send()) {
+                if ($mail) {
                     // Return success response
                     echo json_encode([
                         'success' => true,
@@ -109,22 +125,26 @@ function putusers( $UID, $email,  $status, $fname, $mname, $lname, $suffix, $gen
     
             }
 
-
-            $target_dir = "../uploads/";
-            $target_file = $target_dir . basename($_FILES["file"]["name"]);
-            $uploadOk = 1;
-            $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            if (isset($_FILES["file"]["name"])) {
+                $target_dir = "../uploads/";
+            
+                // Generate a new file name with the current date and time
+                $file_extension = strtolower(pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION));
+                $new_file_name = "file_" . date("Ymd_His") . "." . $file_extension; // New file name format: file_YYYYMMDD_HHMMSS.extension
+                $target_file = $target_dir . $new_file_name;
+            
+                $uploadOk = 1;
+            
+                // Check if the file is an Excel file
+                if ($file_extension != "xls" && $file_extension != "xlsx") {
+                    echo "Sorry, only Excel files are allowed.";
+                    $uploadOk = 0;
+                }
         
-            // Check if the file is an Excel file
-            if ($fileType != "xls" && $fileType != "xlsx") {
-                echo "Sorry, only Excel files are allowed.";
-                $uploadOk = 0;
-            }
-        
-            if ($uploadOk == 1) {
-                // Upload the file
-                if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-                    echo "The file has been uploaded.<br>";
+                if ($uploadOk == 1) {
+                    // Upload the file
+                    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+                        echo "The file has been uploaded as $new_file_name.<br>";
         
                     // Call Python script to read the Excel file
                     $command = escapeshellcmd("python ../backend/try.py " . escapeshellarg($target_file));
@@ -143,7 +163,7 @@ function putusers( $UID, $email,  $status, $fname, $mname, $lname, $suffix, $gen
                             if (!empty($decoded_data) && is_array($decoded_data)) {
                                 foreach ($decoded_data as $row) {
                                     // Use null if the column is missing or empty
-                                    $UID = isset($row['UID']) ? $row['UID'] : null;
+                                    $UID = isset($row['SchoolID']) ? $row['SchoolID'] : null;
                                     $email = isset($row['email']) ? $row['email'] : null;
                                     $status = isset($row['status']) ? $row['status'] : null;
                                     $fname = isset($row['fname']) ? $row['fname'] : null;
@@ -169,7 +189,7 @@ function putusers( $UID, $email,  $status, $fname, $mname, $lname, $suffix, $gen
                 } else {
                     echo "Sorry, there was an error uploading your file.";
                 }
-            }
+            }}
             
         
 ?>

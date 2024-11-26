@@ -15,7 +15,7 @@
         }
 
         .sidebar {
-            flex: 0 0 20%;
+            flex: 0 0 80%;
             background-color: #8d2424;
         }
 

@@ -1,189 +1,134 @@
 <?php
-require 'backend/dblogin.php'; // Include the database connection
+// Database connection (assuming you have a db.php or a connection file)
+require 'backend/dblogin.php';
 
-// Fetch all courses
-$coursesQuery = "SELECT CourseID, CourseAcronym FROM coursetbl"; // Replace with your table name
-$coursesStmt = $pdo->prepare($coursesQuery);
-$coursesStmt->execute();
-$courses = $coursesStmt->fetchAll();
+// Handle adding to the "Best Research" functionality
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ResearchID'])) {
+    $researchID = intval($_POST['ResearchID']); // Sanitize input
 
-// Get the current and last year dynamically
-$currentYear = date('Y');
-$lastYear = $currentYear - 1;
+    try {
+        // Check if research already exists in the best_research table
+        $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM `best_research` WHERE ResearchID = :ResearchID");
+        $checkStmt->execute(['ResearchID' => $researchID]);
+        $count = $checkStmt->fetchColumn();
 
-// Function to render star ratings
-function renderRatingStars($averageRating) {
-    $wholeStars = floor($averageRating); // Number of full stars
-    $fraction = $averageRating - $wholeStars; // Remaining fraction of the last star
-    $totalStars = 5; // Total stars to display
-
-    $output = '';
-
-    // Render full stars
-    for ($i = 1; $i <= $wholeStars; $i++) {
-        $output .= '<svg class="starRATE filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                    </svg>';
+        // If not exists, insert it into the best_research table
+        if ($count == 0) {
+            $query = "INSERT INTO `best_research` (ResearchID) VALUES (:ResearchID)";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute(['ResearchID' => $researchID]);
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'This research is already in the best research list.']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
+    exit;
+}
 
-    // Render partial star (if applicable)
-    if ($fraction > 0) {
-        $percentage = $fraction * 100; // Convert fraction to percentage
-        $output .= '<svg class="starRATE partial" style="--percent: ' . $percentage . '%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                    </svg>';
+// Retrieve all entries from the best_research table grouped by Course
+$bestResearchByCourse = [];
+try {
+    $query = "SELECT 
+                  br.ResearchID, 
+                  r.Title, 
+                  r.YRPublished, 
+                  r.Abstract, 
+                  r.ImageName, 
+                  C.CourseAcronym 
+              FROM 
+                  `best_research` br 
+              LEFT JOIN 
+                  researchtbl r ON br.ResearchID = r.ResearchID 
+              LEFT JOIN 
+                  coursetbl C ON C.CourseID = r.CourseID 
+              ORDER BY 
+                  C.CourseAcronym, r.Title";
+    $stmt = $pdo->query($query);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Group by CourseAcronym
+    foreach ($results as $research) {
+        $bestResearchByCourse[$research['CourseAcronym']][] = $research;
     }
-
-    // Render empty stars
-    for ($i = $wholeStars + ($fraction > 0 ? 1 : 0); $i < $totalStars; $i++) {
-        $output .= '<svg class="starRATE" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                    </svg>';
-    }
-
-    return $output;
+} catch (PDOException $e) {
+    echo "Error fetching best research: " . $e->getMessage();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Research by Course</title>
+    <title>Research Search with Selection</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .starRATE {
-            width: 20px;
-            height: 20px;
-            fill: #ccc;
-        }
-
-        .starRATE.filled {
-            fill: #FFD700;
-        }
-
-        .starRATE.partial {
-            position: relative;
-        }
-
-        .starRATE.partial path {
-            fill: #FFD700;
-            clip-path: polygon(0 0, var(--percent, 0%) 0, var(--percent, 0%) 100%, 0% 100%);
-        }
-
-        .research-sidebar {
-            position: fixed; /* Fix the sidebar to the right side */
-            top: 100px;
-            right: 20px;
-            width: 250px;
-            max-height: 600px;
-            overflow-y: auto;
+        body {
             background-color: #f8f9fa;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
         }
 
         .course-section {
-            margin-bottom: 30px;
-        }
-
-        .research-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            cursor: pointer;
-            text-decoration: none; /* Remove underline */
+            margin-top: 50px;
         }
 
         .research-item img {
-            width: 100%;
-            height: 120px; /* Smaller image height */
-            object-fit: cover;
+            max-width: 100%;
+            height: auto;
             border-radius: 5px;
         }
 
-        .research-item h5 {
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            margin: 0;
+        .research-item {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #ffffff;
+            padding: 20px;
         }
 
-        .research-item p {
-            text-align: center;
-            font-size: 12px;
-            margin: 0;
+        .research-title {
+            cursor: pointer;
+            color: #007BFF;
         }
 
-        .research-item:hover {
-            background-color: #f0f0f0; /* Light hover effect */
+        .research-title:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>Top 10 Research by Course</h1>
-    <div class="research-sidebar">
-        <?php
-        foreach ($courses as $course) {
-            $courseID = $course['CourseID'];
-            $courseAcronym = htmlspecialchars($course['CourseAcronym']);
+    <div class="container mt-5">
+        <h1 class="text-center">Best Research</h1>
 
-            // Fetch top 10 research for this course
-            $researchQuery = "
-                SELECT A.ResearchID, ROUND(AVG(A.Rate), 1) AS Rates, B.Title, B.ImageName 
-                FROM studentresearchratetbl AS A 
-                LEFT JOIN researchtbl AS B ON A.ResearchID = B.ResearchID 
-                WHERE B.CourseID = :courseID 
-                  AND YEAR(B.date) BETWEEN :lastYear AND :currentYear
-                GROUP BY A.ResearchID 
-                ORDER BY Rates DESC 
-                LIMIT 10";
-            $researchStmt = $pdo->prepare($researchQuery);
-            $researchStmt->execute([
-                'courseID' => $courseID,
-                'lastYear' => $lastYear,
-                'currentYear' => $currentYear
-            ]);
-            $researchItems = $researchStmt->fetchAll();
-
-            echo "<div class='course-section'>";
-            echo "<h2>Top Research for $courseAcronym</h2>";
-
-            if (count($researchItems) > 0) {
-                foreach ($researchItems as $research) {
-                    $title = htmlspecialchars($research['Title']);
-                    $imageUrl = !empty($research['ImageName']) ? "UploadIMG/" . htmlspecialchars($research['ImageName']) : "img/neust_logo.png";
-                    $averageRating = $research['Rates'];
-                    $researchID = $research['ResearchID'];
-                    ?>
-
-                    <a href="ResearchView?researchID=<?= $researchID ?>" class="research-item">
-                        <img src="<?= $imageUrl ?>" alt="Research Image">
-                        <h5><?= $title ?></h5>
-                        <p>Average Rating: <?= $averageRating ?> / 5</p>
-                        <div class="starsDiv">
-                            <?= renderRatingStars($averageRating) ?>
-                        </div>
-                    </a>
-
-                    <?php
-                }
-            } else {
-                echo "<p>No research found for this course.</p>";
-            }
-
-            echo "</div>";
-        }
-        ?>
+        <!-- Display the Best Research grouped by course -->
+        <?php if (!empty($bestResearchByCourse)) : ?>
+            <?php foreach ($bestResearchByCourse as $course => $researchList) : ?>
+                <div class="course-section">
+                    <h2><?= htmlspecialchars($course) ?></h2>
+                    <div class="row gy-4">
+                        <?php foreach ($researchList as $research) : ?>
+                            <div class="col-md-4">
+                                <div class="research-item p-3">
+                                    <h3 class="research-title"><?= htmlspecialchars($research['Title']) ?></h3>
+                                    <p><strong>Year:</strong> <?= htmlspecialchars($research['YRPublished']) ?></p>
+                                    <p><?= htmlspecialchars($research['Abstract']) ?></p>
+                                    <img src="UploadIMG/<?= htmlspecialchars($research['ImageName']) ?>" alt="<?= htmlspecialchars($research['Title']) ?>" class="img-fluid mt-2">
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <p class="text-center">No best research added yet.</p>
+        <?php endif; ?>
     </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

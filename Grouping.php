@@ -253,7 +253,7 @@ $(document).ready(function() {
 require 'backend/dblogin.php';
 
 try {
-    $stmt = $pdo->query("SELECT RoleID, RoleName FROM roletbl");
+    $stmt = $pdo->query("SELECT RoleID, RoleName FROM roletbl where `Usertype` <> 2;");
     $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());

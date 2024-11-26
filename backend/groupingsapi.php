@@ -36,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($keywords as $keyword) {
             if (!empty($keyword)) {
                 $insert_keyword_sql = "INSERT INTO `ReasearchKeyWordsTBL` 
-                                       (`ReasearchKeyWordsD`, `KeywordConnectorKey`, `Keyword`, `date`) 
-                                       VALUES (NULL, :KeywordConnectorKey, :keyword, current_timestamp());";
+                                       (`ReasearchKeyWordsD`, `RoleConnectorKey`, `Keyword`, `date`) 
+                                       VALUES (NULL, :RoleConnectorKey, :keyword, current_timestamp());";
                 $stmt = $pdo->prepare($insert_keyword_sql);
                 $stmt->execute([
-                    ':KeywordConnectorKey' => $Roleconnector,
+                    ':RoleConnectorKey' => $Roleconnector,
                     ':keyword' => $keyword
                 ]);
             }
@@ -64,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $insert_tag_bridge_sql = "INSERT INTO `ReasearchTagTBL` 
-                                          (`ResearchTagID`, `TagConnectorKey`, `TagID`, `dateCreated`) 
-                                          VALUES (NULL, :TagConnectorKey, :tag_id, current_timestamp());";
+                                          (`ResearchTagID`, `RoleConnectorKey`, `TagID`, `dateCreated`) 
+                                          VALUES (NULL, :RoleConnectorKey, :tag_id, current_timestamp());";
                 $stmt = $pdo->prepare($insert_tag_bridge_sql);
                 $stmt->execute([
-                    ':TagConnectorKey' => $Roleconnector,
+                    ':RoleConnectorKey' => $Roleconnector,
                     ':tag_id' => $tag_id
                 ]);
             }
