@@ -299,7 +299,7 @@ include 'modal/header.php';
 
                 <!-- Sidebar for Each Course -->
                 <div class="research-sidebar">
-                    <h2 class="course-title"><?= htmlspecialchars($courseAcronym) ?> - Top Research</h2>
+                    <h2 class="course-title"><?= htmlspecialchars($courseAcronym) ?> - Top Rate Research</h2>
                     <div class="course-research-items">
                         <?php if (!empty($researchItems)) : ?>
                             <?php foreach ($researchItems as $research) : ?>
@@ -312,7 +312,8 @@ include 'modal/header.php';
                                 <a href="ResearchView?researchID=<?= $researchID ?>" class="research-item">
                                     <img src="<?= $imageUrl ?>" alt="<?= $title ?>">
                                     <h5><?= $title ?></h5>
-                                    <p>Average Rating: <?= $averageRating ?> / 5</p>
+                                    <p>Average Rating: <?= empty($averageRating) ? 0 : $averageRating ?> / 5</p>
+
                                     <div class="starsDiv">
                                         <?= renderRatingStars($averageRating) ?>
                                     </div>
@@ -346,7 +347,7 @@ function addResearchCard(researchID, title, date, abstract, imageUrl, rate) {
         <p><strong>Year:</strong> ${date}</p>
         <p>${abstract}</p>
         <div class="rating">
-            <strong>Average Rating:</strong> ${rate} / 5
+           <strong>Average Rating:</strong> ${rate === null || rate === "null" ? 0 : rate} / 5
             <div class="stars">${generateStars(rate)}</div>
         </div>
         <a href="ResearchView?researchID=${researchID}" class="read-more">Read More</a>

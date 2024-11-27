@@ -9,21 +9,6 @@
     <title>Edit profile</title>
 </head>
 <style>
-        .content {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-}
-
-.sidebar {
-    flex: 0 0 20%;
-    background-color: #8d2424; /* Optional: Add background color to distinguish */
-}
-
-.main-content {
-    flex: 0 0 70%;
-    background-color: #ffffff; /* Optional: Add background color to distinguish */
-}
 .profile-picture {
     width: 20rem;
     height: 20rem;
@@ -45,9 +30,7 @@
 <body>
 <div class="content">
         <div class="sidebar">
-            <?php
-                include 'modal/profileSidebar.php';
-            ?>
+        <?php include 'modal/adminSidebar.php'; ?>
         </div>
      <div class=" main-content">  
         <div class="norDiv1">

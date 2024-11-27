@@ -7,15 +7,17 @@ $userID = $_GET['userid'] ?? '';
 if ($userID) {
     // Prepare the query to fetch teacher details
     $stmt = $pdo->prepare("
-        SELECT 
+            SELECT 
             `UserID`, 
             CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) AS Fullname, 
             `Email`,  
             `imageName`
         FROM 
-            `accounttbl` 
+            `accounttbl` as a 
+			left join usertypetbl as b 
+            on b.usertype = a.Usertype
         WHERE 
-            `UserID` = :userID AND `Usertype` = '3'
+            `UserID` = :userID AND `UserStatus` <> '3'
     ");
     
     // Bind the UserID parameter

@@ -3,41 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Your Website Name</title>
 
     <style>
-        .dropdown-container {
-            padding-right:2em;
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ddd;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            min-width: 160px;
-            top: 100%;
-            transform: translateX(-70%);
-        }
-
-        .dropdown-menu a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown-container:hover .dropdown-menu {
-            display: block;
-        }
 header {
     background-color: #1e3698;
     color: #fff;
@@ -53,6 +23,7 @@ header {
 }
 nav {
     flex: 1;
+    padding-right:1rem;
 }
 nav ul {
     list-style-type: none;
@@ -340,6 +311,23 @@ nav ul li a {
 .removeSearch{
         display: none;
     }
+    
+
+}
+.form-group {
+    position: relative !important; /* Ensure this parent has relative positioning */
+}
+.prediction-container {
+    position: absolute;
+    background-color: rgb(155, 227, 229);
+    border: 1px solid #6692f3;
+    border-radius: 2px;
+    max-height: 150px;
+    width: auto;
+    overflow-y: auto;
+    display: none;
+    padding: 9px;
+    z-index: 200;
 }
     </style>
 </head>
@@ -374,10 +362,14 @@ nav ul li a {
                     </div>
                     <div class="form-group mb-3">
                         <input type="text" class="form-control" id="Tag" name="Tag" placeholder="Tag">
+                        <div class="prediction-container" id="prediction-container"></div> 
                     </div>
                     <div class="form-group mb-3">
-                        <input type="text" class="form-control" id="Course" name="Course" placeholder="Course">
+                        <select class="form-control" id="Course" name="Course">
+                            <option value="">Select a Course</option> <!-- Default option -->
+                        </select>
                     </div>
+
                     <div class="form-group mb-3">
                         <input type="text" class="form-control" id="Keyword" name="Keyword" placeholder="Keyword">
                     </div>
@@ -396,62 +388,47 @@ nav ul li a {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-document.getElementById('searchForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent the default form submission
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
 
-    // Gather form data
-    const title = document.getElementById('Title').value;
-    const tag = document.getElementById('Tag').value;
-    const course = document.getElementById('Course').value;
-    const keyword = document.getElementById('Keyword').value;
+        // Gather form data
+        const title = document.getElementById('Title').value;
+        const tag = document.getElementById('Tag').value;
+        const course = document.getElementById('Course').value;
+        const keyword = document.getElementById('Keyword').value;
 
-    // Create URL with query parameters
-    const queryParams = new URLSearchParams();
-    if (title) queryParams.append('Title', title);
-    if (tag) queryParams.append('Tag', tag);
-    if (course) queryParams.append('Course', course);
-    if (keyword) queryParams.append('Keyword', keyword);
+        // Create URL with query parameters
+        const queryParams = new URLSearchParams();
+        if (title) queryParams.append('Title', title);
+        if (tag) queryParams.append('Tag', tag);
+        if (course) queryParams.append('Course', course);
+        if (keyword) queryParams.append('Keyword', keyword);
 
-    // Redirect to the constructed URL
-    window.location.href = `searchy?${queryParams.toString()}`;
-});
+        // Redirect to the constructed URL
+        window.location.href = `searchy?${queryParams.toString()}`;
+    });
 
-// Clear button functionality
-document.getElementById('clearBtn').addEventListener('click', function() {
-    document.getElementById('Title').value = '';
-    document.getElementById('Tag').value = '';
-    document.getElementById('Course').value = '';
-    document.getElementById('Keyword').value = '';
-});
+    // Clear button functionality
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        document.getElementById('Title').value = '';
+        document.getElementById('Tag').value = '';
+        document.getElementById('Course').value = '';
+        document.getElementById('Keyword').value = '';
+    });
 </script>
     <nav>
         <ul>
             <li><a href="homepage">Home</a></li>
             <li><a href="./about">About</a></li>
             <li><a href="./TeacherS">Teachers</a></li>
-            <li><a href="./favorite"> <span class="ic--baseline-favorite"></span></a></li>
+            <li><a href="./favorite"> 
+                <!-- <span class="ic--baseline-favorite"></span> -->
+                Favorite
+            </a></li>
             <li><a href="./TeacherS"><span class="f7--square-favorites-alt-fill"></span></a></li>
-            <li><div class="dropdown-container">
-                    <a href="./profile" class="rounder"><span class="iconamoon--profile-thin"></span></a>
-                    <div class="dropdown-menu">
-                    <?php 
-    $cookie_value = $_COOKIE["RepSesID"];
-        $lastChar = substr($cookie_value, -1);
-
-        if ($lastChar === '1') {
-            echo "<a href='./Accounts'> <span> Admin</span></a>";
-        } else if ($lastChar === '9') {
-            echo "<a href='./CapTSection'> <span> Capstone</span></a>";
-        }else if ($lastChar === '8') {
-            echo "<a href='./UploadResearchInfo'> <span>Student</span></a>";
-        }
- ?>
-                        <a href="#">Action 2</a>
-                        <a href="logout.php"><span class="material-symbols-light--logout-sharp"></span><span>Logout</span></a>
-                    </div>
-                </div>
-            
+            <li>
+            <a href="./profile" class="rounder"><span class="iconamoon--profile-thin"></span></a>
             </li>
         </ul>
     </nav>
@@ -460,6 +437,94 @@ document.getElementById('clearBtn').addEventListener('click', function() {
 
     
 </header>
+
+<script>
+    $(document).ready(function() {
+        // Fetch courses when the page is ready
+        $.ajax({
+            url: 'backend/getcoursesAPI.php',  // Path to your PHP script
+            method: 'GET',
+            success: function(data) {
+                var courses = JSON.parse(data);
+                var courseDropdown = $('#Course');
+                
+                // Clear the dropdown before adding new options
+                courseDropdown.empty();
+                
+                // Add a default option
+                courseDropdown.append('<option value="">Select a Course</option>');
+                
+                // Check if the response contains course data
+                if (Array.isArray(courses)) {
+                    courses.forEach(function(course) {
+                        // Add each course as an option
+                        courseDropdown.append('<option value="' + course.CourseAcronym + '">' + course.CourseAcronym + '</option>');
+                    });
+                } else {
+                    // Handle any error or no data returned from the API
+                    courseDropdown.append('<option value="" disabled>No courses available</option>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching courses: ", error);
+            }
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function() {
+        // Listen for input change in the Tag field
+        $('#Tag').on('input', function() {
+            var query = $(this).val();
+
+            if (query.length >= 3) { // Show suggestions after 3 characters
+                $.ajax({
+                    url: 'backend/predictiveTag.php', // Path to your PHP script
+                    method: 'GET',
+                    data: { query: query },
+                    success: function(data) {
+                        // If the response is already a parsed JSON object, you can skip JSON.parse
+                        if (typeof data === "string") {
+                            data = JSON.parse(data); // Ensure we parse the response if it's a string
+                        }
+                        var predictions = data; // This should be an array now
+                        var predictionHTML = '';
+
+                        // If there are predictions, display them
+                        if (predictions.length > 0) {
+                            predictions.forEach(function(prediction) {
+                                predictionHTML += '<div class="prediction-item" onclick="selectTag(\'' + prediction.TagName + '\')">' + prediction.TagName + '</div>';
+                            });
+                            $('#prediction-container').html(predictionHTML).show();
+                        } else {
+                            $('#prediction-container').hide();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching data: ", error); // Log any errors
+                    }
+                });
+            } else {
+                $('#prediction-container').hide(); // Hide predictions if input is less than 3 characters
+            }
+        });
+
+        // Function to set the Tag input value when a suggestion is clicked
+        window.selectTag = function(tagName) {
+            $('#Tag').val(tagName);
+            $('#prediction-container').hide();
+        };
+
+        // Clear predictions when clicking outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#Tag').length) {
+                $('#prediction-container').hide();
+            }
+        });
+    });
+
+</script>
 
 <script>
     // JavaScript function to toggle the display of the navigation links

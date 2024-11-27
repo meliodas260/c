@@ -41,8 +41,9 @@ try {
 
         try {
             // Fetch researchers related to the research
-            $ResearcherSql = $pdo->prepare("SELECT b.Fname, b.Mname, b.Lname, b.suffix, a.role FROM researchroletbl a 
+            $ResearcherSql = $pdo->prepare("SELECT b.Fname, b.Mname, b.Lname, b.suffix, c.RoleName FROM researchroletbl a 
                                              LEFT JOIN accounttbl b ON b.UserID = a.UID 
+                                             left join roletbl c on a.Role = c.RoleID
                                              WHERE a.RoleConnectorKey = :connector");
             $ResearcherSql->execute(['connector' => $connector]);
 
@@ -60,16 +61,23 @@ try {
             // Separate researchers and panels based on role
             $researchers = [];
             $panels = [];
+            $stmt1 = $pdo->query("SELECT RoleName FROM roletbl WHERE Usertype = 3");
+            $rolesType3 = $stmt1->fetchAll(PDO::FETCH_COLUMN); // Get an array of RoleNames
+        
+            // Fetch roles where Usertype <> 3
+            $stmt2 = $pdo->query("SELECT RoleName FROM roletbl WHERE Usertype <> 3");
+            $rolesTypeNot3 = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+
             while ($rowlower = $ResearcherSql->fetch(PDO::FETCH_ASSOC)) {
                 $fullName = trim($rowlower['Fname'] . ' ' . $rowlower['Mname'] . ' ' . $rowlower['Lname'] . ' ' . $rowlower['suffix']);
-                $role = $rowlower['role'];
+                $role = $rowlower['RoleName'];
 
-                if (in_array($role, ['Leader', 'Member'])) {
+                if (in_array($role, $rolesType3)) {
                     $researchers[] = [
                         'name' => $fullName,
                         'role' => $role
                     ];
-                } elseif (in_array($role, ['Adviser', 'Panel0', 'Panel1', 'Panel2'])) {
+                } if (in_array($role,$rolesTypeNot3)) {
                     $panels[] = [
                         'name' => $fullName,
                         'role' => $role

@@ -1,0 +1,19 @@
+SELECT b.CourseAcronym, COUNT(*) FROM `sectionn&capteachertbl` a left join coursetbl b on a.CourseID = b.CourseID group by b.CourseID;
+all sections count per course 
+
+SELECT b.CourseAcronym, COUNT(*) FROM `sectionn&capteachertbl` a left join coursetbl b on a.CourseID = b.CourseID where YEAR(a.DateCreacted) = '2024' group by b.CourseID;
+sections count per course currentYR
+
+SELECT count(*) as LoginNumber FROM `logtbl` WHERE MONTH(`datelogin`) = 11;
+LoginNumber per MONTH
+
+SELECT b.CourseAcronym,count(*) FROM `researchtbl` a left join coursetbl b on a.CourseID = b.CourseID;
+count of research per course alltime
+
+SELECT b.CourseAcronym, COUNT(*) AS research_count, YEAR(a.date) AS year
+FROM `researchtbl` a
+LEFT JOIN coursetbl b ON a.CourseID = b.CourseID
+GROUP BY b.CourseAcronym, YEAR(a.date)
+ORDER BY YEAR(a.date) DESC;
+
+count of research per course perYR

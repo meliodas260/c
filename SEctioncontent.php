@@ -22,7 +22,7 @@
 <?php include 'modal/header.php'; ?>
 <div class="content">
     <div class="sidebar">
-<?php  include 'modal/adminSidebar.php';  ?>
+        <?php  include 'modal/adminSidebar.php';  ?>
     </div>
     <div class="main-content">
     <div class="norDiv">

@@ -45,41 +45,40 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
                 if ($anolaman) {
                     $SESID = $sesid . "9"; //Teacher
                     updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
-                    header("Location: ../CapTSection.php");
+                    header("Location: ../CapTSection");
                     exit;
-                } else {
-                    // Check if the user is a researcher (Leader or Member)
-                    $Role = $pdo->prepare("SELECT Role, ResearchID FROM `researchroletbl` WHERE UID = :UID");
-                    $Role->execute([':UID' => $UID]);
-                    $roles = $Role->fetch(PDO::FETCH_ASSOC);
-
-                    if ($roles && $roles['Role'] == "Leader") {
-                        $SESID = $sesid . "8"; //user
-                        setcookie("ResearchNya", $roles['ResearchID'], time() + (86400 * 7), "/", "", false, true);
-                        updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
-                        header("Location: ../UploadResearchInfo.php");
-                        exit;
-                    } elseif ($roles && $roles['Role'] == "Member") {
-                        $SESID = $sesid . "7"; //user
-                        setcookie("ResearchNya", $roles['ResearchID'], time() + (86400 * 7), "/", "", false, true);
-                        updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
-                        header("Location: ../UploadResearchInfo.php");
-                        exit;
-                    } else {
+                }  else {
                         // Default user role
-                        $SESID = $sesid . "0";//user
+                        $SESID = $sesid . "0"; // Default user
                         updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
                         header("Location: ../homepage.php");
                         exit;
                     }
+
                 }
-            } else {
-                // If no valid user role, redirect to homepage
-                updateSessionCookies($pdo, "User", $UID, $dateExpire, $date);
-                header("Location: ../homepage.php");
-                exit;
-            }
-        } else {
+                else {
+                // Check if the user is a researcher (Leader or Member)
+                $RoleQuery = $pdo->prepare("
+                    SELECT rr.Role, r.RoleID FROM researchroletbl rr JOIN roletbl r ON r.RoleID = rr.Role WHERE rr.UID = :UID AND r.Usertype = 3;
+                ");
+                $RoleQuery->execute([':UID' => $UID]);
+                $userRole = $RoleQuery->fetch(PDO::FETCH_ASSOC);
+
+                if ($userRole) {
+                    // User has a valid researcher role
+                    $SESID = $sesid . "8"; // Researcher role
+                    updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
+                    header("Location: ../profile");
+                    exit;
+                } else {
+                    // Default user role
+                    $SESID = $sesid . "0"; // Default user
+                    updateSessionCookies($pdo, $SESID, $UID, $dateExpire, $date);
+                    header("Location: ../homepage.php");
+                    exit;
+                }
+            }  
+        }else {
             // Invalid password
            header("Location: ../index.php?error=invalid_password");
             exit;

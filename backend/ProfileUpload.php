@@ -84,6 +84,7 @@ if (isset($_POST['submit'])) {
     }
 }
 if($_SERVER['REQUEST_METHOD'] == 'GET'){
+    
    // SQL query
 $sql = "SELECT `imageName` FROM `accounttbl` WHERE `UserID` = :UID";
 

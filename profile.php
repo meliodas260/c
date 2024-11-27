@@ -15,12 +15,11 @@
         }
 
         .sidebar {
-            flex: 0 0 80%;
-            background-color: #8d2424;
+            flex: 2;
         }
 
         .main-content {
-            flex: 1;
+            flex: 8;
             background-color: #ffffff;
             padding: 20px;
         }
@@ -132,7 +131,7 @@
 <body>
     <div class="content">
         <div class="sidebar">
-            <?php include 'modal/profileSidebar.php'; ?>
+            <?php include 'modal/adminSidebar.php'; ?>
         </div>
 
         <div class="main-content">

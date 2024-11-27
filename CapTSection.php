@@ -58,7 +58,7 @@
 <body>
 <div class="content">
     <div class="sidebar">
-        <?php include 'modal/CapTSidebar.php'; ?>
+        <?php include 'modal/adminSidebar.php'; ?>
     </div>
     <div class="main-content">
 

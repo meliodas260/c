@@ -140,13 +140,13 @@ input{
     }
     
     .sidebar {
-    flex: 0 0 17%;
+    flex: 2;
     background-color: #9ca6cc; /* Optional: Add background color to distinguish */
     }
     
     .main-content {
     margin-top: 3%;
-    flex: 0 0 78%;
+    flex:8;
     background-color: #ffffff; /* Optional: Add background color to distinguish */
     }
     

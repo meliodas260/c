@@ -17,6 +17,7 @@ if(isset($_COOKIE["RepSesID"])) {
     header("Location: index.php");
     exit;
 }}
+
 function VerifyCApT(){
     // Check if the cookie is set
     if(isset($_COOKIE["RepSesID"])) {
@@ -35,6 +36,7 @@ function VerifyCApT(){
         header("Location: index.php");
         exit;
     }}
+
     function VerifyResearcher(){
         // Check if the cookie is set
         if(isset($_COOKIE["RepSesID"])) {
@@ -55,6 +57,7 @@ function VerifyCApT(){
             header("Location: index.php");
             exit;
         }}
+        
         function Verifyuser(){
             // Check if the cookie is set
             if(isset($_COOKIE["RepSesID"])) {

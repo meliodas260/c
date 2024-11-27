@@ -18,14 +18,16 @@ if (!empty($sec)) {
     if ($input === '') {
         // Query for all names when input is empty, including imageName
         $stmt = $pdo->prepare("SELECT `UserID`, CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) AS Fullname, `imageName` 
-FROM `accounttbl` 
-WHERE `Usertype` = '3';");
+FROM `accounttbl` as a 
+left join usertypetbl as b on b.usertype = a.Usertype
+WHERE `UserStatus` <> '3';");
     } else {
         // Query based on input, including imageName
         $stmt = $pdo->prepare("SELECT `UserID`, CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) AS Fullname, `imageName` 
-FROM `accounttbl` 
-WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE CONCAT('%', :input, '%') 
-AND `Usertype` = '3';");
+        FROM `accounttbl` as a 
+        left join usertypetbl as b on a.usertype = b.usertype 
+        WHERE CONCAT(`Fname`, ' ', `Mname`, ' ', `Lname`, ' ', `Suffix`) LIKE CONCAT('%', :input, '%') AND `UserStatus` <> '3';");
+
         $inputParam = "$input%";
         $stmt->bindValue(':input', $inputParam);
     }

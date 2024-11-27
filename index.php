@@ -21,7 +21,7 @@
      
 
                     <form action="backend/try.php" method="GET">
-                       <h3>Online repo System</h3>    
+                       <h4>NEUST-MGT Research Repository</h4>    
                        <br>
                        <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" name="username" placeholder="name@example.com" required>

@@ -13,8 +13,9 @@ try {
         $connector = $row['RoleConnectorKey'];
 
         // Fetch researchers related to the research
-        $ResearcherSql = $pdo->query("SELECT * FROM researchroletbl a 
-                                       LEFT JOIN accounttbl b ON b.UserID = a.UID 
+        $ResearcherSql = $pdo->query("SELECT b.Fname, b.Mname, b.Lname, b.suffix, c.RoleName FROM researchroletbl a 
+                                             LEFT JOIN accounttbl b ON b.UserID = a.UID 
+                                             left join roletbl c on a.Role = c.RoleID
                                        WHERE a.RoleConnectorKey = $connector");
 
         // Fetch tags related to the research
@@ -29,23 +30,29 @@ try {
         // Collect researchers, tags, and keywords into arrays
         $researchers = [];
         $Panels = [];
-        while ($rowlower = $ResearcherSql->fetch(PDO::FETCH_ASSOC)) {
-            if ($rowlower['Role'] === 'Leader'  || $rowlower['Role'] === 'Member') {
-            $fullName = trim($rowlower['Fname'] . ' ' . $rowlower['Mname'] . ' ' . $rowlower['Lname'] . ' ' . $rowlower['Suffix']);
-    
+
+    $stmt1 = $pdo->query("SELECT RoleName FROM roletbl WHERE Usertype = 3");
+    $rolesType3 = $stmt1->fetchAll(PDO::FETCH_COLUMN); // Get an array of RoleNames
+
+    // Fetch roles where Usertype <> 3
+    $stmt2 = $pdo->query("SELECT RoleName FROM roletbl WHERE Usertype <> 3");
+    $rolesTypeNot3 = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+
+    while ($rowlower = $ResearcherSql->fetch(PDO::FETCH_ASSOC)) {
+        $fullName = trim($rowlower['Fname'] . ' ' . $rowlower['Mname'] . ' ' . $rowlower['Lname'] . ' ' . $rowlower['suffix']);
+        $role = $rowlower['RoleName'];
+
+        if (in_array($role, $rolesType3)) {
             $researchers[] = [
                 'name' => $fullName,
-                'role' => $rowlower['Role']
+                'role' => $role
             ];
-        }
-        if ($rowlower['Role'] === 'Adviser'  || $rowlower['Role'] === 'Panel0' || $rowlower['Role'] === 'Panel1' || $rowlower['Role'] === 'Panel2') {
-            $fullName = trim($rowlower['Fname'] . ' ' . $rowlower['Mname'] . ' ' . $rowlower['Lname'] . ' ' . $rowlower['Suffix']);
-    
+        } if (in_array($role,$rolesTypeNot3)) {
             $Panels[] = [
                 'name' => $fullName,
-                'role' => $rowlower['Role']
+                'role' => $role
             ];
-        }       
+        }
     }
 
         $tagsArray = [];

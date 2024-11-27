@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <link href="css/custom2.css" rel="stylesheet"> 
@@ -12,6 +15,10 @@
 
 
     <style>
+        .modal-dialog.custom-width {
+    max-width: 90%; /* Adjust width as needed, e.g., 90% of viewport */
+}
+
         .profile-container {
             display: flex;
             flex-direction: column;
@@ -40,6 +47,7 @@
     height: 50px;
     object-fit: cover; 
     border-radius: 10px; 
+    
 }
         .content {
             display: flex;
@@ -130,16 +138,12 @@
 
     <div class="norDiv">
         <div class="profile-container">
-        <div class="profile-section">
-                <div class="profile-picture" id="profilePicture">
-                    <img src="img/avatar-default-icon-1024x1024-dvpl2mz1.png" alt="Profile Picture">
+            <div class="profile-section">
+                <div class="profile-picture">
+                    <img src="img/avatar-default-icon-1024x1024-dvpl2mz1.png" id="TeacherPIC" alt="Profile Picture">
                 </div>
             </div>
 
-    <!-- Modal Structure -->
-   
-
-    <script src="modal/ImageZoom.js"></script>
             <div class="profile-details">
                 <h2 id="fullName">Loading...</h2>
                 <p><strong>User ID:</strong> <span id="userID">Loading...</span></p>
@@ -168,13 +172,24 @@
         if (userID) {
             // Fetch teacher's main profile
             fetch(`backend/teacherfullprofile.php?userid=${userID}`)
-                .then(response => response.json())
-                .then(profile => {
-                    $('#fullName').text(profile.Fullname || 'Name not available');
-                    $('#userID').text(profile.UserID || 'N/A');
-                    $('#email').text(profile.Email || 'N/A');
-                })
-                .catch(error => console.error('Error fetching teacher profile:', error));
+            .then(response => response.json())
+            .then(profile => {
+                $('#fullName').text(profile.Fullname || 'Name not available');
+                $('#userID').text(profile.UserID || 'N/A');
+                $('#email').text(profile.Email || 'N/A');
+
+                // Check if imageName is null or empty and set the profile picture
+                const profilePicUrl = profile.imageName ? `Profiles/${profile.imageName}` : 'img/avatar-default-icon-1024x1024-dvpl2mz1.png';
+                $('#TeacherPIC').attr('src', profilePicUrl);
+
+                // Add click event to open modal with the profile picture
+                $('#TeacherPIC').on('click', function () {
+                    $('#modalProfilePic').attr('src', profilePicUrl);
+                    $('#profilePicModal').modal('show');
+                });
+            })
+            .catch(error => console.error('Error fetching teacher profile:', error));
+
 
             // Fetch teacher's research roles
             fetch(`backend/teacherresearchroles.php?userid=${userID}`)
@@ -207,6 +222,22 @@
             console.error('User ID is missing from the URL.');
         }
     </script>
+    <!-- Modal -->
+        <!-- Modal for Profile Picture -->
+        <div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content">
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    <div class="modal-body text-center">
+                        <img id="modalProfilePic" src="" alt="Profile Picture" class="img-fluid rounded">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 </body>
 
 </html>
